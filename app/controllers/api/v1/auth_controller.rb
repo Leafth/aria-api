@@ -79,7 +79,8 @@ module Api
           httponly: true,
           secure: Rails.env.production?,
           same_site: :strict,
-          expires: Rails.configuration.x.auth.refresh_token_expiration.from_now
+          expires: Rails.configuration.x.auth.refresh_token_expiration.from_now,
+          path: "/"
         )
 
         response.set_cookie(
@@ -88,7 +89,8 @@ module Api
           httponly: true,
           secure: Rails.env.production?,
           same_site: :lax,
-          expires: Rails.configuration.x.auth.access_token_expiration.from_now
+          expires: Rails.configuration.x.auth.access_token_expiration.from_now,
+          path: "/"
         )
       end
 
