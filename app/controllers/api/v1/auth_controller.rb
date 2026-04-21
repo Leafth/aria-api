@@ -14,6 +14,27 @@ module Api
           user_agent: request.user_agent
         ).call
 
+        set_auth_cookies(result)
+
+        render json: {
+          access_token: result[:access_token],
+          refresh_token: result[:refresh_token],
+          token_type: "Bearer",
+          expires_in: Rails.configuration.x.auth.access_token_expiration.to_i,
+          user: user_payload(result[:user])
+        }, status: :ok
+      end
+
+      def refresh
+        token = cookies[:refresh_token] || params.dig(:auth, :refresh_token)
+
+        result = Auth::Refresh.new(
+          tenant: current_tenant,
+          refresh_token: token
+        ).call
+
+        set_auth_cookies(result)
+
         render json: {
           access_token: result[:access_token],
           refresh_token: result[:refresh_token],
@@ -36,6 +57,31 @@ module Api
           email: user.email,
           tenant_id: user.tenant_id
         }
+      end
+
+      def set_auth_cookies(result)
+        response.set_cookie(
+          :refresh_token,
+          value: result[:refresh_token],
+          httponly: true,
+          secure: Rails.env.production?,
+          same_site: :strict,
+          expires: Rails.configuration.x.auth.refresh_token_expiration.from_now
+        )
+
+        response.set_cookie(
+          :access_token,
+          value: result[:access_token],
+          httponly: true,
+          secure: Rails.env.production?,
+          same_site: :lax,
+          expires: Rails.configuration.x.auth.access_token_expiration.from_now
+        )
+      end
+
+      def clear_auth_cookies
+        cookies.delete(:refresh_token)
+        cookies.delete(:access_token)
       end
 
       def render_auth_error(error)
