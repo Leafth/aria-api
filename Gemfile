@@ -53,5 +53,6 @@ group :development, :test do
   gem "rspec-rails"
 end
 
-gem "device"
-gem "jwt"
+gem "devise", "~> 5.0"
+
+gem "jwt", "~> 3.1"
