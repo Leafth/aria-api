@@ -44,6 +44,19 @@ module Api
         }, status: :ok
       end
 
+      def logout
+        token = cookies[:refresh_token] || params.dig(:auth, :refresh_token)
+
+        Auth::Logout.new(
+          tenant: current_tenant,
+          refresh_token: token
+        ).call
+
+        clear_auth_cookies
+
+        render json: {}, status: :ok
+      end
+
       private
 
       def login_params
