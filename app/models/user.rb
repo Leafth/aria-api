@@ -3,6 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
 
   belongs_to :tenant
+  has_many :auth_sessions, dependent: :destroy
 
   devise :database_authenticatable,
          :recoverable, :validatable

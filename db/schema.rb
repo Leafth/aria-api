@@ -10,9 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_21_005422) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_21_042713) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "auth_sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.string "ip_address"
+    t.string "refresh_token_digest", null: false
+    t.datetime "revoked_at"
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.bigint "user_id", null: false
+    t.index ["expires_at"], name: "index_auth_sessions_on_expires_at"
+    t.index ["refresh_token_digest"], name: "index_auth_sessions_on_refresh_token_digest", unique: true
+    t.index ["revoked_at"], name: "index_auth_sessions_on_revoked_at"
+    t.index ["tenant_id"], name: "index_auth_sessions_on_tenant_id"
+    t.index ["user_id"], name: "index_auth_sessions_on_user_id"
+  end
 
   create_table "tenants", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -41,5 +58,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_21_005422) do
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 
+  add_foreign_key "auth_sessions", "tenants"
+  add_foreign_key "auth_sessions", "users"
   add_foreign_key "users", "tenants"
 end
