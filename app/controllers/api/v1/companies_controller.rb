@@ -4,7 +4,7 @@ module Api
       include CurrentTenant
       include AuthenticateRequest
 
-      before_action :set_company, only: [ :show ]
+      before_action :set_company, only: [ :show, :update, :destroy ]
 
       def index
         companies = current_tenant.companies
@@ -33,6 +33,19 @@ module Api
         else
           render json: { errors: company.errors.full_messages }, status: :unprocessable_entity
         end
+      end
+
+      def update
+        if @company.update(company_params)
+          render json: @company, status: :ok
+        else
+          render json: { errors: @company.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      def destroy
+        @company.destroy
+        render json: {}, status: :no_content
       end
 
       private
