@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       delete "auth/logout", to: "auth#logout"
 
       get "me", to: "users#me"
+
+      resources :companies
     end
   end
 end
