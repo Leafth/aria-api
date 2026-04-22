@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_21_042713) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_22_124748) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -29,6 +29,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_21_042713) do
     t.index ["revoked_at"], name: "index_auth_sessions_on_revoked_at"
     t.index ["tenant_id"], name: "index_auth_sessions_on_tenant_id"
     t.index ["user_id"], name: "index_auth_sessions_on_user_id"
+  end
+
+  create_table "companies", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "name"
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_companies_on_tenant_id"
   end
 
   create_table "tenants", force: :cascade do |t|
@@ -60,5 +69,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_21_042713) do
 
   add_foreign_key "auth_sessions", "tenants"
   add_foreign_key "auth_sessions", "users"
+  add_foreign_key "companies", "tenants"
   add_foreign_key "users", "tenants"
 end
