@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       delete "auth/logout", to: "auth#logout"
 
       get "me", to: "users#me"
-      
+
       post "password/forgot", to: "passwords#create"
       put  "password/reset",  to: "passwords#update"
 

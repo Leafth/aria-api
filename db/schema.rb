@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_124748) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_23_112054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -29,6 +29,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_124748) do
     t.index ["revoked_at"], name: "index_auth_sessions_on_revoked_at"
     t.index ["tenant_id"], name: "index_auth_sessions_on_tenant_id"
     t.index ["user_id"], name: "index_auth_sessions_on_user_id"
+  end
+
+  create_table "bulls", force: :cascade do |t|
+    t.string "breed", null: false
+    t.bigint "company_id"
+    t.datetime "created_at", null: false
+    t.string "ear_tag"
+    t.string "name", null: false
+    t.string "origin", null: false
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_bulls_on_company_id"
+    t.index ["tenant_id", "ear_tag"], name: "index_bulls_on_tenant_id_and_ear_tag", unique: true, where: "(ear_tag IS NOT NULL)"
+    t.index ["tenant_id", "name"], name: "index_bulls_on_tenant_id_and_name"
+    t.index ["tenant_id"], name: "index_bulls_on_tenant_id"
+    t.check_constraint "origin::text = ANY (ARRAY['local'::character varying, 'company'::character varying]::text[])", name: "bulls_origin_check"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -69,6 +85,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_124748) do
 
   add_foreign_key "auth_sessions", "tenants"
   add_foreign_key "auth_sessions", "users"
+  add_foreign_key "bulls", "companies"
+  add_foreign_key "bulls", "tenants"
   add_foreign_key "companies", "tenants"
   add_foreign_key "users", "tenants"
 end
