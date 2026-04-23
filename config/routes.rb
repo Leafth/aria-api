@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       put  "password/reset",  to: "passwords#update"
 
       resources :companies
+      resources :bulls
     end
   end
 end
