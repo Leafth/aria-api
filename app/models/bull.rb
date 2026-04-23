@@ -13,7 +13,7 @@ class Bull < ApplicationRecord
 
   validates :ear_tag, uniqueness: { scope: :tenant_id }, allow_nil: true
 
-  validates :origin_rules
+  validate :origin_rules
 
   private
 
@@ -23,8 +23,8 @@ class Bull < ApplicationRecord
     end
 
     if company?
-      errors.add(:company, "Touros de empresa devem obrigatoriamente estar associados") if company_id.blank?
-      errors.add(:ear_tag, "Não deve existir para touros de empresa") if ear_tag.present?
+      errors.add(:company, "para touros de empresa devem obrigatoriamente estar associados") if company_id.blank?
+      errors.add(:ear_tag, "não deve existir para touros de empresa") if ear_tag.present?
     end
   end
 end
