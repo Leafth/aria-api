@@ -67,7 +67,7 @@ module Api
         return scope if params[:q].blank?
 
         scope.where(
-          "LOWER(bulls.name) LIKE :q OR LOWER(bulls.breed) LIKE :q",
+          "LOWER(bulls.name) LIKE :q OR LOWER(bulls.breed) LIKE :q OR LOWER(bulls.ear_tag) LIKE :q",
           q: "%#{params[:q].downcase}%"
         )
       end
