@@ -33,7 +33,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_23_112054) do
 
   create_table "bulls", force: :cascade do |t|
     t.string "breed", null: false
-    t.bigint "company_id"
+    t.uuid "company_id"
     t.datetime "created_at", null: false
     t.string "ear_tag"
     t.string "name", null: false
@@ -47,7 +47,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_23_112054) do
     t.check_constraint "origin::text = ANY (ARRAY['local'::character varying, 'company'::character varying]::text[])", name: "bulls_origin_check"
   end
 
-  create_table "companies", force: :cascade do |t|
+  create_table "companies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
     t.string "name"

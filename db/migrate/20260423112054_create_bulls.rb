@@ -7,7 +7,7 @@ class CreateBulls < ActiveRecord::Migration[8.1]
       t.string :ear_tag
 
       t.references :tenant, null: false, foreign_key: true
-      t.references :company, foreign_key: true
+      t.references :company, type: :uuid, foreign_key: true
 
       t.timestamps
     end
