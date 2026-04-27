@@ -1,8 +1,8 @@
 class CreateAuthSessions < ActiveRecord::Migration[8.1]
   def change
-    create_table :auth_sessions do |t|
-      t.references :user, null: false, foreign_key: true
-      t.references :tenant, null: false, foreign_key: true
+    create_table :auth_sessions, id: :uuid do |t|
+      t.references :user, type: :uuid, null: false, foreign_key: true
+      t.references :tenant, type: :uuid, null: false, foreign_key: true
       t.string :refresh_token_digest, null: false
       t.datetime :expires_at, null: false
       t.datetime :revoked_at

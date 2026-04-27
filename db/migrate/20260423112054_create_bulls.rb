@@ -1,12 +1,12 @@
 class CreateBulls < ActiveRecord::Migration[8.1]
   def change
-    create_table :bulls do |t|
+    create_table :bulls, id: :uuid do |t|
       t.string :name, null: false
       t.string :breed, null: false
       t.string :origin, null: false
       t.string :ear_tag
 
-      t.references :tenant, null: false, foreign_key: true
+      t.references :tenant, type: :uuid, null: false, foreign_key: true
       t.references :company, type: :uuid, foreign_key: true
 
       t.timestamps
