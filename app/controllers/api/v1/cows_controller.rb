@@ -37,14 +37,14 @@ module Api
       def update
         if forbidden_params_present?
           return render json: {
-            errors: { base: [ "Some fields cannot be updated here" ] }
+            errors: { forbidden_fields: [ "Some fields cannot be updated here" ] }
           }, status: :unprocessable_entity
         end
 
         if @cow.update(update_cow_params)
           render json: @cow
         else
-          render json: { errors: @cow.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @cow.errors }, status: :unprocessable_entity
         end
       end
 
