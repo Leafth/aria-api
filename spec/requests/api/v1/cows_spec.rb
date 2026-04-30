@@ -8,7 +8,7 @@ RSpec.describe "Api::V1::Cows", type: :request do
   def cow_params
     {
       name: "Mimosa",
-      ear_tag: "001",
+      ear_tag: SecureRandom.hex(3),
       birth_date: "2023-01-01",
       breed: "Nelore",
       weight: 180,
@@ -59,9 +59,9 @@ RSpec.describe "Api::V1::Cows", type: :request do
     end
 
     it "não permite brinco duplicado" do
-      tenant.cows.create!(cow_params)
+      tenant.cows.create!(cow_params.merge(ear_tag: "001"))
 
-      post "/api/v1/cows", params: { cow: cow_params },
+      post "/api/v1/cows", params: { cow: cow_params.merge(ear_tag: "001") },
         headers: headers
 
       expect(response).to have_http_status(:unprocessable_entity)
