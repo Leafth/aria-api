@@ -152,7 +152,7 @@ RSpec.describe "Api::V1::Cows", type: :request do
 
     it "não permite atualizar brinco para valor existente" do
       exists_cow = tenant.cows.create(cow_params)
-      new_cow = tenant.cows.create(cow_params.merge(ear_tag: 002))
+      new_cow = tenant.cows.create(cow_params)
 
       patch "/api/v1/cows/#{new_cow.id}",
         params: { cow: { ear_tag: exists_cow.ear_tag } },

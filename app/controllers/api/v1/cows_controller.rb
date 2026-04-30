@@ -4,7 +4,7 @@ module Api
       include CurrentTenant
       include AuthenticateRequest
 
-      before_action :set_cow, only: [ :show ]
+      before_action :set_cow, only: [ :show, :update ]
 
       def index
         cows = current_tenant.cows
@@ -34,6 +34,20 @@ module Api
         end
       end
 
+      def update
+        if forbidden_params_present?
+          return render json: {
+            errors: { base: [ "Some fields cannot be updated here" ] }
+          }, status: :unprocessable_entity
+        end
+
+        if @cow.update(update_cow_params)
+          render json: @cow
+        else
+          render json: { errors: @cow.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
       private
 
       def set_cow
@@ -49,6 +63,15 @@ module Api
           :weight,
           :phase,
           :active
+        )
+      end
+
+      def update_cow_params
+        params.require(:cow).permit(
+          :name,
+          :ear_tag,
+          :birth_date,
+          :breed
         )
       end
 
@@ -100,6 +123,15 @@ module Api
           total_pages: scope.total_pages,
           total_count: scope.total_count
         }
+      end
+
+      def forbidden_params_present?
+        return false unless params[:cow]
+
+        permitted = update_cow_params.keys.map(&:to_s)
+        incoming  = params[:cow].keys
+
+        (incoming - permitted).any?
       end
     end
   end
