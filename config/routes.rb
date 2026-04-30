@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
       resources :companies
       resources :bulls
+      resources :cows
     end
   end
 end
