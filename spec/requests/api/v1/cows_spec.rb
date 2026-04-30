@@ -33,5 +33,38 @@ RSpec.describe "Api::V1::Cows", type: :request do
       puts response.body
       expect(response).to have_http_status(:created)
     end
+
+    it "retorna 422 quando nome ausente" do
+      post "/api/v1/cows", params: { cow: cow_params.merge(name: nil) },
+        headers: headers
+
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      body = JSON.parse(response.body)
+      expect(body["errors"]).to have_key("name")
+    end
+
+    it "retorna 422 quando peso é inválido" do
+      post "/api/v1/cows", params: { cow: cow_params.merge(weight: -100) },
+        headers: headers
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "retorna 422 quando fase é inválida" do
+      post "/api/v1/cows", params: { cow: cow_params.merge(phase: "old") },
+        headers: headers
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "não permite brinco duplicado" do
+      tenant.cows.create!(cow_params)
+
+      post "/api/v1/cows", params: { cow: cow_params },
+        headers: headers
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
   end
 end

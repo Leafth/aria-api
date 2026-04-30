@@ -10,7 +10,7 @@ module Api
         if cow.save
           render json: cow, status: :created
         else
-          render json: { erros: cow.errors }, status: :unprocessable_entity
+          render json: { errors: cow.errors }, status: :unprocessable_entity
         end
       end
 
