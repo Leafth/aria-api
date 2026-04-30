@@ -89,4 +89,22 @@ RSpec.describe "Api::V1::Cows", type: :request do
       expect(body["meta"]["current_page"]).to eq(1)
     end
   end
+
+  describe "GET /api/v1/cows/:id" do
+    it "return cow" do
+      cow = tenant.cows.create!(cow_params)
+
+      get "/api/v1/cows/#{cow.id}", headers: headers
+
+      expect(response).to have_http_status(:ok)
+      body = JSON.parse(response.body)
+      expect(body["id"]).to eq(cow.id)
+    end
+
+    it "retorna 404 caso não exista" do
+      get "/api/v1/cows/999999", headers: headers
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end
