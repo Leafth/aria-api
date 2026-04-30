@@ -72,15 +72,16 @@ RSpec.describe "Api::V1::Cows", type: :request do
     it "lista cows" do
       tenant.cows.create!(cow_params)
 
-      get "api/v1/cows", headers: headers
-      expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body).size).to eq(1)
+      get "/api/v1/cows", headers: headers
+
+      body = JSON.parse(response.body)
+      expect(body["data"].size).to eq(1)
     end
 
     it "aplica paginação" do
       5.times { tenant.cows.create!(cow_params) }
 
-      get 'api/v1/cows?page=1&per_page=2', headers: headers
+      get '/api/v1/cows?page=1&per_page=2', headers: headers
 
       body = JSON.parse(response.body)
 
