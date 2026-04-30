@@ -107,4 +107,58 @@ RSpec.describe "Api::V1::Cows", type: :request do
       expect(response).to have_http_status(:not_found)
     end
   end
+
+  describe "PATCH /api/v1/cows/:id" do
+    it "atualiza dados válidos" do
+      cow = tenant.cows.create(cow_params)
+
+      patch "/api/v1/cows/#{cow.id}",
+        params: { cow: { name: "Atualizada" } },
+        headers: headers
+
+      expect(response).to have_http_status(:ok)
+      expect(cow.reload.name).to eq("Atualizada")
+    end
+
+    it "não permite inativação por update" do
+      cow = tenant.cows.create(cow_params)
+
+      patch "/api/v1/cows/#{cow.id}",
+        params: { cow: { active: false } },
+        headers: headers
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "não permite alterar peso" do
+      cow = tenant.cows.create(cow_params)
+
+      patch "/api/v1/cows/#{cow.id}",
+        params: { cow: { weight: 9999 } },
+        headers: headers
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "não permite alterar fase" do
+      cow = tenant.cows.create(cow_params)
+
+      patch "/api/v1/cows/#{cow.id}",
+        params: { cow: { phase: "primiparous" } },
+        headers: headers
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "não permite atualizar brinco para valor existente" do
+      exists_cow = tenant.cows.create(cow_params)
+      new_cow = tenant.cows.create(cow_params.merge(ear_tag: 002))
+
+      patch "/api/v1/cows/#{new_cow.id}",
+        params: { cow: { ear_tag: exists_cow.ear_tag } },
+        headers: headers
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
 end
