@@ -4,6 +4,8 @@ module Api
       include CurrentTenant
       include AuthenticateRequest
 
+      before_action :set_cow, only: [ :show ]
+
       def index
         cows = current_tenant.cows
 
@@ -18,6 +20,10 @@ module Api
         }, status: :ok
       end
 
+      def show
+        render json: @cow, status: :ok
+      end
+
       def create
         cow = current_tenant.cows.new(cow_params)
 
@@ -29,6 +35,10 @@ module Api
       end
 
       private
+
+      def set_cow
+        @cow = current_tenant.cows.find(params[:id])
+      end
 
       def cow_params
         params.require(:cow).permit(
