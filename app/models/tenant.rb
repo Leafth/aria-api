@@ -2,7 +2,8 @@ class Tenant < ApplicationRecord
   has_many :users, dependent: :restrict_with_exception
   has_many :auth_sessions, dependent: :restrict_with_exception
   has_many :companies, dependent: :destroy
-  has_many :bulls
+  has_many :bulls, dependent: :destroy
+  has_many :cows, dependent: :destroy
 
   enum :status, { active: 0, inactive: 1 }
 
