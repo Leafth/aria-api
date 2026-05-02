@@ -15,7 +15,9 @@ Rails.application.routes.draw do
 
       resources :companies
       resources :bulls
-      resources :cows
+      resources :cows do
+        resources :events, only: [ :create ], controller: "events"
+      end
     end
   end
 end
