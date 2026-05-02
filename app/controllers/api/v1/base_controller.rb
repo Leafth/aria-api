@@ -17,6 +17,10 @@ module Api
         }, status: :unprocessable_entity
       end
 
+      def bad_request(error)
+        render json: { errors: { base: [ error.message ] } }, status: :bad_request
+      end
+
       def handle_invalid_enum(error)
         if error.message.include?("is not a valid")
           render json: { errors: { phase: [ "Invalid value" ] } }, status: :unprocessable_entity
