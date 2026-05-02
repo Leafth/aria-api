@@ -44,7 +44,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_02_121012) do
     t.index ["tenant_id", "ear_tag"], name: "index_bulls_on_tenant_id_and_ear_tag", unique: true, where: "(ear_tag IS NOT NULL)"
     t.index ["tenant_id", "name"], name: "index_bulls_on_tenant_id_and_name"
     t.index ["tenant_id"], name: "index_bulls_on_tenant_id"
-    t.check_constraint "origin::text = ANY (ARRAY['local'::character varying::text, 'company'::character varying::text])", name: "bulls_origin_check"
+    t.check_constraint "origin::text = ANY (ARRAY['local'::character varying, 'company'::character varying]::text[])", name: "bulls_origin_check"
   end
 
   create_table "companies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
