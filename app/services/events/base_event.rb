@@ -1,0 +1,44 @@
+module Events
+    class BaseEvent
+      def initialize(cow:, params:)
+        @cow = cow
+        @params = params
+      end
+
+      def call
+        ActiveRecord::Base.transaction do
+          validate!
+          event = create_event
+          apply!(event)
+          event
+        end
+      end
+
+      private
+
+      attr_reader :cow, :params
+
+      def create_event
+        Event.create!(
+          cow: cow,
+          tenant: cow.tenant,
+          event_type: event_type,
+          occurred_at: occurred_at,
+          data: data
+        )
+      end
+
+      def occurred_at
+        params[:occurred_at].presence || Time.current
+      end
+
+      def validate!; end
+      def apply!(_event); end
+      def data
+        {}
+      end
+      def event_type
+        raise NotImplementedError
+      end
+    end
+end
