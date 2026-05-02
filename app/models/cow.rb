@@ -1,5 +1,6 @@
 class Cow < ApplicationRecord
   belongs_to :tenant
+  has_many :events, dependent: :destroy
 
   enum :phase, {
     calf: "calf",

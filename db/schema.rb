@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_30_055029) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_02_121012) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -44,7 +44,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_30_055029) do
     t.index ["tenant_id", "ear_tag"], name: "index_bulls_on_tenant_id_and_ear_tag", unique: true, where: "(ear_tag IS NOT NULL)"
     t.index ["tenant_id", "name"], name: "index_bulls_on_tenant_id_and_name"
     t.index ["tenant_id"], name: "index_bulls_on_tenant_id"
-    t.check_constraint "origin::text = ANY (ARRAY['local'::character varying, 'company'::character varying]::text[])", name: "bulls_origin_check"
+    t.check_constraint "origin::text = ANY (ARRAY['local'::character varying::text, 'company'::character varying::text])", name: "bulls_origin_check"
   end
 
   create_table "companies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -69,6 +69,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_30_055029) do
     t.decimal "weight", precision: 10, scale: 2, null: false
     t.index ["tenant_id", "ear_tag"], name: "index_cows_on_tenant_id_and_ear_tag", unique: true
     t.index ["tenant_id"], name: "index_cows_on_tenant_id"
+  end
+
+  create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "cow_id", null: false
+    t.datetime "created_at", null: false
+    t.jsonb "data", default: {}, null: false
+    t.string "event_type", null: false
+    t.datetime "occurred_at", null: false
+    t.uuid "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cow_id"], name: "index_events_on_cow_id"
+    t.index ["tenant_id"], name: "index_events_on_tenant_id"
   end
 
   create_table "tenants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -104,5 +116,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_30_055029) do
   add_foreign_key "bulls", "tenants"
   add_foreign_key "companies", "tenants"
   add_foreign_key "cows", "tenants"
+  add_foreign_key "events", "cows"
+  add_foreign_key "events", "tenants"
   add_foreign_key "users", "tenants"
 end
