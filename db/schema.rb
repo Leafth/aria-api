@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_23_112054) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_30_055029) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -56,6 +56,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_23_112054) do
     t.index ["tenant_id"], name: "index_companies_on_tenant_id"
   end
 
+  create_table "cows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.date "birth_date", null: false
+    t.string "breed", null: false
+    t.datetime "created_at", null: false
+    t.string "ear_tag", null: false
+    t.string "name", null: false
+    t.string "phase", null: false
+    t.uuid "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "weight", precision: 10, scale: 2, null: false
+    t.index ["tenant_id", "ear_tag"], name: "index_cows_on_tenant_id_and_ear_tag", unique: true
+    t.index ["tenant_id"], name: "index_cows_on_tenant_id"
+  end
+
   create_table "tenants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
@@ -88,5 +103,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_23_112054) do
   add_foreign_key "bulls", "companies"
   add_foreign_key "bulls", "tenants"
   add_foreign_key "companies", "tenants"
+  add_foreign_key "cows", "tenants"
   add_foreign_key "users", "tenants"
 end
