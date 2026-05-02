@@ -1,0 +1,32 @@
+module Api
+  module V1
+    class EventsController < BaseController
+      include CurrentTenant
+      include AuthenticateRequest
+
+      def create
+        cow = current_tenant.cows.find(params[:cow_id])
+
+        event = build_event(cow).call
+
+        render json: event, status: :created
+      end
+
+      private
+
+      def build_event(cow)
+        event_params = params.require(:event).permit(:event_type, data: {})
+
+        case event_params[:event_type]
+        when "inactivation"
+          Events::Inactivation.new(cow: cow, params: event_params)
+        else
+          event = Event.new
+          event.errors.add(:event_type, "is not supported")
+
+          raise ActiveRecord::RecordInvalid.new(event)
+        end
+      end
+    end
+  end
+end
