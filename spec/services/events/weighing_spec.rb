@@ -75,5 +75,21 @@ RSpec.describe Events::Weighing do
 
       expect(cow.reload.weight).to eq(200)
     end
+
+    it "é inválido se a cow estiver inativa" do
+      cow.update!(active: false)
+
+      params = {
+        event_type: "weighing",
+        occurred_at: "2026-05-05",
+        data: { weight: 200 }
+      }
+
+      expect {
+        described_class.new(cow: cow, params: params).call
+      }.to raise_error(ActiveRecord::RecordInvalid)
+
+      expect(cow.reload.weight).to eq(180)
+    end
   end
 end

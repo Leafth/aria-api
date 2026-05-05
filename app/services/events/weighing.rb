@@ -19,6 +19,8 @@ module Events
     end
 
     def validate!
+      raise invalid!("cow is inactive") unless cow.active?
+
       weight = data[:weight]
 
       raise invalid!("weight is required") if weight.blank?
