@@ -17,4 +17,17 @@ class Cow < ApplicationRecord
   validates :weight, presence: true, numericality: { greater_than: 0 }
   validates :phase, presence: true
   validates :active, inclusion: { in: [ true, false ] }
+
+  def weight_from_history
+    last_weighing = events
+      .where(event_type: "weighing")
+      .order(occurred_at: :desc, created_at: :desc)
+      .first
+
+    last_weighing&.data&.dig("weight")&.to_f || weight
+  end
+
+  def recalculate_weight!
+    update!(weight: weight_from_history)
+  end
 end
