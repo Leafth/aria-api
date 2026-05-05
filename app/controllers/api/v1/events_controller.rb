@@ -15,7 +15,7 @@ module Api
       private
 
       def build_event(cow)
-        event_params = params.require(:event).permit(:event_type, data: {})
+        event_params = params.require(:event).permit(:event_type, :occurred_at, data: {})
 
         case event_params[:event_type]
         when "inactivation"
