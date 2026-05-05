@@ -20,6 +20,8 @@ module Api
         case event_params[:event_type]
         when "inactivation"
           Events::Inactivation.new(cow: cow, params: event_params)
+        when "weighing"
+          Events::Weighing.new(cow: cow, params: event_params)
         else
           event = Event.new
           event.errors.add(:event_type, "is not supported")
