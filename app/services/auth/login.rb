@@ -10,7 +10,7 @@ module Auth
 
     def call
       user = tenant.users.find_by(email: email)
-      raise Error, I18n.t!("auth.errors.invalid_tenant") unless tenant
+      raise Error, I18n.t!("tenant.errors.invalid_tenant") unless tenant
 
       raise Error, I18n.t!("auth.errors.invalid_credentials") unless user
       raise Error, I18n.t!("auth.errors.inactive_user") unless user.active?

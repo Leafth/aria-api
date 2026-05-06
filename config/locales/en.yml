@@ -1,7 +1,6 @@
 en:
   auth:
     errors:
-      invalid_tenant: "Invalid tenant"
       invalid_credentials: "Invalid credentials"
       inactive_user: "Inactive user"
 
@@ -15,3 +14,10 @@ en:
       session_not_found: "Session not found"
       revoked_session: "Session has been revoked"
       expired_session: "Session has expired"
+
+  tenant:
+    errors:
+      invalid_tenant: "Invalid tenant"
+      missing_tenant: "Tenant not informed"
+      tenant_not_found: "Tenant not found"
+      inactive_tenant: "Inactive tenant"

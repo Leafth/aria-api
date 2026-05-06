@@ -46,7 +46,7 @@ module AuthenticateRequest
     raise Auth::Error, I18n.t!("auth.errors.session_not_found") unless session
     raise Auth::Error, I18n.t!("auth.errors.revoked_session") if session.revoked?
     raise Auth::Error, I18n.t!("auth.errors.expired_session")  if session.expired?
-    raise Auth::Error, I18n.t!("auth.errors.invalid_tenant") unless session.tenant_id == current_tenant.id
+    raise Auth::Error, I18n.t!("tenant.errors.invalid_tenant") unless session.tenant_id == current_tenant.id
 
     session
   end
