@@ -31,21 +31,15 @@ module Api
       end
 
       def create
-        bull = current_tenant.bulls.new(bull_params)
+        bull = current_tenant.bulls.create!(bull_params)
 
-        if bull.save
-          render json: bull, status: :created
-        else
-          render json: { errors: bull.errors.full_messages }, status: :unprocessable_entity
-        end
+        render json: bull, status: :created
       end
 
       def update
-        if @bull.update(bull_params)
-          render json: @bull
-        else
-          render json: { errors: @bull.errors.full_messages }, status: :unprocessable_entity
-        end
+        @bull.update!(bull_params)
+
+        render json: @bull, status: :ok
       end
 
       def destroy
