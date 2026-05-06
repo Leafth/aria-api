@@ -19,7 +19,8 @@ module CurrentTenant
     slug = request.headers["X-Tenant-Slug"].to_s.strip.downcase
     raise ActiveRecord::RecordNotFound, "Tenant não informado" if slug.blank?
 
-    tenant = Tenant.find_by!(slug: slug)
+    tenant = Tenant.find_by(slug: slug)
+    raise ActiveRecord::RecordNotFound, "Tenant não existe" unless tenant
     raise ActiveRecord::RecordNotFound, "Tenant inativo" unless tenant.active?
 
     tenant
