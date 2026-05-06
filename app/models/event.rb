@@ -3,8 +3,9 @@ class Event < ApplicationRecord
   belongs_to :tenant
 
   EVENT_TYPES = %w[
-    weighing
     inactivation
+    weighing
+    phase_change
   ].freeze
 
   validates :event_type, presence: true, inclusion: { in: EVENT_TYPES }
