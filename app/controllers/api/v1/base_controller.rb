@@ -5,8 +5,6 @@ module Api
       rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity
       rescue_from Auth::Error, with: :render_auth_error
 
-      rescue_from ArgumentError, with: :handle_invalid_enum
-
       private
 
       def render_not_found(error)
@@ -23,14 +21,6 @@ module Api
 
       def render_auth_error(error)
         render json: { errors: { base: [ error.message ] } }, status: :unauthorized
-      end
-
-      def handle_invalid_enum(error)
-        if error.message.include?("is not a valid")
-          render json: { errors: { phase: [ "Invalid value" ] } }, status: :unprocessable_entity
-        else
-          raise error
-        end
       end
     end
   end
