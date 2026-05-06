@@ -22,6 +22,8 @@ module Api
           Events::Inactivation.new(cow: cow, params: event_params)
         when "weighing"
           Events::Weighing.new(cow: cow, params: event_params)
+        when "phase_change"
+          Events::PhaseChange.new(cow: cow, params: event_params)
         else
           event = Event.new
           event.errors.add(:event_type, "is not supported")
