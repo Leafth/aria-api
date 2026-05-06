@@ -10,7 +10,7 @@ module Auth
         refresh_token_digest: Auth::RefreshToken.digest(refresh_token)
       )
 
-      raise Error, "Sessão não encontrada" unless session
+      raise Error, I18n.t!("auth.errors.session_not_found") unless session
 
       session.revoke!
       true

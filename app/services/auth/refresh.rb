@@ -6,18 +6,18 @@ module Auth
     end
 
     def call
-      raise Error, "Refresh token ausente" if refresh_token.blank?
+      raise Error, I18n.t!("auth.errors.missing_refresh_token") if refresh_token.blank?
 
       session = tenant.auth_sessions.find_by(
         refresh_token_digest: Auth::RefreshToken.digest(refresh_token)
       )
 
-      raise Error, "Refresh token inválido" unless session
-      raise Error, "Sessão revogada" if session.revoked?
-      raise Error, "Sessão expirada" if session.expired?
+      raise Error, I18n.t!("auth.errors.invalid_refresh_token") unless session
+      raise Error, I18n.t!("auth.errors.revoked_session") if session.revoked?
+      raise Error, I18n.t!("auth.errors.expired_session")  if session.expired?
 
       user = session.user
-      raise Error, "Usuário inativo" unless user.active?
+      raise Error,  I18n.t!("auth.errors.inactive_user") unless user.active?
 
       new_refresh_token = Auth::RefreshToken.generate_token
 

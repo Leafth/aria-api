@@ -10,11 +10,11 @@ module Auth
 
     def call
       user = tenant.users.find_by(email: email)
-      raise Error, "Tenant inválido" unless tenant
+      raise Error, I18n.t!("auth.errors.invalid_tenant") unless tenant
 
-      raise Error, "Credenciais inválidas" unless user
-      raise Error, "Usuário inativo" unless user.active?
-      raise Error, "Credenciais inválidas" unless user.valid_password?(password)
+      raise Error, I18n.t!("auth.errors.invalid_credentials") unless user
+      raise Error, I18n.t!("auth.errors.inactive_user") unless user.active?
+      raise Error, I18n.t!("auth.errors.invalid_credentials") unless user.valid_password?(password)
 
       refresh_token = Auth::RefreshToken.generate_token
 
