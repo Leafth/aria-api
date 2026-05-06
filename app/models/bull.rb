@@ -5,7 +5,7 @@ class Bull < ApplicationRecord
   enum :origin, {
     local: "local",
     company: "company"
-  }
+  }, validate: { message: "invalid origin" }
 
   validates :name, presence: true
   validates :breed, presence: true
