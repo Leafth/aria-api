@@ -6,6 +6,8 @@ module Auth
     end
 
     def call
+      raise Error, "Refresh token ausente" if refresh_token.blank?
+
       session = tenant.auth_sessions.find_by(
         refresh_token_digest: Auth::RefreshToken.digest(refresh_token)
       )
