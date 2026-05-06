@@ -3,6 +3,7 @@ module Api
     class BaseController < ApplicationController
       rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
       rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity
+      rescue_from ActionDispatch::Http::Parameters::ParseError, with: :bad_request
       rescue_from Auth::Error, with: :render_auth_error
 
       private
