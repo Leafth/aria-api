@@ -21,7 +21,7 @@ module AuthenticateRequest
   end
 
   def access_token
-    header = request.headers["Authorization"] 
+    header = request.headers["Authorization"]
     return header.split(" ").last if header.present?
 
     cookies[:access_token]
