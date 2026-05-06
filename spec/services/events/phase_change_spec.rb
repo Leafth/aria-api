@@ -29,6 +29,7 @@ RSpec.describe Events::PhaseChange do
       expect(event).to be_persisted
       expect(event.event_type).to eq("phase_change")
       expect(event.data["phase"]).to eq("heifer")
+      expect(event.data["previous_phase"]).to eq("calf")
       expect(cow.reload.phase).to eq("heifer")
     end
 
