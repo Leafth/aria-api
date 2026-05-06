@@ -1,7 +1,5 @@
 module Auth
   class Refresh
-    class Error < StandardError; end
-
     def initialize(tenant:, refresh_token:)
       @tenant = tenant
       @refresh_token = refresh_token

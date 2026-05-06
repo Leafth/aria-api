@@ -1,7 +1,5 @@
 module Auth
   class Login
-    class Error < StandardError; end
-
     def initialize(tenant:, email:, password:, ip_address:, user_agent:)
       @tenant = tenant
       @email = email.to_s.strip.downcase
