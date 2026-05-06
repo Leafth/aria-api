@@ -4,8 +4,14 @@ en:
       invalid_tenant: "Invalid tenant"
       invalid_credentials: "Invalid credentials"
       inactive_user: "Inactive user"
-      session_not_found: "Session not found"
+
       missing_refresh_token: "Refresh token is missing"
       invalid_refresh_token: "Invalid refresh token"
+
+      missing_access_token: "Access token is missing"
+      invalid_access_token: "Invalid access token"
+      expired_access_token: "Access token has expired"
+
+      session_not_found: "Session not found"
       revoked_session: "Session has been revoked"
       expired_session: "Session has expired"

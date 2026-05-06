@@ -1,5 +1,3 @@
-class AuthenticationError < StandardError; end
-
 module AuthenticateRequest
   extend ActiveSupport::Concern
 
@@ -14,7 +12,7 @@ module AuthenticateRequest
     session = find_session!(payload)
     user = session.user
 
-    raise Auth::Error, "Usuário inativo" unless user.active?
+    raise Auth::Error, I18n.t!("auth.errors.inactive_user") unless user.active?
 
     @current_user = user
     @current_session = session
@@ -29,26 +27,26 @@ module AuthenticateRequest
 
   def decode_token!
     token = access_token
-    raise Auth::Error, "Token ausente" if token.blank?
+    raise Auth::Error, I18n.t!("auth.errors.missing_access_token") if token.blank?
 
     payload = Auth::AccessToken.decode(token)
 
-    raise Auth::Error, "Token expirado" if payload["exp"].blank?
-    raise Auth::Error, "Token expirado" if payload["exp"] < Time.current.to_i
+    raise Auth::Error, I18n.t!("auth.errors.expired_access_token") if payload["exp"].blank?
+    raise Auth::Error, I18n.t!("auth.errors.expired_access_token") if payload["exp"] < Time.current.to_i
 
     payload
 
   rescue JWT::DecodeError
-    raise Auth::Error, "Token inválido"
+    raise Auth::Error, I18n.t!("auth.errors.invalid_access_token")
   end
 
   def find_session!(payload)
     session = AuthSession.find_by(id: payload["session_id"])
 
-    raise Auth::Error, "Sessão não encontrada" unless session
-    raise Auth::Error, "Sessão revogada" if session.revoked?
-    raise Auth::Error, "Sessão expirada" if session.expired?
-    raise Auth::Error, "Tenant inválido" unless session.tenant_id == current_tenant.id
+    raise Auth::Error, I18n.t!("auth.errors.session_not_found") unless session
+    raise Auth::Error, I18n.t!("auth.errors.revoked_session") if session.revoked?
+    raise Auth::Error, I18n.t!("auth.errors.expired_session")  if session.expired?
+    raise Auth::Error, I18n.t!("auth.errors.invalid_tenant") unless session.tenant_id == current_tenant.id
 
     session
   end
