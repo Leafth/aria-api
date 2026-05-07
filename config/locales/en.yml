@@ -23,5 +23,9 @@ en:
       inactive_tenant: "Inactive tenant"
 
   cows:
-      errors:
-        forbidden_fields: "Some fields cannot be updated here"
+    errors:
+      forbidden_fields: "Some fields cannot be updated here"
+
+  events:
+    errors:
+      unsupported_event_type: "Is not supported"
