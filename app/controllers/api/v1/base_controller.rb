@@ -13,7 +13,7 @@ module Api
       end
 
       def render_unprocessable_entity(error)
-        render json: { errors: error.record.errors }, status: :unprocessable_entity
+        render json: { errors: error.record.errors.to_hash(true) }, status: :unprocessable_entity
       end
 
       def bad_request(error)
