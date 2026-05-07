@@ -18,6 +18,16 @@ class Cow < ApplicationRecord
   validates :phase, presence: true
   validates :active, inclusion: { in: [ true, false ] }
 
+  validate :birth_date_cannot_be_in_future
+
+  def birth_date_cannot_be_in_future
+    return unless birth_date.present?
+
+    if birth_date > Time.current
+      errors.add(:birth_date, :future_date)
+    end
+  end
+
   def weight_from_history
     last_weighing = events
       .where(event_type: "weighing")

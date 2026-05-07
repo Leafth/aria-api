@@ -56,6 +56,8 @@ en:
           attributes:
             phase:
               invalid_phase: "is invalid"
+            birth_date:
+              future_date: "cannot be in the future"
 
         event:
           attributes:
