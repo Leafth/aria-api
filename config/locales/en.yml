@@ -29,3 +29,11 @@ en:
   events:
     errors:
       unsupported_event_type: "Is not supported"
+
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            password:
+              invalid_format: "Has invalid format: minimum 8 characters, with letters, numbers, and only ! @ # $ % &"
