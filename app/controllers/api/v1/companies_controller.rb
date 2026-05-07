@@ -16,25 +16,28 @@ module Api
         companies = paginate(companies)
 
         render json: {
-          data: companies,
+          data: ActiveModelSerializers::SerializableResource.new(
+            companies,
+            each_serializer: CompanySerializer
+          ),
           meta: pagination_meta(companies)
         }, status: :ok
       end
 
       def show
-        render json: @company, status: :ok
+        render json: @company, serializer: CompanySerializer, status: :ok
       end
 
       def create
         company = current_tenant.companies.create!(company_params)
 
-        render json: company, status: :created
+        render json: company, serializer: CompanySerializer, status: :created
       end
 
       def update
         @company.update!(company_params)
 
-        render json: @company, status: :ok
+        render json: @company, serializer: CompanySerializer, status: :ok
       end
 
       def destroy
