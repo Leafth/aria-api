@@ -47,3 +47,8 @@ en:
               company_required: "must be associated for company bulls"
             ear_tag:
               company_with_ear_tag: "must not exist for company bulls"
+
+        cow:
+          attributes:
+            phase:
+              invalid_phase: "is invalid"
