@@ -14,13 +14,7 @@ module Api
         bulls = apply_sort(bulls)
         bulls = paginate(bulls)
 
-        render json: {
-          data: ActiveModelSerializers::SerializableResource.new(
-            bulls,
-            each_serializer: BullSerializer
-          ),
-          meta: pagination_meta(bulls)
-        }
+        render_paginated bulls, serializer: BullSerializer
       end
 
       def show
@@ -88,16 +82,6 @@ module Api
         per_page = params[:per_page].to_i > 0 ? params[:per_page].to_i : 10
 
         scope.page(page).per(per_page)
-      end
-
-      def pagination_meta(scope)
-        {
-          current_page: scope.current_page,
-          next_page: scope.next_page,
-          prev_page: scope.prev_page,
-          total_pages: scope.total_pages,
-          total_count: scope.total_count
-        }
       end
     end
   end

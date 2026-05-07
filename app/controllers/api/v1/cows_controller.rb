@@ -14,13 +14,7 @@ module Api
         cows = apply_sort(cows)
         cows = paginate(cows)
 
-        render json: {
-          data: ActiveModelSerializers::SerializableResource.new(
-            cows,
-            each_serializer: CowSerializer
-          ),
-          meta: pagination_meta(cows)
-        }, status: :ok
+        render_paginated cows, serializer: CowSerializer
       end
 
       def show
@@ -110,16 +104,6 @@ module Api
         per_page = params[:per_page].to_i > 0 ? params[:per_page].to_i : 10
 
         scope.page(page).per(per_page)
-      end
-
-      def pagination_meta(scope)
-        {
-          current_page: scope.current_page,
-          next_page: scope.next_page,
-          prev_page: scope.prev_page,
-          total_pages: scope.total_pages,
-          total_count: scope.total_count
-        }
       end
 
       def forbidden_params_present?
