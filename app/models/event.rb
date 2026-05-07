@@ -19,7 +19,7 @@ class Event < ApplicationRecord
     return unless occurred_at.present?
 
     if occurred_at > Time.current
-      errors.add(:occurred_at, "cannot be in the future")
+      errors.add(:occurred_at, :future_date)
     end
   end
 end

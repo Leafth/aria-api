@@ -31,6 +31,10 @@ en:
       unsupported_event_type: "Is not supported"
 
   activerecord:
+    attributes:
+      event:
+        occurred_at: "Event date"
+
     errors:
       models:
         user:
@@ -52,3 +56,8 @@ en:
           attributes:
             phase:
               invalid_phase: "is invalid"
+
+        event:
+          attributes:
+            occurred_at:
+              future_date: "cannot be in the future"
