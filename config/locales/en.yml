@@ -37,3 +37,13 @@ en:
           attributes:
             password:
               invalid_format: "Has invalid format: minimum 8 characters, with letters, numbers, and only ! @ # $ % &"
+
+        bull:
+          attributes:
+            origin:
+              invalid_origin: "is invalid"
+            company:
+              local_with_company: "must not be associated with local bulls"
+              company_required: "must be associated for company bulls"
+            ear_tag:
+              company_with_ear_tag: "must not exist for company bulls"
