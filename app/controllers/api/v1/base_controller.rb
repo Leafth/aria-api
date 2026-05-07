@@ -4,6 +4,7 @@ module Api
       rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
       rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity
       rescue_from ActionDispatch::Http::Parameters::ParseError, with: :bad_request
+      rescue_from ActionController::ParameterMissing, with: :bad_request
       rescue_from Auth::Error, with: :render_auth_error
 
       private
@@ -17,7 +18,7 @@ module Api
       end
 
       def bad_request(error)
-        render json: { errors: { base: [ error.message ] } }, status: :bad_request
+        render json: { errors: { base: [ error.message.capitalize  ] } }, status: :bad_request
       end
 
       def render_auth_error(error)
