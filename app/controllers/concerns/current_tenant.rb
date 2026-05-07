@@ -17,10 +17,11 @@ module CurrentTenant
 
   def resolve_current_tenant
     slug = request.headers["X-Tenant-Slug"].to_s.strip.downcase
-    raise ActiveRecord::RecordNotFound, "Tenant não informado" if slug.blank?
+    raise ActiveRecord::RecordNotFound, I18n.t!("tenant.errors.missing_tenant") if slug.blank?
 
-    tenant = Tenant.find_by!(slug: slug)
-    raise ActiveRecord::RecordNotFound, "Tenant inativo" unless tenant.active?
+    tenant = Tenant.find_by(slug: slug)
+    raise ActiveRecord::RecordNotFound, I18n.t!("tenant.errors.tenant_not_found") unless tenant
+    raise ActiveRecord::RecordNotFound, I18n.t!("tenant.errors.inactive_tenant") unless tenant.active?
 
     tenant
   end

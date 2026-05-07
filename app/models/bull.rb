@@ -5,7 +5,7 @@ class Bull < ApplicationRecord
   enum :origin, {
     local: "local",
     company: "company"
-  }
+  }, validate: { message: :invalid_origin }
 
   validates :name, presence: true
   validates :breed, presence: true
@@ -19,12 +19,12 @@ class Bull < ApplicationRecord
 
   def origin_rules
     if local?
-      errors.add(:company, "Touros locais não devem estar associados a uma empresa") if company_id.present?
+      errors.add(:company, :local_with_company) if company_id.present?
     end
 
     if company?
-      errors.add(:company, "para touros de empresa devem obrigatoriamente estar associados") if company_id.blank?
-      errors.add(:ear_tag, "não deve existir para touros de empresa") if ear_tag.present?
+      errors.add(:company, :company_required) if company_id.blank?
+      errors.add(:ear_tag, :company_with_ear_tag) if ear_tag.present?
     end
   end
 end

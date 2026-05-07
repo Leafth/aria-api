@@ -3,8 +3,6 @@ module Api
     class AuthController < BaseController
       include CurrentTenant
 
-      rescue_from Auth::Login::Error, with: :render_auth_error
-
       def login
         result = Auth::Login.new(
           tenant: current_tenant,
@@ -97,10 +95,6 @@ module Api
       def clear_auth_cookies
         cookies.delete(:refresh_token)
         cookies.delete(:access_token)
-      end
-
-      def render_auth_error(error)
-        render json: { error: error.message }, status: :unauthorized
       end
     end
   end

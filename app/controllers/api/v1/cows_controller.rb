@@ -25,27 +25,21 @@ module Api
       end
 
       def create
-        cow = current_tenant.cows.new(cow_params)
+        cow = current_tenant.cows.create!(cow_params)
 
-        if cow.save
-          render json: cow, status: :created
-        else
-          render json: { errors: cow.errors }, status: :unprocessable_entity
-        end
+        render json: cow, status: :created
       end
 
       def update
         if forbidden_params_present?
           return render json: {
-            errors: { forbidden_fields: [ "Some fields cannot be updated here" ] }
+            errors: { forbidden_fields: [ I18n.t!("cows.errors.forbidden_fields") ] }
           }, status: :unprocessable_entity
         end
 
-        if @cow.update(update_cow_params)
-          render json: @cow
-        else
-          render json: { errors: @cow.errors }, status: :unprocessable_entity
-        end
+        @cow.update!(update_cow_params)
+
+        render json: @cow, status: :ok
       end
 
       private

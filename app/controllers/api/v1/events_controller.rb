@@ -26,7 +26,7 @@ module Api
           Events::PhaseChange.new(cow: cow, params: event_params)
         else
           event = Event.new
-          event.errors.add(:event_type, "is not supported")
+          event.errors.add(:event_type, I18n.t!("events.errors.unsupported_event_type"))
 
           raise ActiveRecord::RecordInvalid.new(event)
         end

@@ -26,26 +26,20 @@ module Api
       end
 
       def create
-        company = current_tenant.companies.new(company_params)
+        company = current_tenant.companies.create!(company_params)
 
-        if company.save
-          render json: company, status: :created
-        else
-          render json: { errors: company.errors.full_messages }, status: :unprocessable_entity
-        end
+        render json: company, status: :created
       end
 
       def update
-        if @company.update(company_params)
-          render json: @company, status: :ok
-        else
-          render json: { errors: @company.errors.full_messages }, status: :unprocessable_entity
-        end
+        @company.update!(company_params)
+
+        render json: @company, status: :ok
       end
 
       def destroy
         @company.destroy
-        render json: {}, status: :no_content
+        head :no_content
       end
 
       private

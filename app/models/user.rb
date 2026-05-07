@@ -28,8 +28,7 @@ class User < ApplicationRecord
     regex = /\A(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%&]+\z/
 
     unless password.match?(regex) && password.length >= 8
-      errors.add :password,
-                 "Senha com formato inválido: mínimo 8 caracteres, com letras, números e apenas ! @ # $ % &"
+      errors.add(:password, :invalid_format)
     end
   end
 end

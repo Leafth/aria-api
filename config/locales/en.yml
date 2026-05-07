@@ -1,2 +1,63 @@
 en:
-  hello: "Hello world"
+  auth:
+    errors:
+      invalid_credentials: "Invalid credentials"
+      inactive_user: "Inactive user"
+
+      missing_refresh_token: "Refresh token is missing"
+      invalid_refresh_token: "Invalid refresh token"
+
+      missing_access_token: "Access token is missing"
+      invalid_access_token: "Invalid access token"
+      expired_access_token: "Access token has expired"
+
+      session_not_found: "Session not found"
+      revoked_session: "Session has been revoked"
+      expired_session: "Session has expired"
+
+  tenant:
+    errors:
+      invalid_tenant: "Invalid tenant"
+      missing_tenant: "Tenant not informed"
+      tenant_not_found: "Tenant not found"
+      inactive_tenant: "Inactive tenant"
+
+  cows:
+    errors:
+      forbidden_fields: "Some fields cannot be updated here"
+
+  events:
+    errors:
+      unsupported_event_type: "is not supported"
+
+  activerecord:
+    attributes:
+      event:
+        occurred_at: "Event date"
+
+    errors:
+      models:
+        user:
+          attributes:
+            password:
+              invalid_format: "has invalid format: minimum 8 characters, with letters, numbers, and only ! @ # $ % &"
+
+        bull:
+          attributes:
+            origin:
+              invalid_origin: "is invalid"
+            company:
+              local_with_company: "must not be associated with local bulls"
+              company_required: "must be associated when the bull origin is company"
+            ear_tag:
+              company_with_ear_tag: "must not exist for company bulls"
+
+        cow:
+          attributes:
+            phase:
+              invalid_phase: "is invalid"
+
+        event:
+          attributes:
+            occurred_at:
+              future_date: "cannot be in the future"

@@ -8,7 +8,7 @@ class Cow < ApplicationRecord
     young: "young",
     primiparous: "primiparous",
     multiparous: "multiparous"
-  }, _validate: true
+  }, validate: { message: :invalid_phase }
 
   validates :name, presence: true
   validates :ear_tag, presence: true, uniqueness: { scope: :tenant_id }

@@ -1,6 +1,6 @@
 module Auth
   class AccessToken
-      ALGORITHM = "HS256".freeze
+    ALGORITHM = "HS256".freeze
 
     def self.encode(user:, tenant:, session:)
       payload = {
