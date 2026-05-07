@@ -4,6 +4,7 @@ module Api
       rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
       rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity
       rescue_from ActiveRecord::RecordNotDestroyed, with: :render_record_not_destroyed
+      rescue_from ActiveRecord::InvalidForeignKey, with: :render_invalid_foreign_key
       rescue_from ActionDispatch::Http::Parameters::ParseError, with: :bad_request
       rescue_from ActionController::ParameterMissing, with: :bad_request
       rescue_from Auth::Error, with: :render_auth_error
@@ -40,6 +41,10 @@ module Api
 
       def render_record_not_destroyed(error)
         render json: { errors: error.record.errors.to_hash(true) }, status: :unprocessable_entity
+      end
+
+      def render_invalid_foreign_key(_error)
+        render json: { errors: { base: [ I18n.t("errors.messages.invalid_foreign_key") ] } }, status: :unprocessable_entity
       end
 
       def bad_request(error)
