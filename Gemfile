@@ -60,3 +60,5 @@ gem "jwt", "~> 3.1"
 gem "mcp", ">= 0.9.2"
 
 gem "kaminari", "~> 1.2"
+
+gem "active_model_serializers", "~> 0.10.16"

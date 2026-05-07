@@ -14,20 +14,17 @@ module Api
         cows = apply_sort(cows)
         cows = paginate(cows)
 
-        render json: {
-          data: cows,
-          meta: pagination_meta(cows)
-        }, status: :ok
+        render_paginated cows, serializer: CowSerializer
       end
 
       def show
-        render json: @cow, status: :ok
+        render json: @cow, serializer: CowSerializer, status: :ok
       end
 
       def create
         cow = current_tenant.cows.create!(cow_params)
 
-        render json: cow, status: :created
+        render json: cow, serializer: CowSerializer, status: :created
       end
 
       def update
@@ -39,7 +36,7 @@ module Api
 
         @cow.update!(update_cow_params)
 
-        render json: @cow, status: :ok
+        render json: @cow, serializer: CowSerializer, status: :ok
       end
 
       private
@@ -107,16 +104,6 @@ module Api
         per_page = params[:per_page].to_i > 0 ? params[:per_page].to_i : 10
 
         scope.page(page).per(per_page)
-      end
-
-      def pagination_meta(scope)
-        {
-          current_page: scope.current_page,
-          next_page: scope.next_page,
-          prev_page: scope.prev_page,
-          total_pages: scope.total_pages,
-          total_count: scope.total_count
-        }
       end
 
       def forbidden_params_present?

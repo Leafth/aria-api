@@ -14,32 +14,23 @@ module Api
         bulls = apply_sort(bulls)
         bulls = paginate(bulls)
 
-        render json: {
-          data: bulls.as_json(
-            only: [ :id, :name, :breed, :origin, :ear_tag, :company_id ],
-            include: { company: { only: [ :id, :name ] } }
-          ),
-          meta: pagination_meta(bulls)
-        }
+        render_paginated bulls, serializer: BullSerializer
       end
 
       def show
-        render json: @bull.as_json(
-          only: [ :id, :name, :breed, :origin, :ear_tag, :company_id ],
-          include: { company: { only: [ :id, :name ] } }
-        )
+        render json: @bull, serializer: BullSerializer, status: :ok
       end
 
       def create
         bull = current_tenant.bulls.create!(bull_params)
 
-        render json: bull, status: :created
+        render json: bull, serializer: BullSerializer, status: :created
       end
 
       def update
         @bull.update!(bull_params)
 
-        render json: @bull, status: :ok
+        render json: @bull, serializer: BullSerializer, status: :ok
       end
 
       def destroy
@@ -91,16 +82,6 @@ module Api
         per_page = params[:per_page].to_i > 0 ? params[:per_page].to_i : 10
 
         scope.page(page).per(per_page)
-      end
-
-      def pagination_meta(scope)
-        {
-          current_page: scope.current_page,
-          next_page: scope.next_page,
-          prev_page: scope.prev_page,
-          total_pages: scope.total_pages,
-          total_count: scope.total_count
-        }
       end
     end
   end
