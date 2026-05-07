@@ -15,31 +15,28 @@ module Api
         bulls = paginate(bulls)
 
         render json: {
-          data: bulls.as_json(
-            only: [ :id, :name, :breed, :origin, :ear_tag, :company_id ],
-            include: { company: { only: [ :id, :name ] } }
+          data: ActiveModelSerializers::SerializableResource.new(
+            bulls,
+            each_serializer: BullSerializer
           ),
           meta: pagination_meta(bulls)
         }
       end
 
       def show
-        render json: @bull.as_json(
-          only: [ :id, :name, :breed, :origin, :ear_tag, :company_id ],
-          include: { company: { only: [ :id, :name ] } }
-        )
+        render json: @bull, serializer: BullSerializer, status: :ok
       end
 
       def create
         bull = current_tenant.bulls.create!(bull_params)
 
-        render json: bull, status: :created
+        render json: bull, serializer: BullSerializer, status: :created
       end
 
       def update
         @bull.update!(bull_params)
 
-        render json: @bull, status: :ok
+        render json: @bull, serializer: BullSerializer, status: :ok
       end
 
       def destroy
