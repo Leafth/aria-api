@@ -15,19 +15,22 @@ module Api
         cows = paginate(cows)
 
         render json: {
-          data: cows,
+          data: ActiveModelSerializers::SerializableResource.new(
+            cows,
+            each_serializer: CowSerializer
+          ),
           meta: pagination_meta(cows)
         }, status: :ok
       end
 
       def show
-        render json: @cow, status: :ok
+        render json: @cow, serializer: CowSerializer, status: :ok
       end
 
       def create
         cow = current_tenant.cows.create!(cow_params)
 
-        render json: cow, status: :created
+        render json: cow, serializer: CowSerializer, status: :created
       end
 
       def update
@@ -39,7 +42,7 @@ module Api
 
         @cow.update!(update_cow_params)
 
-        render json: @cow, status: :ok
+        render json: @cow, serializer: CowSerializer, status: :ok
       end
 
       private
