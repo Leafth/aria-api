@@ -35,8 +35,9 @@ module Api
       end
 
       def destroy
-        @company.destroy
-        head :no_content
+        if @company.destroy!
+          head :no_content
+        end
       end
 
       private
