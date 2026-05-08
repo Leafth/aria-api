@@ -40,6 +40,16 @@ module Events
       raise invalid!("current phase cannot be changed manually") if LOCKED_PHASES_TO_CHANGE.include?(cow.phase)
       raise invalid!("phase cannot be changed manually") unless VALID_PHASES_TO_CHANGE.include?(phase)
       raise invalid!("phase already is #{phase}") if cow.phase == phase
+      raise invalid!("phase cannot go backwards") if phase_goes_backwards?(phase)
+    end
+
+    def phase_goes_backwards?(new_phase)
+      current_index = VALID_PHASES_TO_CHANGE.index(cow.phase)
+      new_index = VALID_PHASES_TO_CHANGE.index(new_phase)
+
+      return false if current_index.nil?
+
+      new_index < current_index
     end
 
     def invalid!(message)

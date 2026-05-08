@@ -18,7 +18,7 @@ RSpec.describe Events::PhaseChange do
   end
 
   describe "#call" do
-    it "cria evento de mudança de fase" do
+    it "cria evento e permite mudar de calf para heifer" do
       params = {
         event_type: "phase_change",
         data: { phase: "heifer" }
@@ -31,6 +31,38 @@ RSpec.describe Events::PhaseChange do
       expect(event.data["phase"]).to eq("heifer")
       expect(event.data["previous_phase"]).to eq("calf")
       expect(cow.reload.phase).to eq("heifer")
+    end
+
+    it "cria evento e permite mudar de calf para young" do
+      params = {
+        event_type: "phase_change",
+        data: { phase: "young" }
+      }
+
+      event = described_class.new(cow: cow, params: params).call
+
+      expect(event).to be_persisted
+      expect(event.event_type).to eq("phase_change")
+      expect(event.data["phase"]).to eq("young")
+      expect(event.data["previous_phase"]).to eq("calf")
+      expect(cow.reload.phase).to eq("young")
+    end
+
+    it "cria evento e permite mudar de heifer para young" do
+      cow.update!(phase: "heifer")
+
+      params = {
+        event_type: "phase_change",
+        data: { phase: "young" }
+      }
+
+      event = described_class.new(cow: cow, params: params).call
+
+      expect(event).to be_persisted
+      expect(event.event_type).to eq("phase_change")
+      expect(event.data["phase"]).to eq("young")
+      expect(event.data["previous_phase"]).to eq("heifer")
+      expect(cow.reload.phase).to eq("young")
     end
 
     it "é inválido sem fase" do
@@ -68,6 +100,51 @@ RSpec.describe Events::PhaseChange do
       expect {
         described_class.new(cow: cow, params: params).call
       }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it "é inválido se tentar voltar de heifer para calf" do
+      cow.update!(phase: "heifer")
+
+      params = {
+        event_type: "phase_change",
+        data: { phase: "calf" }
+      }
+
+      expect {
+        described_class.new(cow: cow, params: params).call
+      }.to raise_error(ActiveRecord::RecordInvalid)
+
+      expect(cow.reload.phase).to eq("heifer")
+    end
+
+    it "é inválido se tentar voltar de young para heifer" do
+      cow.update!(phase: "young")
+
+      params = {
+        event_type: "phase_change",
+        data: { phase: "heifer" }
+      }
+
+      expect {
+        described_class.new(cow: cow, params: params).call
+      }.to raise_error(ActiveRecord::RecordInvalid)
+
+      expect(cow.reload.phase).to eq("young")
+    end
+
+    it "é inválido se tentar voltar de young para calf" do
+      cow.update!(phase: "young")
+
+      params = {
+        event_type: "phase_change",
+        data: { phase: "calf" }
+      }
+
+      expect {
+        described_class.new(cow: cow, params: params).call
+      }.to raise_error(ActiveRecord::RecordInvalid)
+
+      expect(cow.reload.phase).to eq("young")
     end
 
     it "é inválido se tentar mudar manualmente para primiparous" do

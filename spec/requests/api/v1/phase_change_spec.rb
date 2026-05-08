@@ -27,7 +27,7 @@ RSpec.describe "Api::V1::Events", type: :request do
       .and_return(User.new(tenant: tenant))
   end
 
-  it "cria evento de mudança de fase" do
+  it "cria evento e permite mudar de calf para heifer" do
     post "/api/v1/cows/#{cow.id}/events",
       params: {
         event: {
@@ -38,6 +38,36 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     expect(response).to have_http_status(:created)
     expect(cow.reload.phase).to eq("heifer")
+    expect(Event.last.event_type).to eq("phase_change")
+  end
+
+  it "cria evento e permite mudar de calf para young" do
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "phase_change",
+          data: { phase: "young" }
+        }
+      }, headers: headers
+
+    expect(response).to have_http_status(:created)
+    expect(cow.reload.phase).to eq("young")
+    expect(Event.last.event_type).to eq("phase_change")
+  end
+
+  it "cria evento e permite mudar de heifer para young" do
+    cow.update!(phase: "heifer")
+
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "phase_change",
+          data: { phase: "young" }
+        }
+      }, headers: headers
+
+    expect(response).to have_http_status(:created)
+    expect(cow.reload.phase).to eq("young")
     expect(Event.last.event_type).to eq("phase_change")
   end
 
@@ -53,7 +83,7 @@ RSpec.describe "Api::V1::Events", type: :request do
     expect(response).to have_http_status(:unprocessable_entity)
   end
 
-  it "retorna 422 se phase for inválida" do
+  it "retorna 422 se fase for inválida" do
     post "/api/v1/cows/#{cow.id}/events",
       params: {
         event: {
@@ -75,6 +105,51 @@ RSpec.describe "Api::V1::Events", type: :request do
       }, headers: headers
 
     expect(response).to have_http_status(:unprocessable_entity)
+  end
+
+  it "retorna 422 se tentar voltar de heifer para calf" do
+    cow.update!(phase: "heifer")
+
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "phase_change",
+          data: { phase: "calf" }
+        }
+      }, headers: headers
+
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(cow.reload.phase).to eq("heifer")
+  end
+
+  it "retorna 422 se tentar voltar de young para heifer" do
+    cow.update!(phase: "young")
+
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "phase_change",
+          data: { phase: "heifer" }
+        }
+      }, headers: headers
+
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(cow.reload.phase).to eq("young")
+  end
+
+  it "retorna 422 se tentar voltar de young para calf" do
+    cow.update!(phase: "young")
+
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "phase_change",
+          data: { phase: "calf" }
+        }
+      }, headers: headers
+
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(cow.reload.phase).to eq("young")
   end
 
   it "retorna 422 se tentar mudar manualmente para primiparous" do
