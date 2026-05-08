@@ -31,16 +31,16 @@ module Events
     end
 
     def validate!
-      raise invalid!("cow is inactive") unless cow.active?
+      raise invalid!(I18n.t!("cows.errors.cow_inactive")) unless cow.active?
 
       phase = data[:phase]
 
-      raise invalid!("phase is required") if phase.blank?
-      raise invalid!("invalid phase") unless Cow.phases.key?(phase)
-      raise invalid!("current phase cannot be changed manually") if LOCKED_PHASES_TO_CHANGE.include?(cow.phase)
-      raise invalid!("phase cannot be changed manually") unless VALID_PHASES_TO_CHANGE.include?(phase)
-      raise invalid!("phase already is #{phase}") if cow.phase == phase
-      raise invalid!("phase cannot go backwards") if phase_goes_backwards?(phase)
+      raise invalid!(I18n.t!("events.phase_change.phase_required")) if phase.blank?
+      raise invalid!(I18n.t!("events.phase_change.invalid_phase")) unless Cow.phases.key?(phase)
+      raise invalid!(I18n.t!("events.phase_change.current_phase_cannot_be_changed_manually")) if LOCKED_PHASES_TO_CHANGE.include?(cow.phase)
+      raise invalid!(I18n.t!("events.phase_change.phase_cannot_be_changed_manually")) unless VALID_PHASES_TO_CHANGE.include?(phase)
+      raise invalid!(I18n.t!("events.phase_change.phase_already_is", phase: phase)) if cow.phase == phase
+      raise invalid!(I18n.t!("events.phase_change.phase_cannot_go_backwards")) if phase_goes_backwards?(phase)
     end
 
     def phase_goes_backwards?(new_phase)

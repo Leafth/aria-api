@@ -28,10 +28,27 @@ en:
   cows:
     errors:
       forbidden_fields: "Some fields cannot be updated here"
+      cow_inactive: "cow is inactive"
 
   events:
     errors:
       unsupported_event_type: "is not supported"
+
+    inactivation:
+      reason_required: "reason is required"
+      invalid_reason: "invalid reason"
+
+    weighing:
+      weight_required: "weight is required"
+      invalid_weight: "invalid weight"
+
+    phase_change:
+      phase_required: "phase is required"
+      invalid_phase: "invalid phase"
+      current_phase_cannot_be_changed_manually: "current phase cannot be changed manually"
+      phase_cannot_be_changed_manually: "phase cannot be changed manually"
+      phase_already_is: "phase already is %{phase}"
+      phase_cannot_go_backwards: "phase cannot go backwards"
 
   activerecord:
     attributes:
