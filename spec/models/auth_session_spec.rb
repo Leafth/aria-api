@@ -14,7 +14,6 @@ RSpec.describe AuthSession, type: :model do
     )
   end
 
-
   def build_auth_session(attrs = {})
     AuthSession.new({
       tenant: tenant,
