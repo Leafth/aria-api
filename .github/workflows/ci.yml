@@ -64,6 +64,29 @@ jobs:
           - 5432:5432
         options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
 
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/aria_api_test
+      SECRET_KEY_BASE: test_secret_key_base
+
+      CORS_ORIGINS: http://localhost:5173
+
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
+      ACCESS_TOKEN_SECRET: test_access_token_secret
+
+      DEVISE_MAILER_SENDER: no-reply@example.com
+
+      SMTP_HOST: localhost
+      SMTP_PORT: 1025
+      SMTP_USER: test
+      SMTP_PASS: test
+
+      FRONTEND_URL: http://localhost:5173
+        
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
