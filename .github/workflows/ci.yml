@@ -96,4 +96,6 @@ jobs:
           bundler-cache: true
 
       - name: Run tests
-        run: bin/rails db:prepare spec
+        run: |
+          bin/rails db:drop db:create db:schema:load
+          bin/rails spec
