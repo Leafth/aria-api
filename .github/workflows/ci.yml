@@ -86,7 +86,7 @@ jobs:
       SMTP_PASS: test
 
       FRONTEND_URL: http://localhost:5173
-        
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -97,11 +97,4 @@ jobs:
           bundler-cache: true
 
       - name: Run tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-          SECRET_KEY_BASE: test_secret_key_base
-          DEVISE_MAILER_SENDER: no-reply@example.com
-
-        run: |
-          bin/rails db:prepare spec
+        run: bin/rails db:prepare spec
