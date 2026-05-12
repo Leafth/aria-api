@@ -172,7 +172,7 @@ RSpec.describe "Api::V1::Auth", type: :request do
       expect(response).to have_http_status(:unauthorized)
     end
 
-    it "retorna erro quando refresh token não é enviado" do
+    it "retorna 401 quando refresh token não é enviado" do
       delete "/api/v1/auth/logout",
         params: {
           auth: {}
