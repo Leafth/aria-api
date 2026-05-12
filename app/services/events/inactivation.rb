@@ -7,7 +7,7 @@ module Events
       def validate!
         raise invalid!(I18n.t!("cows.errors.cow_inactive")) unless cow.active?
 
-        reason = data[:reason] || data[:reason]
+        reason = data[:reason]
 
         raise invalid!(I18n.t!("events.inactivation.reason_required")) if reason.blank?
         raise invalid!(I18n.t!("events.inactivation.invalid_reason")) unless VALID_REASONS.include?(reason)
