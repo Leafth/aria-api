@@ -9,7 +9,7 @@ module Events
       return true unless last_reproductive_event
       return true if occurred_at > last_reproductive_event.occurred_at
 
-      raise Events::Error, i18n.t("events.errors.occurred_at_must_be_after_last_reproductive_event")
+      raise Events::Error, I18n.t!("events.errors.occurred_at_must_be_after_last_reproductive_event")
     end
 
     attr_reader :cow, :occurred_at
