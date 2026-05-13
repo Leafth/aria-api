@@ -33,6 +33,7 @@ en:
   events:
     errors:
       unsupported_event_type: "is not supported"
+      occurred_at_must_be_after_last_reproductive_event: "The reproductive event date must be after the last registered reproductive event"
 
     inactivation:
       reason_required: "reason is required"
