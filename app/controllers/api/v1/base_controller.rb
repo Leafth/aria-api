@@ -8,6 +8,7 @@ module Api
       rescue_from ActionDispatch::Http::Parameters::ParseError, with: :bad_request
       rescue_from ActionController::ParameterMissing, with: :bad_request
       rescue_from Auth::Error, with: :render_auth_error
+      rescue_from Events::Error, with: :render_event_error
 
       private
 
@@ -53,6 +54,10 @@ module Api
 
       def render_auth_error(error)
         render json: { errors: { base: [ error.message ] } }, status: :unauthorized
+      end
+
+      def render_event_error(error)
+        render json: { errors: { base: [ error.message ] } }, status: :unprocessable_entity
       end
     end
   end
