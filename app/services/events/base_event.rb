@@ -32,11 +32,27 @@ module Events
         params[:occurred_at].presence || Time.current
       end
 
-      def validate!; end
+      def validate!
+        validate_reproductive_chronology! if reproductive_event?
+      end
+
+      def validate_reproductive_chronology!
+        Events::ReproductiveChronologyValidator.new(
+          cow: cow,
+          occurred_at: occurred_at
+        ).validate!
+      end
+
+      def reproductive_event?
+        event_type.in?(Event::REPRODUCTIVE_EVENT_TYPES)
+      end
+
       def apply!(_event); end
+
       def data
         {}
       end
+
       def event_type
         raise NotImplementedError
       end

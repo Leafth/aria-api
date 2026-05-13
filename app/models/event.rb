@@ -6,12 +6,31 @@ class Event < ApplicationRecord
     inactivation
     weighing
     phase_change
+
+    heat_detection
+    insemination
+    pregnancy_check
+    calving
   ].freeze
+
+  REPRODUCTIVE_EVENT_TYPES = %w[
+    heat_detection
+    insemination
+    pregnancy_check
+    calving
+  ].freeze
+
+  scope :reproductive, -> { where(event_type: REPRODUCTIVE_EVENT_TYPES) }
+  scope :ordered, -> { order(:occurred_at, :created_at) }
 
   validates :event_type, presence: true, inclusion: { in: EVENT_TYPES }
   validates :occurred_at, presence: true
 
   validate :occurred_at_cannot_be_in_future
+
+  def reproductive?
+    event_type.in?(REPRODUCTIVE_EVENT_TYPES)
+  end
 
   private
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_02_121012) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_13_113220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -44,7 +44,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_02_121012) do
     t.index ["tenant_id", "ear_tag"], name: "index_bulls_on_tenant_id_and_ear_tag", unique: true, where: "(ear_tag IS NOT NULL)"
     t.index ["tenant_id", "name"], name: "index_bulls_on_tenant_id_and_name"
     t.index ["tenant_id"], name: "index_bulls_on_tenant_id"
-    t.check_constraint "origin::text = ANY (ARRAY['local'::character varying, 'company'::character varying]::text[])", name: "bulls_origin_check"
+    t.check_constraint "origin::text = ANY (ARRAY['local'::character varying::text, 'company'::character varying::text])", name: "bulls_origin_check"
   end
 
   create_table "companies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -62,11 +62,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_02_121012) do
     t.string "breed", null: false
     t.datetime "created_at", null: false
     t.string "ear_tag", null: false
+    t.datetime "last_calving_at"
+    t.datetime "last_heat_at"
+    t.datetime "last_insemination_at"
     t.string "name", null: false
     t.string "phase", null: false
+    t.datetime "pregnancy_confirmed_at"
+    t.string "reproductive_status", default: "open", null: false
     t.uuid "tenant_id", null: false
     t.datetime "updated_at", null: false
     t.decimal "weight", precision: 10, scale: 2, null: false
+    t.index ["reproductive_status"], name: "index_cows_on_reproductive_status"
     t.index ["tenant_id", "ear_tag"], name: "index_cows_on_tenant_id_and_ear_tag", unique: true
     t.index ["tenant_id"], name: "index_cows_on_tenant_id"
   end
