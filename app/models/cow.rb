@@ -10,12 +10,21 @@ class Cow < ApplicationRecord
     multiparous: "multiparous"
   }, validate: { message: :invalid_phase }
 
+  enum :reproductive_status, {
+    open: "open",
+    in_heat: "in_heat",
+    inseminated: "inseminated",
+    pregnant: "pregnant",
+    postpartum: "postpartum"
+  }, prefix: :reproductive, validate: true
+
   validates :name, presence: true
   validates :ear_tag, presence: true, uniqueness: { scope: :tenant_id }
   validates :birth_date, presence: true
   validates :breed, presence: true
   validates :weight, presence: true, numericality: { greater_than: 0 }
   validates :phase, presence: true
+  validates :reproductive_status, presence: true
   validates :active, inclusion: { in: [ true, false ] }
 
   validate :birth_date_cannot_be_in_future
