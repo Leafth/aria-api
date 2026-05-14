@@ -40,10 +40,11 @@ en:
       invalid_calving_transition: "Calving can only be recorded for cows that are pregnant."
 
       insemination:
-        heat_expired: "Insemination must occur within 24 hours after heat detection"
-        invalid_method: "Method must be natural_mating or artificial_insemination"
-        bull_required: "Bull is required"
-        bull_not_found: "Bull not found"
+        heat_expired: "Insemination must occur within 24 hours after heat detection."
+        method_required: "Method is required."
+        invalid_method: "Method must be natural_mating or artificial_insemination."
+        bull_required: "Bull is required."
+        bull_not_found: "Bull not found."
         artificial_insemination_requires_company_bull: "Artificial insemination requires a company bull"
         natural_mating_requires_local_bull: "Natural mating requires a local bull"
 
