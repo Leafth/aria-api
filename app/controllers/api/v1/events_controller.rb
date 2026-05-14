@@ -15,7 +15,13 @@ module Api
       private
 
       def build_event(cow)
-        event_params = params.require(:event).permit(:event_type, :occurred_at, data: {})
+        event_params = params.require(:event).permit(
+          :event_type,
+          :occurred_at,
+          :heat_occurred_at,
+          :insemination_occurred_at,
+          data: {}
+        )
 
         case event_params[:event_type]
         when "inactivation"
@@ -28,6 +34,8 @@ module Api
           Events::HeatDetection.new(cow: cow, params: event_params)
         when "insemination"
           Events::Insemination.new(cow: cow, params: event_params)
+        when "heat_detection_with_insemination"
+          Events::HeatDetectionWithInsemination.new(cow: cow, params: event_params)
         else
           event = Event.new
           event.errors.add(:event_type, I18n.t!("events.errors.unsupported_event_type"))
