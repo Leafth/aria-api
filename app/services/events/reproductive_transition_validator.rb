@@ -4,7 +4,6 @@ module Events
       "heat_detection" => %i[
         reproductive_open?
         reproductive_postpartum?
-        reproductive_in_heat?
       ],
       "insemination" => %i[
         reproductive_in_heat?
@@ -17,10 +16,11 @@ module Events
       ]
     }.freeze
 
-    def initialize(cow:, event_type:, data: {})
+    def initialize(cow:, event_type:, data: {}, occurred_at: Time.current)
       @cow = cow
       @event_type = event_type
       @data = data || {}
+      @occurred_at = occurred_at
     end
 
     def validate!

@@ -62,3 +62,6 @@ gem "mcp", ">= 0.9.2"
 gem "kaminari", "~> 1.2"
 
 gem "active_model_serializers", "~> 0.10.16"
+
+gem "sidekiq", "~> 8.1"
+gem "sidekiq-cron", "~> 2.4"

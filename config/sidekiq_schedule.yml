@@ -1,0 +1,4 @@
+expire_heats:
+  cron: "* * * * *"
+  class: "Events::ExpireHeatsJob"
+  queue: default
