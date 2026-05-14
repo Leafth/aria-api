@@ -19,23 +19,22 @@ module Events
         cow: cow,
         event_type: event_type,
         data: data,
-        occurred_at: occurred_at
       ).validate!
+    end
 
-      def apply!(_event)
-        cow.update!(
-          reproductive_status: reproductive_status_after_heat,
-          last_heat_at: occurred_at
-        )
-      end
+    def apply!(_event)
+      cow.update!(
+        reproductive_status: reproductive_status_after_heat,
+        last_heat_at: occurred_at
+      )
+    end
 
-      def reproductive_status_after_heat
+    def reproductive_status_after_heat
         active_heat? ? "in_heat" : "open"
-      end
+    end
 
-      def active_heat?
+    def active_heat?
         occurred_at >= Time.current - 24.hours
-      end
     end
   end
 end

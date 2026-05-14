@@ -16,11 +16,10 @@ module Events
       ]
     }.freeze
 
-    def initialize(cow:, event_type:, data: {}, occurred_at: Time.current)
+    def initialize(cow:, event_type:, data: {})
       @cow = cow
       @event_type = event_type
       @data = data || {}
-      @occurred_at = occurred_at
     end
 
     def validate!
