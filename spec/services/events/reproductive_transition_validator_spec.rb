@@ -8,7 +8,6 @@ RSpec.describe Events::ReproductiveTransitionValidator do
           Cow,
           reproductive_open?: true,
           reproductive_postpartum?: false,
-          reproductive_in_heat?: false
         )
 
         validator = described_class.new(
@@ -24,7 +23,6 @@ RSpec.describe Events::ReproductiveTransitionValidator do
           Cow,
           reproductive_open?: false,
           reproductive_postpartum?: false,
-          reproductive_in_heat?: false
         )
 
         validator = described_class.new(

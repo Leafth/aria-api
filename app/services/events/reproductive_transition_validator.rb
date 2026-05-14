@@ -4,7 +4,6 @@ module Events
       "heat_detection" => %i[
         reproductive_open?
         reproductive_postpartum?
-        reproductive_in_heat?
       ],
       "insemination" => %i[
         reproductive_in_heat?
