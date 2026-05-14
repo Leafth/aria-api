@@ -29,7 +29,9 @@ module Events
       end
 
       def occurred_at
-        params[:occurred_at].presence || Time.current
+        value = params[:occurred_at].presence || Time.current
+
+        value.is_a?(String) ? Time.zone.parse(value) : value
       end
 
       def validate!
