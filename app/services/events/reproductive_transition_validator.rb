@@ -24,6 +24,8 @@ module Events
     end
 
     def validate!
+      raise Events::Error, I18n.t!("cows.errors.cow_inactive") unless cow.active?
+
       allowed_states = VALID_TRANSITIONS[event_type]
       return true unless allowed_states
 
