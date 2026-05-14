@@ -24,6 +24,8 @@ module Api
           Events::Weighing.new(cow: cow, params: event_params)
         when "phase_change"
           Events::PhaseChange.new(cow: cow, params: event_params)
+        when "heat_detection"
+          Events::HeatDetection.new(cow: cow, params: event_params)
         else
           event = Event.new
           event.errors.add(:event_type, I18n.t!("events.errors.unsupported_event_type"))
