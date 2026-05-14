@@ -20,7 +20,7 @@ RSpec.describe Events::HeatDetection do
 
   describe "#call" do
     it "cria evento para detecção do cio atual e atualiza status da matriz" do
-      occurred_at = Time.current
+      occurred_at = 1.hour.ago
       params = {
         event_type: "heat_detection",
         occurred_at: occurred_at,
@@ -34,11 +34,11 @@ RSpec.describe Events::HeatDetection do
       expect(event).to be_persisted
       expect(event.event_type).to eq("heat_detection")
       expect(cow.reload.reproductive_status).to eq("in_heat")
-      expect(cow.reload.last_heat_at).to eq(occurred_at)
+      expect(cow.reload.last_heat_at).to be_within(1.second).of(occurred_at)
     end
 
     it "cria evento para detecção do cio passado e mantém status da matriz" do
-      occurred_at = Time.zone.parse("2026-04-23 10:00:00")
+      occurred_at = 25.hours.ago
       params = {
         event_type: "heat_detection",
         occurred_at: occurred_at,
@@ -52,13 +52,13 @@ RSpec.describe Events::HeatDetection do
       expect(event).to be_persisted
       expect(event.event_type).to eq("heat_detection")
       expect(cow.reload.reproductive_status).to eq("open")
-      expect(cow.reload.last_heat_at).to eq(occurred_at)
+      expect(cow.reload.last_heat_at).to be_within(1.second).of(occurred_at)
     end
 
     it "permite criar cio quando a matriz está em pós-parto" do
       cow.update!(reproductive_status: "postpartum")
 
-      occurred_at = Time.current
+      occurred_at = 1.hour.ago
 
       params = {
         occurred_at: occurred_at,
@@ -72,14 +72,17 @@ RSpec.describe Events::HeatDetection do
       expect(event).to be_persisted
       expect(event.event_type).to eq("heat_detection")
       expect(cow.reload.reproductive_status).to eq("in_heat")
-      expect(cow..reload.last_heat_at).to eq(occurred_at)
+      expect(cow.reload.last_heat_at).to be_within(1.second).of(occurred_at)
     end
 
     it "é inválido quando a matriz já está com cio ativo" do
-      cow.update!(reproductive_status: "in_heat", last_heat_at: 1.hour.ago)
+      occurred_at = Time.current
+      last_heat_at = 1.hour.ago
+
+      cow.update!(reproductive_status: "in_heat", last_heat_at: last_heat_at)
 
       params = {
-        occurred_at: Time.current,
+        occurred_at: occurred_at,
         data: {
           observation: "Nova tentativa de cio"
         }
@@ -94,7 +97,7 @@ RSpec.describe Events::HeatDetection do
 
       expect(Event.count).to eq(0)
       expect(cow.reload.reproductive_status).to eq("in_heat")
-      expect(cow.reload.last_heat_at).to eq(1.hour.ago)
+      expect(cow.reload.last_heat_at).to be_within(1.second).of(last_heat_at)
     end
 
     it "é inválido quando a matriz não está em estado permitido para cio" do
