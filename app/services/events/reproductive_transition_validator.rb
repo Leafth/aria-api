@@ -16,14 +16,15 @@ module Events
       ]
     }.freeze
 
-    def initialize(cow:, event_type:, data: {}, occurred_at: Time.current)
+    def initialize(cow:, event_type:, data: {})
       @cow = cow
       @event_type = event_type
       @data = data || {}
-      @occurred_at = occurred_at
     end
 
     def validate!
+      raise Events::Error, I18n.t!("cows.errors.cow_inactive") unless cow.active?
+
       allowed_states = VALID_TRANSITIONS[event_type]
       return true unless allowed_states
 

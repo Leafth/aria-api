@@ -6,8 +6,9 @@ RSpec.describe Events::ReproductiveTransitionValidator do
       it "é válido quando cow está open" do
         cow = instance_double(
           Cow,
+          active?: true,
           reproductive_open?: true,
-          reproductive_postpartum?: false,
+          reproductive_postpartum?: false
         )
 
         validator = described_class.new(
@@ -21,6 +22,7 @@ RSpec.describe Events::ReproductiveTransitionValidator do
       it "é inválido quando cow não está em estado permitido" do
         cow = instance_double(
           Cow,
+          active?: true,
           reproductive_open?: false,
           reproductive_postpartum?: false,
         )
@@ -37,7 +39,7 @@ RSpec.describe Events::ReproductiveTransitionValidator do
 
     context "insemination" do
       it "é válido quando cow está in_heat" do
-        cow = instance_double(Cow, reproductive_in_heat?: true)
+        cow = instance_double(Cow, active?: true, reproductive_in_heat?: true)
 
         validator = described_class.new(
           cow: cow,
@@ -48,7 +50,7 @@ RSpec.describe Events::ReproductiveTransitionValidator do
       end
 
       it "é inválido quando cow não está in_heat" do
-        cow = instance_double(Cow, reproductive_in_heat?: false)
+        cow = instance_double(Cow, active?: true, reproductive_in_heat?: false)
 
         validator = described_class.new(
           cow: cow,
@@ -62,7 +64,7 @@ RSpec.describe Events::ReproductiveTransitionValidator do
 
     context "pregnancy_check" do
       it "é válido quando cow está inseminated" do
-        cow = instance_double(Cow, reproductive_inseminated?: true)
+        cow = instance_double(Cow, active?: true, reproductive_inseminated?: true)
 
         validator = described_class.new(
           cow: cow,
@@ -73,7 +75,7 @@ RSpec.describe Events::ReproductiveTransitionValidator do
       end
 
       it "é inválido quando cow não está inseminated" do
-        cow = instance_double(Cow, reproductive_inseminated?: false)
+        cow = instance_double(Cow, active?: true, reproductive_inseminated?: false)
 
         validator = described_class.new(
           cow: cow,
@@ -87,7 +89,7 @@ RSpec.describe Events::ReproductiveTransitionValidator do
 
     context "calving" do
       it "é válido quando cow está pregnant" do
-        cow = instance_double(Cow, reproductive_pregnant?: true)
+        cow = instance_double(Cow, active?: true, reproductive_pregnant?: true)
 
         validator = described_class.new(
           cow: cow,
@@ -98,7 +100,7 @@ RSpec.describe Events::ReproductiveTransitionValidator do
       end
 
       it "é inválido quando cow não está pregnant" do
-        cow = instance_double(Cow, reproductive_pregnant?: false)
+        cow = instance_double(Cow, active?: true, reproductive_pregnant?: false)
 
         validator = described_class.new(
           cow: cow,
@@ -110,9 +112,23 @@ RSpec.describe Events::ReproductiveTransitionValidator do
       end
     end
 
+    context "quando matriz é inativa" do
+      it "ignora validação" do
+        cow = instance_double(Cow, active?: false)
+
+        validator = described_class.new(
+          cow: cow,
+          event_type: "weighing"
+        )
+
+        expect { validator.validate! }
+          .to raise_error(Events::Error, I18n.t!("cows.errors.cow_inactive"))
+      end
+    end
+
     context "quando evento não é reprodutivo" do
       it "ignora validação" do
-        cow = instance_double(Cow)
+        cow = instance_double(Cow, active?: true)
 
         validator = described_class.new(
           cow: cow,
