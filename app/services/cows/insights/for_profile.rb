@@ -1,12 +1,21 @@
 module Cows
   module Insights
     class ForProfile
+      RECOMMENDED_NEXT_ACTIONS = {
+        "open" => "heat_detection",
+        "in_heat" => "insemination",
+        "inseminated" => "pregnancy_check",
+        "pregnant" => "calving",
+        "postpartum" => "heat_detection"
+      }.freeze
+
       def initialize(cow:)
         @cow = cow
       end
 
       def call
         {
+          recommended_next_action: recommended_next_action,
           weight_insight: weight_insight,
           phase_insight: phase_insight
         }
@@ -15,6 +24,10 @@ module Cows
       private
 
       attr_reader :cow
+
+      def recommended_next_action
+        RECOMMENDED_NEXT_ACTIONS[cow.reproductive_status]
+      end
 
       def weight_insight
         {
