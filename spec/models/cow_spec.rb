@@ -70,7 +70,6 @@ RSpec.describe Cow, type: :model do
 
   it "inválida com data de nascimento futura" do
     cow = build_cow(birth_date: 1.day.from_now)
-
     expect(cow).not_to be_valid
     expect(cow.errors[:birth_date]).to be_present
   end
