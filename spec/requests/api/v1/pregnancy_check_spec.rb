@@ -45,7 +45,6 @@ RSpec.describe "Api::V1::Events", type: :request do
           }
         }, headers: headers
 
-      puts response.body
       expect(response).to have_http_status(:created)
       expect(cow.reload.reproductive_status).to eq("pregnant")
       expect(cow.pregnancy_confirmed_at).to be_within(1.second).of(occurred_at)
