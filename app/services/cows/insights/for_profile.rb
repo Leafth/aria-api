@@ -15,6 +15,7 @@ module Cows
 
       def call
         {
+          reproductive_status: reproductive_status,
           recommended_next_action: recommended_next_action,
           weight_insight: weight_insight,
           phase_insight: phase_insight
@@ -24,6 +25,17 @@ module Cows
       private
 
       attr_reader :cow
+
+      def reproductive_status
+        {
+          status: cow.reproductive_status,
+          message: reproductive_status_message
+        }
+      end
+
+      def reproductive_status_message
+        I18n.t!("cows.insights.profile.reproductive_status.messages.#{cow.reproductive_status}")
+      end
 
       def recommended_next_action
         RECOMMENDED_NEXT_ACTIONS[cow.reproductive_status]

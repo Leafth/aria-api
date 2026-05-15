@@ -37,6 +37,14 @@ en:
           below_weight: "Cow is below the expected weight"
           change_suggested: "Suggestion: change phase to %{phase}"
 
+        reproductive_status:
+          messages:
+            open: "Waiting for heat"
+            in_heat: "In Heat"
+            inseminated: "Inseminated"
+            pregnant: "Pregnant"
+            postpartum: "Postpartum"
+
   events:
     errors:
       unsupported_event_type: "is not supported"

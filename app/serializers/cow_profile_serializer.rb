@@ -4,7 +4,6 @@ class CowProfileSerializer < ActiveModel::Serializer
     :ear_tag,
     :birth_date,
     :breed,
-    :reproductive_status,
     :last_heat_at,
     :last_insemination_at,
     :last_calving_at,
