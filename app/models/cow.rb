@@ -32,9 +32,7 @@ class Cow < ApplicationRecord
   def birth_date_cannot_be_in_future
     return unless birth_date.present?
 
-    if birth_date > Time.current
-      errors.add(:birth_date, :future_date)
-    end
+    errors.add(:birth_date, :future_date) if birth_date > Date.current
   end
 
   def weight_from_history
