@@ -30,6 +30,13 @@ en:
       forbidden_fields: "Some fields cannot be updated here"
       cow_inactive: "cow is inactive"
 
+    insights:
+      profile:
+        phase:
+          adequate: "Adequate phase"
+          below_weight: "Cow is below the expected weight"
+          change_suggested: "Suggestion: change phase to %{phase}"
+
   events:
     errors:
       unsupported_event_type: "is not supported"
@@ -69,6 +76,14 @@ en:
 
   activerecord:
     attributes:
+      cow:
+        phases:
+          calf: "calf"
+          heifer: "heifer"
+          young: "young"
+          primiparous: "primiparous"
+          multiparous: "multiparous"
+
       event:
         occurred_at: "Event date"
 

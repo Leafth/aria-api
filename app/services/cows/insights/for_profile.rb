@@ -7,7 +7,8 @@ module Cows
 
       def call
         {
-          weight_insight: weight_insight
+          weight_insight: weight_insight,
+          phase_insight: phase_insight
         }
       end
 
@@ -20,6 +21,38 @@ module Cows
           current_weight: cow.weight,
           last_weighing_at: last_weighing&.occurred_at
         }
+      end
+
+      def phase_insight
+        {
+          current_phase: cow.phase,
+          message: phase_message
+        }
+      end
+
+      def phase_message
+        return I18n.t!("cows.insights.profile.phase.below_weight") if below_weight_for_phase?
+
+        if suggested_phase.present?
+          return I18n.t!("cows.insights.profile.phase.change_suggested", phase: I18n.t!("activerecord.attributes.cow.phases.#{suggested_phase}"))
+        end
+
+        I18n.t!("cows.insights.profile.phase.adequate")
+      end
+
+      def below_weight_for_phase?
+        return true if cow.phase == "heifer" && cow.weight < 100
+        return true if cow.phase.in?(%w[young primiparous multiparous]) && cow.weight < 180
+
+        false
+      end
+
+      def suggested_phase
+        return "young" if cow.phase == "calf" && cow.weight >= 180
+        return "heifer" if cow.phase == "calf" && cow.weight >= 100
+        return "young" if cow.phase == "heifer" && cow.weight >= 180
+
+        nil
       end
 
       def last_weighing
