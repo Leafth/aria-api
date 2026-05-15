@@ -33,7 +33,7 @@ module Events
     def next_phase_after_calving
       return "multiparous" if cow.phase.in?(%w[primiparous multiparous])
 
-    "primiparous"
+      "primiparous"
     end
   end
 end
