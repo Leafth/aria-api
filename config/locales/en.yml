@@ -48,6 +48,9 @@ en:
         artificial_insemination_requires_company_bull: "Artificial insemination requires a company bull"
         natural_mating_requires_local_bull: "Natural mating requires a local bull"
 
+      pregnancy_check:
+        invalid_result: "Pregnancy check result must be positive or negative."
+
     inactivation:
       reason_required: "reason is required"
       invalid_reason: "invalid reason"
