@@ -24,7 +24,7 @@ RSpec.describe Events::Calving do
   let(:occurred_at) { Time.current.change(usec: 0) }
 
   describe "#call" do
-    it "cria evento para parto e atualiza status da matriz" do
+    it "cria evento para parto, atualiza status da matriz, e muda fase para primípara" do
       params = {
         event_type: "calving",
         occurred_at: occurred_at,
@@ -38,6 +38,47 @@ RSpec.describe Events::Calving do
       expect(event).to be_persisted
       expect(event.event_type).to eq("calving")
       expect(cow.reload.reproductive_status).to eq("postpartum")
+      expect(cow.reload.phase).to eq("primiparous")
+      expect(cow.reload.last_calving_at).to be_within(1.second).of(occurred_at)
+    end
+
+    it "cria evento para parto, atualiza status da matriz, e muda fase de primípara para multípara" do
+      cow.update!(phase: "primiparous")
+
+      params = {
+        event_type: "calving",
+        occurred_at: occurred_at,
+        data: {
+          observation: "Parto sem complicações"
+        }
+      }
+
+      event = described_class.new(cow: cow, params: params).call
+
+      expect(event).to be_persisted
+      expect(event.event_type).to eq("calving")
+      expect(cow.reload.reproductive_status).to eq("postpartum")
+      expect(cow.reload.phase).to eq("multiparous")
+      expect(cow.reload.last_calving_at).to be_within(1.second).of(occurred_at)
+    end
+
+    it "cria evento para parto, atualiza status da matriz, e mantém fase quando multípara" do
+      cow.update!(phase: "multiparous")
+
+      params = {
+        event_type: "calving",
+        occurred_at: occurred_at,
+        data: {
+          observation: "Parto sem complicações"
+        }
+      }
+
+      event = described_class.new(cow: cow, params: params).call
+
+      expect(event).to be_persisted
+      expect(event.event_type).to eq("calving")
+      expect(cow.reload.reproductive_status).to eq("postpartum")
+      expect(cow.reload.phase).to eq("multiparous")
       expect(cow.reload.last_calving_at).to be_within(1.second).of(occurred_at)
     end
 

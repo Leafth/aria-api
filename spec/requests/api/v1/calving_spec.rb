@@ -34,7 +34,7 @@ RSpec.describe "Api::V1::Events", type: :request do
   end
 
   describe "POST /api/v1/cows/:cow_id/events" do
-    it "cria evento de parto e atualiza status da matriz" do
+    it "cria evento de parto, atualiza status da matriz e muda fase para primípara" do
       post "/api/v1/cows/#{cow.id}/events",
         params: {
           event: {
@@ -49,6 +49,49 @@ RSpec.describe "Api::V1::Events", type: :request do
       expect(response).to have_http_status(:created)
       expect(cow.reload.reproductive_status).to eq("postpartum")
       expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
+      expect(cow.reload.phase).to eq("primiparous")
+      expect(Event.last.event_type).to eq("calving")
+    end
+
+    it "cria evento de parto, atualiza status da matriz, e muda fase de primípara para multípara" do
+      cow.update!(phase: "primiparous")
+
+      post "/api/v1/cows/#{cow.id}/events",
+        params: {
+          event: {
+            event_type: "calving",
+            occurred_at: occurred_at,
+            data: {
+              observation: "Parto sem complicações"
+            }
+          }
+        }, headers: headers
+
+      expect(response).to have_http_status(:created)
+      expect(cow.reload.reproductive_status).to eq("postpartum")
+      expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
+      expect(cow.reload.phase).to eq("multiparous")
+      expect(Event.last.event_type).to eq("calving")
+    end
+
+    it "cria evento de parto, atualiza status da matriz, e mantém fase quando multípara" do
+      cow.update!(phase: "multiparous")
+
+      post "/api/v1/cows/#{cow.id}/events",
+        params: {
+          event: {
+            event_type: "calving",
+            occurred_at: occurred_at,
+            data: {
+              observation: "Parto sem complicações"
+            }
+          }
+        }, headers: headers
+
+      expect(response).to have_http_status(:created)
+      expect(cow.reload.reproductive_status).to eq("postpartum")
+      expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
+      expect(cow.reload.phase).to eq("multiparous")
       expect(Event.last.event_type).to eq("calving")
     end
 
