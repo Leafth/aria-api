@@ -38,6 +38,8 @@ module Api
           Events::HeatDetectionWithInsemination.new(cow: cow, params: event_params)
         when "pregnancy_check"
           Events::PregnancyCheck.new(cow: cow, params: event_params)
+        when "calving"
+          Events::Calving.new(cow: cow, params: event_params)
         else
           event = Event.new
           event.errors.add(:event_type, I18n.t!("events.errors.unsupported_event_type"))
