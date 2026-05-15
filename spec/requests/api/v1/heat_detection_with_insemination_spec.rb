@@ -56,8 +56,10 @@ RSpec.describe "Api::V1::Events", type: :request do
         }, headers: headers
 
         expect(response).to have_http_status(:created)
-        expect(Event.second_to_last.event_type).to eq("heat_detection")
-        expect(Event.last.event_type).to eq("insemination")
+        events = cow.events.order(:occurred_at)
+
+        expect(events.second_to_last.event_type).to eq("heat_detection")
+        expect(events.last.event_type).to eq("insemination")
 
         cow.reload
 
