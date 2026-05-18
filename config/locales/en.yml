@@ -45,6 +45,15 @@ en:
             pregnant: "Pregnant"
             postpartum: "Postpartum"
 
+          observations:
+            open: "Next heat: %{next_heat_date}"
+            open_without_heat: "No previous heat date available to estimate the next heat"
+            in_heat: "Register an insemination. %{remaining_hours}h remaining"
+            heat_expired: "Heat expired"
+            inseminated: "Waiting for pregnancy diagnosis"
+            pregnant: "Estimated calving date: %{calving_date}"
+            postpartum: "Calving date: %{calving_date}"
+
   events:
     errors:
       unsupported_event_type: "is not supported"
