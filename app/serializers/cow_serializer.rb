@@ -7,10 +7,20 @@ class CowSerializer < ActiveModel::Serializer
     :weight,
     :phase,
     :reproductive_status,
-    :active,
-    :insights
+    :active
+
+    attribute :insights, if: :active?
+    attribute :inactive_status, unless: :active?
 
     def insights
       Cows::Insights::ForIndex.new(cow: object).call
+    end
+
+    def inactive_status
+      Cows::Insights::InactiveStatus.new(cow: object).call unless object.active?
+    end
+
+    def active?
+      object.active?
     end
 end
