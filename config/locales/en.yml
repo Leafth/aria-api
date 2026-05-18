@@ -62,6 +62,14 @@ en:
             calving_due_soon: "Late stage pregnancy"
             calving_overdue: "Birth passed the scheduled date"
 
+      index:
+        status:
+          open: "Last calving"
+          in_heat: "Heat confirmed"
+          inseminated: "Breeding completed"
+          pregnant: "Pregnancy confirmed"
+          postpartum: "Calving"
+
   events:
     errors:
       unsupported_event_type: "is not supported"

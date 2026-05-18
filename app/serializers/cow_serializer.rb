@@ -7,8 +7,10 @@ class CowSerializer < ActiveModel::Serializer
     :weight,
     :phase,
     :reproductive_status,
-    :last_heat_at,
-    :last_insemination_at,
-    :last_calving_at,
-    :active
+    :active,
+    :insights
+
+    def insights
+      Cows::Insights::ForIndex.new(cow: object).call
+    end
 end
