@@ -166,11 +166,11 @@ pt-BR:
     attributes:
       cow:
         phases:
-          calf: "bezerra"
-          heifer: "novilha"
-          young: "jovem"
-          primiparous: "primípara"
-          multiparous: "multípara"
+          calf: "Bezerra"
+          heifer: "Garrota"
+          young: "Novilha"
+          primiparous: "Primípara"
+          multiparous: "Multípara"
 
       event:
         occurred_at: "Data do evento"
