@@ -18,7 +18,7 @@ module Api
       end
 
       def show
-        render json: @cow, serializer: CowSerializer, status: :ok
+        render json: @cow, serializer: CowProfileSerializer, status: :ok
       end
 
       def create

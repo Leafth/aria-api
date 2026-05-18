@@ -48,6 +48,6 @@ RSpec.describe Event, type: :model do
     )
 
     expect(event).not_to be_valid
-    expect(event.errors[:occurred_at]).to include("cannot be in the future")
+    expect(event.errors[:occurred_at]).to include(I18n.t!("activerecord.errors.models.event.attributes.occurred_at.future_date"))
   end
 end

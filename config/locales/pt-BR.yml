@@ -1,0 +1,197 @@
+pt-BR:
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d/%m"
+      long: "%d de %B de %Y"
+
+    day_names:
+      - domingo
+      - segunda-feira
+      - terça-feira
+      - quarta-feira
+      - quinta-feira
+      - sexta-feira
+      - sábado
+
+    abbr_day_names:
+      - dom
+      - seg
+      - ter
+      - qua
+      - qui
+      - sex
+      - sáb
+
+    month_names:
+      -
+      - janeiro
+      - fevereiro
+      - março
+      - abril
+      - maio
+      - junho
+      - julho
+      - agosto
+      - setembro
+      - outubro
+      - novembro
+      - dezembro
+
+    abbr_month_names:
+      -
+      - jan
+      - fev
+      - mar
+      - abr
+      - mai
+      - jun
+      - jul
+      - ago
+      - set
+      - out
+      - nov
+      - dez
+
+  errors:
+    messages:
+      invalid_foreign_key: "O recurso referenciado não existe ou não pode ser utilizado"
+
+  auth:
+    errors:
+      invalid_credentials: "Credenciais inválidas"
+      inactive_user: "Usuário inativo"
+
+      missing_refresh_token: "Refresh token ausente"
+      invalid_refresh_token: "Refresh token inválido"
+
+      missing_access_token: "Access token ausente"
+      invalid_access_token: "Access token inválido"
+      expired_access_token: "Access token expirado"
+
+      session_not_found: "Sessão não encontrada"
+      revoked_session: "Sessão revogada"
+      expired_session: "Sessão expirada"
+
+  tenant:
+    errors:
+      invalid_tenant: "Tenant inválido"
+      missing_tenant: "Tenant não informado"
+      tenant_not_found: "Tenant não encontrado"
+      inactive_tenant: "Tenant inativo"
+
+  cows:
+    errors:
+      forbidden_fields: "Alguns campos não podem ser atualizados aqui"
+      cow_inactive: "A matriz está inativa"
+
+    insights:
+      profile:
+        phase:
+          adequate: "Fase adequada"
+          below_weight: "Abaixo do peso esperado"
+          change_suggested: "Sugestão: mudar fase para %{phase}"
+
+        reproductive_status:
+          messages:
+            open: "Aguardando Cio"
+            in_heat: "Em Cio"
+            inseminated: "Cobertura Realizada"
+            pregnant: "Prenha"
+            postpartum: "Pós-Parto"
+
+          observations:
+            open: "Próximo cio: %{next_heat_date}"
+            open_without_heat: "Não é possível estimar o próximo cio"
+            in_heat: "Registre uma inseminação. %{remaining_hours}h restantes"
+            heat_expired: "Cio expirado"
+            inseminated: "Aguardando diagnóstico de prenhez"
+            pregnant: "Parto previsto: %{calving_date}"
+            postpartum: "Data do parto: %{calving_date}"
+
+          alerts:
+            heat_overdue: "Cio fora do período estimado"
+            heat_ending_soon: "Restam %{remaining_hours}h de cio"
+            pregnancy_check_due: "Registre a verificação de prenhez em breve"
+            pregnancy_check_overdue: "Verificação de prenhez atrasada"
+            calving_due_soon: "Prenhez em fase final"
+            calving_overdue: "Parto fora da data prevista"
+
+  events:
+    errors:
+      unsupported_event_type: "não é suportado"
+      occurred_at_must_be_after_last_reproductive_event: "A data do evento reprodutivo deve ser posterior ao último evento reprodutivo registrado"
+      invalid_heat_detection_transition: "A detecção de cio só pode ser registrada para matrizes abertas ou em pós-parto."
+      invalid_insemination_transition: "A inseminação só pode ser registrada para matrizes em cio."
+      invalid_pregnancy_check_transition: "A verificação de prenhez só pode ser registrada para matrizes inseminadas."
+      invalid_calving_transition: "O parto só pode ser registrado para matrizes prenhas."
+
+      insemination:
+        heat_expired: "A inseminação deve ocorrer em até 24 horas após a detecção do cio."
+        method_required: "O método é obrigatório."
+        invalid_method: "O método deve ser natural_mating ou artificial_insemination."
+        bull_required: "O touro é obrigatório."
+        bull_not_found: "Touro não encontrado."
+        artificial_insemination_requires_company_bull: "A inseminação artificial exige um touro da empresa"
+        natural_mating_requires_local_bull: "A monta natural exige um touro local"
+
+      pregnancy_check:
+        invalid_result: "O resultado da verificação de prenhez deve ser positive ou negative."
+
+    inactivation:
+      reason_required: "O motivo é obrigatório"
+      invalid_reason: "Motivo inválido"
+
+    weighing:
+      weight_required: "O peso é obrigatório"
+      invalid_weight: "Peso inválido"
+
+    phase_change:
+      phase_required: "A fase é obrigatória"
+      invalid_phase: "Fase inválida"
+      current_phase_cannot_be_changed_manually: "A fase atual não pode ser alterada manualmente"
+      phase_cannot_be_changed_manually: "A fase não pode ser alterada manualmente"
+      phase_already_is: "A fase já é %{phase}"
+      phase_cannot_go_backwards: "A fase não pode regredir"
+
+  activerecord:
+    attributes:
+      cow:
+        phases:
+          calf: "bezerra"
+          heifer: "novilha"
+          young: "jovem"
+          primiparous: "primípara"
+          multiparous: "multípara"
+
+      event:
+        occurred_at: "Data do evento"
+
+    errors:
+      models:
+        user:
+          attributes:
+            password:
+              invalid_format: "possui formato inválido: mínimo de 8 caracteres, com letras, números e apenas ! @ # $ % &"
+
+        bull:
+          attributes:
+            origin:
+              invalid_origin: "é inválida"
+            company:
+              local_with_company: "não deve estar associada a touros locais"
+              company_required: "deve estar associada quando a origem do touro for company"
+            ear_tag:
+              company_with_ear_tag: "não deve existir para touros company"
+
+        cow:
+          attributes:
+            phase:
+              invalid_phase: "é inválida"
+            birth_date:
+              future_date: "não pode estar no futuro"
+
+        event:
+          attributes:
+            occurred_at:
+              future_date: "não pode estar no futuro"

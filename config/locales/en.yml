@@ -30,6 +30,38 @@ en:
       forbidden_fields: "Some fields cannot be updated here"
       cow_inactive: "cow is inactive"
 
+    insights:
+      profile:
+        phase:
+          adequate: "Adequate phase"
+          below_weight: "Cow is below the expected weight"
+          change_suggested: "Suggestion: change phase to %{phase}"
+
+        reproductive_status:
+          messages:
+            open: "Waiting for heat"
+            in_heat: "In Heat"
+            inseminated: "Inseminated"
+            pregnant: "Pregnant"
+            postpartum: "Postpartum"
+
+          observations:
+            open: "Next heat: %{next_heat_date}"
+            open_without_heat: "No previous heat date available to estimate the next heat"
+            in_heat: "Register an insemination. %{remaining_hours}h remaining"
+            heat_expired: "Heat expired"
+            inseminated: "Waiting for pregnancy diagnosis"
+            pregnant: "Estimated calving date: %{calving_date}"
+            postpartum: "Calving date: %{calving_date}"
+
+          alerts:
+            heat_overdue: "Cio outside the estimated period"
+            heat_ending_soon: "%{remaining_hours}h left in heat"
+            pregnancy_check_due: "Register pregnancy verification soon"
+            pregnancy_check_overdue: "Pregnancy check overdue"
+            calving_due_soon: "Late stage pregnancy"
+            calving_overdue: "Birth passed the scheduled date"
+
   events:
     errors:
       unsupported_event_type: "is not supported"
@@ -69,6 +101,14 @@ en:
 
   activerecord:
     attributes:
+      cow:
+        phases:
+          calf: "calf"
+          heifer: "heifer"
+          young: "young"
+          primiparous: "primiparous"
+          multiparous: "multiparous"
+
       event:
         occurred_at: "Event date"
 
