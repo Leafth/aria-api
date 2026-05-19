@@ -124,6 +124,7 @@ pt-BR:
           inseminated: "Cobertura realizada"
           pregnant: "Prenhez confirmada"
           postpartum: "Parto"
+          weighing: "Pesagem"
 
   events:
     errors:
