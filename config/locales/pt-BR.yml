@@ -102,7 +102,6 @@ pt-BR:
 
           observations:
             open: "Próximo cio: %{next_heat_date}"
-            open_without_heat: "Não é possível estimar o próximo cio"
             in_heat: "Aguardando cobertura"
             heat_expired: "Cio expirado"
             inseminated: "Aguardando diagnóstico de prenhez"

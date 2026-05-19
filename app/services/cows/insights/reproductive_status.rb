@@ -79,7 +79,7 @@ module Cows
       end
 
       def open_observation
-        return I18n.t!("cows.insights.profile.reproductive_status.observations.open_without_heat") if cow.last_heat_at.blank?
+        return nil if cow.last_heat_at.blank?
 
         I18n.t!(
           "cows.insights.profile.reproductive_status.observations.open",
