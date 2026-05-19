@@ -110,7 +110,7 @@ pt-BR:
 
           alerts:
             heat_overdue: "Cio fora do período estimado"
-            heat_ending_soon: "Restam %{remaining_hours}h de cio"
+            heat_ending_soon: "Restam %{remaining_hours} horas de cio"
             pregnancy_check_due: "Registre a verificação de prenhez em breve"
             pregnancy_check_overdue: "Verificação de prenhez atrasada"
             calving_due_soon: "Prenhez em fase final"

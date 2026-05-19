@@ -236,8 +236,8 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         end
       end
 
-      context "com parto previsto para os próximos 15 dias" do
-        let(:last_insemination_at) { 275.days.ago.change(usec: 0) }
+      context "com parto previsto para os próximos 20 dias" do
+        let(:last_insemination_at) { 270.days.ago.change(usec: 0) }
 
         it "retorna alerta de parto próximo" do
           result = described_class.new(cow: cow).call

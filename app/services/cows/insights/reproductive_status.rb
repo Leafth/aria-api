@@ -130,7 +130,7 @@ module Cows
       end
 
       def calving_due_soon?
-        expected_calving_date.present? && expected_calving_date.between?(Date.current, 15.days.from_now.to_date)
+        expected_calving_date.present? && expected_calving_date.between?(Date.current, 20.days.from_now.to_date)
       end
 
       def calving_overdue?
