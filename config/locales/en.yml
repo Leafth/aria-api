@@ -47,12 +47,11 @@ en:
 
           observations:
             open: "Next heat: %{next_heat_date}"
-            open_without_heat: "No previous heat date available to estimate the next heat"
-            in_heat: "Register an insemination. %{remaining_hours}h remaining"
+            in_heat: "Register an insemination"
             heat_expired: "Heat expired"
             inseminated: "Waiting for pregnancy diagnosis"
             pregnant: "Estimated calving date: %{calving_date}"
-            postpartum: "Calving date: %{calving_date}"
+            postpartum: "%{days_since_calving} days since calving"
 
           alerts:
             heat_overdue: "Cio outside the estimated period"
@@ -64,11 +63,12 @@ en:
 
       index:
         status:
-          open: "Last calving"
+          open: "Last heat"
           in_heat: "Heat confirmed"
           inseminated: "Breeding completed"
           pregnant: "Pregnancy confirmed"
           postpartum: "Calving"
+          weighing: "Weighing"
 
   events:
     errors:
