@@ -107,7 +107,7 @@ pt-BR:
             heat_expired: "Cio expirado"
             inseminated: "Aguardando diagnóstico de prenhez"
             pregnant: "Parto previsto: %{calving_date}"
-            postpartum: "Dias desde o parto: %{days_since_calving}"
+            postpartum: "%{days_since_calving} dias desde o parto"
 
           alerts:
             heat_overdue: "Cio fora do período estimado"

@@ -36,9 +36,7 @@ module Cows
 
       def status_occurred_at
         case cow.reproductive_status
-        when "open"
-          cow.last_calving_at
-        when "in_heat"
+        when "open", "in_heat"
           cow.last_heat_at
         when "inseminated"
           cow.last_insemination_at
