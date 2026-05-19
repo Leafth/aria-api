@@ -90,10 +90,7 @@ module Cows
       def in_heat_observation
         return I18n.t!("cows.insights.profile.reproductive_status.observations.heat_expired") unless remaining_heat_hours.positive?
 
-        I18n.t!(
-          "cows.insights.profile.reproductive_status.observations.in_heat",
-          remaining_hours: remaining_heat_hours
-        )
+        I18n.t!("cows.insights.profile.reproductive_status.observations.in_heat")
       end
 
       def inseminated_observation
