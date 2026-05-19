@@ -37,7 +37,7 @@ module Cows
       def weight_insight
         {
           current_weight: cow.weight,
-          last_weighing_at: last_weighing&.occurred_at
+          last_weighing_at: last_weighing_at
         }
       end
 
@@ -71,6 +71,10 @@ module Cows
         return "young" if cow.phase == "heifer" && cow.weight >= 180
 
         nil
+      end
+
+      def last_weighing_at
+        last_weighing&.occurred_at || cow.birth_date
       end
 
       def last_weighing

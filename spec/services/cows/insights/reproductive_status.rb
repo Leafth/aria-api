@@ -33,13 +33,13 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
       let(:reproductive_status) { "open" }
 
       context "sem data de cio anterior" do
-        it "retorna mensagem, observação padrão e nenhum alerta" do
+        it "retorna mensagem e nenhum alerta" do
           result = described_class.new(cow: cow).call
 
           expect(result).to eq(
             status: "open",
             message: I18n.t!("cows.insights.profile.reproductive_status.messages.open"),
-            observation: I18n.t!("cows.insights.profile.reproductive_status.observations.open_without_heat"),
+            observation: nil,
             alerts: []
           )
         end
@@ -236,8 +236,8 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         end
       end
 
-      context "com parto previsto para os próximos 15 dias" do
-        let(:last_insemination_at) { 275.days.ago.change(usec: 0) }
+      context "com parto previsto para os próximos 20 dias" do
+        let(:last_insemination_at) { 270.days.ago.change(usec: 0) }
 
         it "retorna alerta de parto próximo" do
           result = described_class.new(cow: cow).call
@@ -293,13 +293,15 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
 
       it "retorna data do parto e nenhum alerta" do
         result = described_class.new(cow: cow).call
+        days_since_calving = (Time.zone.today - cow.last_calving_at.to_date).to_i
+
 
         expect(result).to eq(
           status: "postpartum",
           message: I18n.t!("cows.insights.profile.reproductive_status.messages.postpartum"),
           observation: I18n.t!(
             "cows.insights.profile.reproductive_status.observations.postpartum",
-            calving_date: I18n.l(last_calving_at.to_date)
+            days_since_calving: days_since_calving
           ),
           alerts: []
         )

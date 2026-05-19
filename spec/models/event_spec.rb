@@ -50,4 +50,16 @@ RSpec.describe Event, type: :model do
     expect(event).not_to be_valid
     expect(event.errors[:occurred_at]).to include(I18n.t!("activerecord.errors.models.event.attributes.occurred_at.future_date"))
   end
+
+  it "é inválido com data anterior à data de nascimento da matriz" do
+    event = Event.new(
+      cow: cow,
+      tenant: tenant,
+      event_type: "inactivation",
+      occurred_at: cow.birth_date - 1.day
+    )
+
+    expect(event).not_to be_valid
+    expect(event.errors[:occurred_at]).to include(I18n.t!("activerecord.errors.models.event.attributes.occurred_at.before_birth_date"))
+  end
 end

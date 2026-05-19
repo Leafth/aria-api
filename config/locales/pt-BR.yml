@@ -102,16 +102,15 @@ pt-BR:
 
           observations:
             open: "Próximo cio: %{next_heat_date}"
-            open_without_heat: "Não é possível estimar o próximo cio"
             in_heat: "Aguardando cobertura"
             heat_expired: "Cio expirado"
             inseminated: "Aguardando diagnóstico de prenhez"
             pregnant: "Parto previsto: %{calving_date}"
-            postpartum: "Data do parto: %{calving_date}"
+            postpartum: "%{days_since_calving} dias desde o parto"
 
           alerts:
             heat_overdue: "Cio fora do período estimado"
-            heat_ending_soon: "Restam %{remaining_hours}h de cio"
+            heat_ending_soon: "Restam %{remaining_hours} horas de cio"
             pregnancy_check_due: "Registre a verificação de prenhez em breve"
             pregnancy_check_overdue: "Verificação de prenhez atrasada"
             calving_due_soon: "Prenhez em fase final"
@@ -119,11 +118,12 @@ pt-BR:
 
       index:
         status:
-          open: "Último parto"
-          in_heat: "Cio confirmado"
+          open: "Último cio"
+          in_heat: "Em cio"
           inseminated: "Cobertura realizada"
           pregnant: "Prenhez confirmada"
           postpartum: "Parto"
+          weighing: "Pesagem"
 
   events:
     errors:
@@ -203,3 +203,5 @@ pt-BR:
           attributes:
             occurred_at:
               future_date: "não pode estar no futuro"
+              before_birth_date: "não pode ser anterior ao nascimento da matriz"
+ 

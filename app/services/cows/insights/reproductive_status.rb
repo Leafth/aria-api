@@ -79,7 +79,7 @@ module Cows
       end
 
       def open_observation
-        return I18n.t!("cows.insights.profile.reproductive_status.observations.open_without_heat") if cow.last_heat_at.blank?
+        return nil if cow.last_heat_at.blank?
 
         I18n.t!(
           "cows.insights.profile.reproductive_status.observations.open",
@@ -109,7 +109,7 @@ module Cows
       def postpartum_observation
         I18n.t!(
           "cows.insights.profile.reproductive_status.observations.postpartum",
-          calving_date: I18n.l(cow.last_calving_at.to_date)
+          days_since_calving: days_since_calving
         )
       end
 
@@ -130,7 +130,7 @@ module Cows
       end
 
       def calving_due_soon?
-        expected_calving_date.present? && expected_calving_date.between?(Date.current, 15.days.from_now.to_date)
+        expected_calving_date.present? && expected_calving_date.between?(Date.current, 20.days.from_now.to_date)
       end
 
       def calving_overdue?
@@ -206,6 +206,10 @@ module Cows
         return nil if cow.last_insemination_at.blank?
 
         cow.last_insemination_at.to_date + 285.days
+      end
+
+      def days_since_calving
+        (Time.zone.today - cow.last_calving_at.to_date).to_i
       end
     end
   end
