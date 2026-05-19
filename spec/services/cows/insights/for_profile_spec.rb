@@ -60,12 +60,13 @@ RSpec.describe Cows::Insights::ForProfile do
       older_weighing_at = 2.days.ago.change(usec: 0)
       latest_weighing_at = 1.day.ago.change(usec: 0)
 
-      cow.events.create!(
-        tenant: tenant,
-        event_type: "weighing",
-        occurred_at: older_weighing_at,
-        data: { weight: 95 }
-      )
+      Events::Weighing.new(
+        cow: cow,
+        params: {
+          occurred_at: older_weighing_at,
+          data: { weight: 95 }
+        }
+      ).call
 
       Events::Weighing.new(
         cow: cow,
