@@ -109,7 +109,7 @@ module Cows
       def postpartum_observation
         I18n.t!(
           "cows.insights.profile.reproductive_status.observations.postpartum",
-          calving_date: I18n.l(cow.last_calving_at.to_date)
+          days_since_calving: days_since_calving
         )
       end
 
@@ -206,6 +206,10 @@ module Cows
         return nil if cow.last_insemination_at.blank?
 
         cow.last_insemination_at.to_date + 285.days
+      end
+
+      def days_since_calving
+        (Time.zone.today - cow.last_calving_at.to_date).to_i
       end
     end
   end

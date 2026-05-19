@@ -293,13 +293,15 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
 
       it "retorna data do parto e nenhum alerta" do
         result = described_class.new(cow: cow).call
+        days_since_calving = (Time.zone.today - cow.last_calving_at.to_date).to_i
+
 
         expect(result).to eq(
           status: "postpartum",
           message: I18n.t!("cows.insights.profile.reproductive_status.messages.postpartum"),
           observation: I18n.t!(
             "cows.insights.profile.reproductive_status.observations.postpartum",
-            calving_date: I18n.l(last_calving_at.to_date)
+            days_since_calving: days_since_calving
           ),
           alerts: []
         )
