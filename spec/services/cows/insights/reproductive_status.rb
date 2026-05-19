@@ -33,13 +33,13 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
       let(:reproductive_status) { "open" }
 
       context "sem data de cio anterior" do
-        it "retorna mensagem, observação padrão e nenhum alerta" do
+        it "retorna mensagem e nenhum alerta" do
           result = described_class.new(cow: cow).call
 
           expect(result).to eq(
             status: "open",
             message: I18n.t!("cows.insights.profile.reproductive_status.messages.open"),
-            observation: I18n.t!("cows.insights.profile.reproductive_status.observations.open_without_heat"),
+            observation: nil,
             alerts: []
           )
         end
