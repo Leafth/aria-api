@@ -7,7 +7,17 @@ class CowProfileSerializer < ActiveModel::Serializer
     :active,
     :insights
 
+    attribute :inactive_status, unless: :active?
+
     def insights
       Cows::Insights::ForProfile.new(cow: object).call
+    end
+
+    def inactive_status
+      Cows::Insights::InactiveStatus.new(cow: object).call
+    end
+
+    def active?
+      object.active?
     end
 end
