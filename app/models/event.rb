@@ -27,6 +27,7 @@ class Event < ApplicationRecord
   validates :occurred_at, presence: true
 
   validate :occurred_at_cannot_be_in_future
+  validate :occurred_at_cannot_be_before_birth_date
 
   def reproductive?
     event_type.in?(REPRODUCTIVE_EVENT_TYPES)
@@ -40,5 +41,11 @@ class Event < ApplicationRecord
     if occurred_at > Time.current
       errors.add(:occurred_at, :future_date)
     end
+  end
+
+  def occurred_at_cannot_be_before_birth_date
+    return unless occurred_at.present?
+
+    errors.add(:occurred_at, :before_birth_date) if occurred_at < cow.birth_date
   end
 end

@@ -148,3 +148,4 @@ en:
           attributes:
             occurred_at:
               future_date: "cannot be in the future"
+              before_birth_date: "cannot be before cow's birth date"

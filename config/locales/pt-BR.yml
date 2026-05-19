@@ -203,3 +203,5 @@ pt-BR:
           attributes:
             occurred_at:
               future_date: "não pode estar no futuro"
+              before_birth_date: "não pode ser anterior ao nascimento da matriz"
+ 
