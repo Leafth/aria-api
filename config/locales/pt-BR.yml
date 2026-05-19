@@ -90,7 +90,7 @@ pt-BR:
         phase:
           adequate: "Fase adequada"
           below_weight: "Abaixo do peso esperado"
-          change_suggested: "Sugestão: mudar fase para %{phase}"
+          change_suggested: "Sugestão: alterar fase para %{phase}"
 
         reproductive_status:
           messages:
