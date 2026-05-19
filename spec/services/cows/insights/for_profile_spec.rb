@@ -46,7 +46,7 @@ RSpec.describe Cows::Insights::ForProfile do
         reproductive_status: reproductive_status_insight,
         weight_insight: {
           current_weight: 90,
-          last_weighing_at: nil
+          last_weighing_at: cow.birth_date
         },
         phase_insight: {
           current_phase: "calf",

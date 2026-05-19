@@ -23,7 +23,7 @@ RSpec.describe Cows::Insights::ForIndex do
   end
 
   let(:reproductive_status) { "open" }
-  let(:last_heat_at) { nil }
+  let(:last_heat_at) { Time.zone.parse("2026-05-18 10:00:00") }
   let(:last_insemination_at) { nil }
   let(:pregnancy_confirmed_at) { nil }
   let(:last_calving_at) { nil }
@@ -55,7 +55,7 @@ RSpec.describe Cows::Insights::ForIndex do
         status: {
           code: "open",
           message: I18n.t!("cows.insights.index.status.open"),
-          occurred_at: nil
+          occurred_at: I18n.l(last_heat_at.to_date)
         },
         alerts: [
           {
@@ -68,23 +68,38 @@ RSpec.describe Cows::Insights::ForIndex do
     end
 
     context "quando o status é open" do
-      let(:reproductive_status) { "open" }
-      let(:last_calving_at) { Time.zone.parse("2026-05-01 10:00:00") }
+      context "e a matriz não tem cio cadastrado" do
+        let(:reproductive_status) { "open" }
+        let(:last_heat_at) { nil }
 
-      it "usa a data do último parto como occurred_at" do
-        result = described_class.new(cow: cow).call
+        it "retorna observações de pesagem" do
+          result = described_class.new(cow: cow).call
 
-        expect(result[:status]).to eq(
-          code: "open",
-          message: I18n.t!("cows.insights.index.status.open"),
-          occurred_at: I18n.l(last_calving_at.to_date)
-        )
+          expect(result[:status]).to eq(
+            code: "weighing",
+            message: I18n.t!("cows.insights.index.status.weighing"),
+            occurred_at: I18n.l(cow.birth_date)
+          )
+        end
+      end
+
+      context "e a matriz tem cio cadastrado" do
+        let(:reproductive_status) { "open" }
+
+        it "usa a data do último cio como occurred_at" do
+          result = described_class.new(cow: cow).call
+
+          expect(result[:status]).to eq(
+            code: "open",
+            message: I18n.t!("cows.insights.index.status.open"),
+            occurred_at: I18n.l(last_heat_at.to_date)
+          )
+        end
       end
     end
 
     context "quando o status é in_heat" do
       let(:reproductive_status) { "in_heat" }
-      let(:last_heat_at) { Time.zone.parse("2026-05-18 10:00:00") }
 
       it "usa a data do último cio como occurred_at" do
         result = described_class.new(cow: cow).call
