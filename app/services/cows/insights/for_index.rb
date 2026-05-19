@@ -94,7 +94,7 @@ module Cows
       end
 
       def show_growth_status?
-        cow.phase.in?(%w[calf heifer]) && cow.last_heat_at.blank?
+        cow.last_heat_at.blank?
       end
 
       def reproductive_status
