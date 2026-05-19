@@ -125,7 +125,7 @@ module Cows
       end
 
       def pregnancy_check_due?
-        days_since_insemination.between?(28, 30)
+        days_since_insemination.between?(20, 30)
       end
 
       def pregnancy_check_overdue?
