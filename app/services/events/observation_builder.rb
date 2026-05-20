@@ -20,6 +20,8 @@ module Events
         insemination_observation
       when "pregnancy_check"
         pregnancy_check_observation
+      when "calving"
+        calving_observation
       else
         nil
       end
@@ -104,6 +106,10 @@ module Events
       return nil if result.blank?
 
       I18n.t!("events.observations.pregnancy_check.#{result}")
+    end
+
+    def calving_observation
+      event.data["observation".presence]
     end
 
     def previous_weighing
