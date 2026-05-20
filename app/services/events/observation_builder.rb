@@ -14,6 +14,8 @@ module Events
         phase_change_observation
       when "inactivation"
         inactivation_observation
+      when "heat_detection"
+        heat_detection_observation
       else
         nil
       end
@@ -65,6 +67,10 @@ module Events
       return text if observation.blank?
 
       "#{text} - #{observation}"
+    end
+
+    def heat_detection_observation
+      event.data["observation".presence]
     end
 
     def previous_weighing
