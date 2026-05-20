@@ -12,6 +12,8 @@ module Events
         weighing_observation
       when "phase_change"
         phase_change_observation
+      when "inactivation"
+        inactivation_observation
       else
         nil
       end
@@ -47,6 +49,22 @@ module Events
         previous_phase: I18n.t!("activerecord.attributes.cow.phases.#{previous_phase}"),
         phase: I18n.t!("activerecord.attributes.cow.phases.#{phase}")
       )
+    end
+
+    def inactivation_observation
+      reason = event.data["reason"]
+      observation = event.data["observation"]
+
+      return nil if reason.blank?
+
+      text = I18n.t!(
+        "events.observations.inactivation",
+        reason: I18n.t!("events.inactivation.reasons.#{reason}")
+      )
+
+      return text if observation.blank?
+
+      "#{text} - #{observation}"
     end
 
     def previous_weighing

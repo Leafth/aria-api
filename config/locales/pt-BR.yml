@@ -155,9 +155,14 @@ pt-BR:
 
       phase_change: "De %{previous_phase} para %{phase}"
 
+      inactivation: "Inativada por %{reason}"
+
     inactivation:
       reason_required: "O motivo é obrigatório"
       invalid_reason: "Motivo inválido"
+      reasons:
+        sale: "venda"
+        death: "morte"
 
     weighing:
       weight_required: "O peso é obrigatório"

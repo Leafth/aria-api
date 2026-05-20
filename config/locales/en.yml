@@ -100,9 +100,14 @@ en:
 
       phase_change: "Changed from %{previous_phase} to %{phase}"
 
+      inactivation: "Inactivated due to %{reason}"
+
     inactivation:
       reason_required: "reason is required"
       invalid_reason: "invalid reason"
+      reasons:
+        sale: "sale"
+        death: "death"
 
     weighing:
       weight_required: "weight is required"
