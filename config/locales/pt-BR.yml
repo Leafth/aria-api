@@ -161,8 +161,8 @@ pt-BR:
       insemination_with_company: "%{method}: %{bull} (%{company})"
 
       pregnancy_check:
-        positive: "Diagnóstico positivo"
-        negative: "Diagnóstico negativo"
+        positive: "Resultado positivo"
+        negative: "Resultado negativo"
 
     inactivation:
       reason_required: "O motivo é obrigatório"
@@ -200,6 +200,14 @@ pt-BR:
 
       event:
         occurred_at: "Data do evento"
+        event_type:
+          weighing: "Pesagem"
+          phase_change: "Mudança de fase"
+          inactivation: "Inativação"
+          heat_detection: "Cio detectado"
+          insemination: "Cobertura realizada"
+          pregnancy_check: "Diagnóstico de prenhez"
+          calving: "Parto registrado"
 
     errors:
       models:

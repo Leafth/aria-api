@@ -106,8 +106,8 @@ en:
       insemination_with_company: "%{method}: %{bull} - %{company}"
 
       pregnancy_check:
-        positive: "Positive diagnosis"
-        negative: "Negative diagnosis"
+        positive: "Positive result"
+        negative: "Negative result"
 
     inactivation:
       reason_required: "reason is required"
@@ -145,6 +145,14 @@ en:
 
       event:
         occurred_at: "Event date"
+        event_type:
+          weighing: "Weighing"
+          phase_change: "Phase change"
+          inactivation: "Inactivation"
+          heat_detection: "Heat detection"
+          insemination: "Insemination"
+          pregnancy_check: "Pregnancy check"
+          calving: "Calving"
 
     errors:
       models:
