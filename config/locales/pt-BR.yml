@@ -146,6 +146,13 @@ pt-BR:
       pregnancy_check:
         invalid_result: "O resultado da verificação de prenhez deve ser positive ou negative."
 
+    observations:
+      weighing:
+        first: "%{weight} kg"
+        gained: "+%{weight} kg"
+        lost: "-%{weight} kg"
+        maintened: "Manteve %{weight} kg"
+
     inactivation:
       reason_required: "O motivo é obrigatório"
       invalid_reason: "Motivo inválido"
@@ -204,4 +211,3 @@ pt-BR:
             occurred_at:
               future_date: "não pode estar no futuro"
               before_birth_date: "não pode ser anterior ao nascimento da matriz"
- 

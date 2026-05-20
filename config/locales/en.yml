@@ -91,6 +91,13 @@ en:
       pregnancy_check:
         invalid_result: "Pregnancy check result must be positive or negative."
 
+    observations:
+      weighing:
+        first: "%{weight} kg"
+        gained: "+%{weight} kg"
+        lost: "-%{weight} kg"
+        maintened: "Maintened %{weight} kg"
+
     inactivation:
       reason_required: "reason is required"
       invalid_reason: "invalid reason"
