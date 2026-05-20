@@ -89,10 +89,10 @@ module Api
       end
 
       def apply_sort(scope)
-        sort_by = params[:sort_by].presence || "created_at"
+        sort_by = params[:sort_by].presence || "updated_at"
         sort_dir = params[:sort_dir] == "asc" ? :asc : :desc
 
-        allowed_fields = %w[name breed birth_date weight created_at]
+        allowed_fields = %w[name breed birth_date weight created_at updated_at]
 
         return scope.order(created_at: :desc) unless allowed_fields.include?(sort_by)
 
