@@ -12,6 +12,18 @@ module Api
         render json: event, status: :created
       end
 
+      def index
+        cow = current_tenant.cows.find(params[:cow_id])
+
+        events = cow.events
+
+        events = apply_filters(events)
+        events = apply_sort(events)
+        events = paginate(events)
+
+        render_paginated events, serializer: EventSerializer
+      end
+
       private
 
       def build_event(cow)
@@ -46,6 +58,40 @@ module Api
 
           raise ActiveRecord::RecordInvalid.new(event)
         end
+      end
+
+      def apply_filters(scope)
+        scope = scope.reproductive if reproductive_filter?
+
+        scope = scope.where(event_type: params[:event_type]) if params[:event_type].present?
+        scope = scope.where("occurred_at >= ?", params[:occurred_from]) if params[:occurred_from].present?
+        scope = scope.where("occurred_at <= ?", params[:occurred_to]) if params[:occurred_to].present?
+        scope = scope.where("created_at >= ?", params[:created_from]) if params[:created_from].present?
+        scope = scope.where("created_at <= ?", params[:created_to]) if params[:created_to].present?
+
+        scope
+      end
+
+      def apply_sort(scope)
+        sort_by = params[:sort_by].presence || "occurred_at"
+        sort_dir = params[:sort_dir] == "asc" ? :asc : :desc
+
+        allowed_fields = %w[event_type occurred_at created_at updated_at]
+
+        return scope.order(occurred_at: :desc) unless allowed_fields.include?(sort_by)
+
+        scope.order(sort_by => sort_dir)
+      end
+
+      def paginate(scope)
+        page = params[:page].to_i > 0 ? params[:page].to_i : 1
+        per_page = params[:per_page].to_i > 0 ? params[:per_page].to_i : 10
+
+        scope.page(page).per(per_page)
+      end
+
+      def reproductive_filter?
+        ActiveModel::Type::Boolean.new.cast(params[:reproductive])
       end
     end
   end
