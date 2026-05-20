@@ -102,6 +102,9 @@ en:
 
       inactivation: "Inactivated due to %{reason}"
 
+      insemination: "%{method}: %{bull}"
+      insemination_with_company: "%{method}: %{bull} - %{company}"
+
     inactivation:
       reason_required: "reason is required"
       invalid_reason: "invalid reason"
@@ -112,6 +115,11 @@ en:
     weighing:
       weight_required: "weight is required"
       invalid_weight: "invalid weight"
+
+    insemination:
+      methods:
+        natural_mating: "Natural mating"
+        artificial_insemination: "Artificial insemination"
 
     phase_change:
       phase_required: "phase is required"

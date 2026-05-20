@@ -157,6 +157,9 @@ pt-BR:
 
       inactivation: "Inativada por %{reason}"
 
+      insemination: "%{method}: %{bull}"
+      insemination_with_company: "%{method}: %{bull} (%{company})"
+
     inactivation:
       reason_required: "O motivo é obrigatório"
       invalid_reason: "Motivo inválido"
@@ -175,6 +178,11 @@ pt-BR:
       phase_cannot_be_changed_manually: "A fase não pode ser alterada manualmente"
       phase_already_is: "A fase já é %{phase}"
       phase_cannot_go_backwards: "A fase não pode regredir"
+
+    insemination:
+      methods:
+        natural_mating: "Monta natural"
+        artificial_insemination: "Inseminação artificial"
 
   activerecord:
     attributes:

@@ -16,6 +16,8 @@ module Events
         inactivation_observation
       when "heat_detection"
         heat_detection_observation
+      when "insemination"
+        insemination_observation
       else
         nil
       end
@@ -71,6 +73,27 @@ module Events
 
     def heat_detection_observation
       event.data["observation".presence]
+    end
+
+    def insemination_observation
+      method = event.data["method"]
+      bull = Bull.find_by(id: event.data["bull_id"])
+
+      return nil if method.blank? && bull.blank?
+      return I18n.t!("events.insemination.methods.#{method}") if bull.blank?
+
+      return I18n.t!(
+        "events.observations.insemination_with_company",
+        method: I18n.t!("events.insemination.methods.#{method}"),
+        bull: bull.name,
+        company: bull.company&.name
+      ) if method == "artificial_insemination" && bull.company?
+
+      I18n.t!(
+        "events.observations.insemination",
+        method: I18n.t!("events.insemination.methods.#{method}"),
+        bull: bull.name
+      )
     end
 
     def previous_weighing
