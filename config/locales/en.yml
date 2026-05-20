@@ -96,7 +96,9 @@ en:
         first: "%{weight} kg"
         gained: "+%{weight} kg"
         lost: "-%{weight} kg"
-        maintened: "Maintened %{weight} kg"
+        maintened: "Maintained %{weight} kg"
+
+      phase_change: "Changed from %{previous_phase} to %{phase}"
 
     inactivation:
       reason_required: "reason is required"

@@ -153,6 +153,8 @@ pt-BR:
         lost: "-%{weight} kg"
         maintened: "Manteve %{weight} kg"
 
+      phase_change: "De %{previous_phase} para %{phase}"
+
     inactivation:
       reason_required: "O motivo é obrigatório"
       invalid_reason: "Motivo inválido"

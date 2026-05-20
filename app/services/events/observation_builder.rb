@@ -10,6 +10,8 @@ module Events
       case event.event_type
       when "weighing"
         weighing_observation
+      when "phase_change"
+        phase_change_observation
       else
         nil
       end
@@ -27,11 +29,24 @@ module Events
 
       diff = weight - previous_weight
 
-      return I18n.t!("events.observations.weighing.maintained") if diff.zero?
+      return I18n.t!("events.observations.weighing.maintained", weight: format(weight)) if diff.zero?
 
       key = diff.positive? ? "gained" : "lost"
 
       I18n.t!("events.observations.weighing.#{key}", weight: format(diff.abs))
+    end
+
+    def phase_change_observation
+      previous_phase = event.data["previous_phase"]
+      phase = event.data["phase"]
+
+      return nil if previous_phase.blank? || phase.blank?
+
+      I18n.t!(
+        "events.observations.phase_change",
+        previous_phase: I18n.t!("activerecord.attributes.cow.phases.#{previous_phase}"),
+        phase: I18n.t!("activerecord.attributes.cow.phases.#{phase}")
+      )
     end
 
     def previous_weighing
