@@ -6,7 +6,7 @@ class EventSerializer < ActiveModel::Serializer
   end
 
   def occurred_at
-    object.occurred_at&.strftime("%Y-%m-%d")
+    I18n.l(object.occurred_at.to_date)
   end
 
   def observation
