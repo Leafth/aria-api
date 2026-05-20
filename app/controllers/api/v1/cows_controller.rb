@@ -72,6 +72,7 @@ module Api
         scope = scope.where("weight >= ?", params[:weight_from]) if params[:weight_from].present?
         scope = scope.where("weight <= ?", params[:weight_to]) if params[:weight_to].present?
         scope = scope.where(phase: params[:phase]) if params[:phase].present?
+        scope = scope.where(reproductive_status: params[:reproductive_status]) if params[:reproductive_status].present?
         scope = scope.where(active: params[:active]) if params[:active].present?
         scope = scope.where("created_at >= ?", params[:created_from]) if params[:created_from].present?
         scope = scope.where("created_at <= ?", params[:created_to]) if params[:created_to].present?
