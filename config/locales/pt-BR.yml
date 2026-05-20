@@ -160,6 +160,10 @@ pt-BR:
       insemination: "%{method}: %{bull}"
       insemination_with_company: "%{method}: %{bull} (%{company})"
 
+      pregnancy_check:
+        positive: "Diagnóstico positivo"
+        negative: "Diagnóstico negativo"
+
     inactivation:
       reason_required: "O motivo é obrigatório"
       invalid_reason: "Motivo inválido"

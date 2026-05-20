@@ -103,7 +103,11 @@ en:
       inactivation: "Inactivated due to %{reason}"
 
       insemination: "%{method}: %{bull}"
-      insemination_with_company: "%{method}: %{bull} - %{company}"
+      insemination_with_company: "%{method}: %{bull} - %{company}"]
+
+      pregnancy_check:
+        positive: "Positive diagnosis"
+        negative: "Negative diagnosis"
 
     inactivation:
       reason_required: "reason is required"

@@ -18,6 +18,8 @@ module Events
         heat_detection_observation
       when "insemination"
         insemination_observation
+      when "pregnancy_check"
+        pregnancy_check_observation
       else
         nil
       end
@@ -94,6 +96,14 @@ module Events
         method: I18n.t!("events.insemination.methods.#{method}"),
         bull: bull.name
       )
+    end
+
+    def pregnancy_check_observation
+      result = event.data["result"]
+
+      return nil if result.blank?
+
+      I18n.t!("events.observations.pregnancy_check.#{result}")
     end
 
     def previous_weighing
