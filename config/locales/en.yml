@@ -91,13 +91,39 @@ en:
       pregnancy_check:
         invalid_result: "Pregnancy check result must be positive or negative."
 
+    observations:
+      weighing:
+        first: "%{weight} kg"
+        gained: "+%{weight} kg"
+        lost: "-%{weight} kg"
+        maintened: "Maintained %{weight} kg"
+
+      phase_change: "Changed from %{previous_phase} to %{phase}"
+
+      inactivation: "Inactivated due to %{reason}"
+
+      insemination: "%{method}: %{bull}"
+      insemination_with_company: "%{method}: %{bull} - %{company}"
+
+      pregnancy_check:
+        positive: "Positive result"
+        negative: "Negative result"
+
     inactivation:
       reason_required: "reason is required"
       invalid_reason: "invalid reason"
+      reasons:
+        sale: "sale"
+        death: "death"
 
     weighing:
       weight_required: "weight is required"
       invalid_weight: "invalid weight"
+
+    insemination:
+      methods:
+        natural_mating: "Natural mating"
+        artificial_insemination: "Artificial insemination"
 
     phase_change:
       phase_required: "phase is required"
@@ -119,6 +145,14 @@ en:
 
       event:
         occurred_at: "Event date"
+        event_type:
+          weighing: "Weighing"
+          phase_change: "Phase change"
+          inactivation: "Inactivation"
+          heat_detection: "Heat detection"
+          insemination: "Insemination"
+          pregnancy_check: "Pregnancy check"
+          calving: "Calving"
 
     errors:
       models:

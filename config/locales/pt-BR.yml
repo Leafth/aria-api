@@ -146,9 +146,30 @@ pt-BR:
       pregnancy_check:
         invalid_result: "O resultado da verificação de prenhez deve ser positive ou negative."
 
+    observations:
+      weighing:
+        first: "%{weight} kg"
+        gained: "+%{weight} kg"
+        lost: "-%{weight} kg"
+        maintened: "Manteve %{weight} kg"
+
+      phase_change: "De %{previous_phase} para %{phase}"
+
+      inactivation: "Inativada por %{reason}"
+
+      insemination: "%{method}: %{bull}"
+      insemination_with_company: "%{method}: %{bull} (%{company})"
+
+      pregnancy_check:
+        positive: "Resultado positivo"
+        negative: "Resultado negativo"
+
     inactivation:
       reason_required: "O motivo é obrigatório"
       invalid_reason: "Motivo inválido"
+      reasons:
+        sale: "venda"
+        death: "morte"
 
     weighing:
       weight_required: "O peso é obrigatório"
@@ -162,6 +183,11 @@ pt-BR:
       phase_already_is: "A fase já é %{phase}"
       phase_cannot_go_backwards: "A fase não pode regredir"
 
+    insemination:
+      methods:
+        natural_mating: "Monta natural"
+        artificial_insemination: "Inseminação artificial"
+
   activerecord:
     attributes:
       cow:
@@ -174,6 +200,14 @@ pt-BR:
 
       event:
         occurred_at: "Data do evento"
+        event_type:
+          weighing: "Pesagem"
+          phase_change: "Mudança de fase"
+          inactivation: "Inativação"
+          heat_detection: "Cio detectado"
+          insemination: "Cobertura realizada"
+          pregnancy_check: "Diagnóstico de prenhez"
+          calving: "Parto registrado"
 
     errors:
       models:
@@ -204,4 +238,3 @@ pt-BR:
             occurred_at:
               future_date: "não pode estar no futuro"
               before_birth_date: "não pode ser anterior ao nascimento da matriz"
- 
