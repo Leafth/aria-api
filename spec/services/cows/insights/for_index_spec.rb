@@ -18,6 +18,7 @@ RSpec.describe Cows::Insights::ForIndex do
       last_insemination_at: last_insemination_at,
       pregnancy_confirmed_at: pregnancy_confirmed_at,
       last_calving_at: last_calving_at,
+      last_weighing_at: last_weighing_at,
       active: true
     )
   end
@@ -27,6 +28,7 @@ RSpec.describe Cows::Insights::ForIndex do
   let(:last_insemination_at) { nil }
   let(:pregnancy_confirmed_at) { nil }
   let(:last_calving_at) { nil }
+  let(:last_weighing_at) { Time.zone.parse("2026-05-18 10:00:00") }
 
   let(:reproductive_status_insight) do
     {
@@ -78,7 +80,7 @@ RSpec.describe Cows::Insights::ForIndex do
           expect(result[:status]).to eq(
             code: "weighing",
             message: I18n.t!("cows.insights.index.status.weighing"),
-            occurred_at: I18n.l(cow.birth_date)
+            occurred_at: I18n.l(last_weighing_at.to_date)
           )
         end
       end
