@@ -40,7 +40,7 @@ module Api
       end
 
       def destroy
-        @cow.destroy
+        @cow.destroy!
         head :no_content
       end
 
@@ -98,7 +98,7 @@ module Api
         sort_by = params[:sort_by].presence || "updated_at"
         sort_dir = params[:sort_dir] == "asc" ? :asc : :desc
 
-        allowed_fields = %w[name breed birth_date weight created_at updated_at]
+        allowed_fields = %w[name ear_tag breed phase birth_date weight created_at updated_at]
 
         return scope.order(created_at: :desc) unless allowed_fields.include?(sort_by)
 
