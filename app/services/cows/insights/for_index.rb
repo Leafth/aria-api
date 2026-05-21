@@ -43,7 +43,7 @@ module Cows
       end
 
       def status_occurred_at
-        return last_weighing if show_growth_status?
+        return cow.last_weighing_at if show_growth_status?
 
         case cow.reproductive_status
         when "open", "in_heat"
@@ -83,10 +83,6 @@ module Cows
 
       def phase_message
         profile_insights.dig(:phase_insight, :message)
-      end
-
-      def last_weighing
-        profile_insights.dig(:weight_insight, :last_weighing_at)
       end
 
       def profile_insights

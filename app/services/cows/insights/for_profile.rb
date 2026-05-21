@@ -74,14 +74,7 @@ module Cows
       end
 
       def last_weighing_at
-        last_weighing&.occurred_at || cow.birth_date
-      end
-
-      def last_weighing
-        @last_weighing ||= cow.events
-          .where(event_type: "weighing")
-          .order(occurred_at: :desc, created_at: :desc)
-          .first
+        cow.last_weighing_at
       end
     end
   end
