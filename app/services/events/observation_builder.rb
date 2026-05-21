@@ -35,7 +35,7 @@ module Events
       weight = event.data["weight"].to_d
       previous_weight = previous_weighing&.data&.dig("weight")&.to_d
 
-      return I18n.t!("events.observations.weighing.first", weight: format(weight)) unless previous_weight
+      return I18n.t!("events.observations.weighing.recorded", weight: format(weight)) unless previous_weight
 
       diff = weight - previous_weight
 
@@ -43,7 +43,12 @@ module Events
 
       key = diff.positive? ? "gained" : "lost"
 
-      I18n.t!("events.observations.weighing.#{key}", weight: format(diff.abs))
+      I18n.t!(
+        "events.observations.weighing.#{key}",
+        previous_weight: format(previous_weight),
+        weight: format(weight),
+        difference: format(diff.abs)
+      )
     end
 
     def phase_change_observation

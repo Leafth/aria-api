@@ -148,10 +148,10 @@ pt-BR:
 
     observations:
       weighing:
-        first: "%{weight} kg"
-        gained: "+%{weight} kg"
-        lost: "-%{weight} kg"
-        maintened: "Manteve %{weight} kg"
+        recorded: "Peso inicial: %{weight} kg"
+        gained: "+%{difference} kg, passando de %{previous_weight} kg para %{weight} kg"
+        lost: "-%{difference} kg, passando de %{previous_weight} kg para %{weight} kg"
+        maintained: "Peso mantido em %{weight} kg"
 
       phase_change: "De %{previous_phase} para %{phase}"
 
