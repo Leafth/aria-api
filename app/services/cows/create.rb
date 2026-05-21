@@ -23,7 +23,7 @@ module Cows
       Events::Weighing.new(
         cow: cow,
         params: {
-          occurred_at: cow.created_at,
+          occurred_at: cow.created_at.beginning_of_day,
           data: {
             weight: cow.weight
           }
