@@ -4,7 +4,7 @@ module Api
       include CurrentTenant
       include AuthenticateRequest
 
-      before_action :set_cow, only: [ :show, :update ]
+      before_action :set_cow, only: [ :show, :update, :destroy ]
 
       def index
         cows = current_tenant.cows
@@ -37,6 +37,11 @@ module Api
         @cow.update!(update_cow_params)
 
         render json: @cow, serializer: CowSerializer, status: :ok
+      end
+
+      def destroy
+        @cow.destroy!
+        head :no_content
       end
 
       private
@@ -72,6 +77,7 @@ module Api
         scope = scope.where("weight >= ?", params[:weight_from]) if params[:weight_from].present?
         scope = scope.where("weight <= ?", params[:weight_to]) if params[:weight_to].present?
         scope = scope.where(phase: params[:phase]) if params[:phase].present?
+        scope = scope.where(reproductive_status: params[:reproductive_status]) if params[:reproductive_status].present?
         scope = scope.where(active: params[:active]) if params[:active].present?
         scope = scope.where("created_at >= ?", params[:created_from]) if params[:created_from].present?
         scope = scope.where("created_at <= ?", params[:created_to]) if params[:created_to].present?
@@ -89,10 +95,10 @@ module Api
       end
 
       def apply_sort(scope)
-        sort_by = params[:sort_by].presence || "created_at"
+        sort_by = params[:sort_by].presence || "updated_at"
         sort_dir = params[:sort_dir] == "asc" ? :asc : :desc
 
-        allowed_fields = %w[name breed birth_date weight created_at]
+        allowed_fields = %w[name ear_tag breed phase birth_date weight created_at updated_at]
 
         return scope.order(created_at: :desc) unless allowed_fields.include?(sort_by)
 
