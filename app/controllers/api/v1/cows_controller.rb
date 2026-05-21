@@ -4,7 +4,7 @@ module Api
       include CurrentTenant
       include AuthenticateRequest
 
-      before_action :set_cow, only: [ :show, :update ]
+      before_action :set_cow, only: [ :show, :update, :destroy ]
 
       def index
         cows = current_tenant.cows
@@ -37,6 +37,11 @@ module Api
         @cow.update!(update_cow_params)
 
         render json: @cow, serializer: CowSerializer, status: :ok
+      end
+
+      def destroy
+        @cow.destroy
+        head :no_content
       end
 
       private
