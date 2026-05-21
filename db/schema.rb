@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_13_113220) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_21_164356) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -65,6 +65,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_113220) do
     t.datetime "last_calving_at"
     t.datetime "last_heat_at"
     t.datetime "last_insemination_at"
+    t.datetime "last_weighing_at"
     t.string "name", null: false
     t.string "phase", null: false
     t.datetime "pregnancy_confirmed_at"
