@@ -28,16 +28,20 @@ RSpec.describe "Api::V1::Events", type: :request do
   end
 
   it "cria evento de pesagem" do
+    occurred_at = Time.zone.parse("2026-05-05")
+
     post "/api/v1/cows/#{cow.id}/events",
       params: {
         "event": {
           event_type: "weighing",
+          occurred_at: occurred_at,
           data: { weight: 200 }
         }
       }, headers: headers, as: :json
 
     expect(response).to have_http_status(:created)
     expect(cow.reload.weight).to eq(200)
+    expect(cow.reload.last_weighing_at).to eq(occurred_at)
     expect(Event.last.event_type).to eq("weighing")
   end
 

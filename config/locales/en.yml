@@ -93,10 +93,10 @@ en:
 
     observations:
       weighing:
-        first: "%{weight} kg"
-        gained: "+%{weight} kg"
-        lost: "-%{weight} kg"
-        maintened: "Maintained %{weight} kg"
+        recorded: "Initial weight: %{weight} kg"
+        gained: "+%{difference} kg, from %{previous_weight} kg to %{weight} kg"
+        lost: "-%{difference} kg, from %{previous_weight} kg to %{weight} kg"
+        maintained: "Weight maintained at %{weight} kg"
 
       phase_change: "Changed from %{previous_phase} to %{phase}"
 

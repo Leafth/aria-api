@@ -46,7 +46,7 @@ RSpec.describe Cows::Insights::ForProfile do
         reproductive_status: reproductive_status_insight,
         weight_insight: {
           current_weight: 90,
-          last_weighing_at: cow.birth_date
+          last_weighing_at: nil
         },
         phase_insight: {
           current_phase: "calf",
@@ -76,7 +76,7 @@ RSpec.describe Cows::Insights::ForProfile do
         }
       ).call
 
-      result = described_class.new(cow: cow).call
+      result = described_class.new(cow: cow.reload).call
 
       expect(result[:weight_insight]).to eq(
         current_weight: 100,

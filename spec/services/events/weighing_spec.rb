@@ -19,6 +19,8 @@ RSpec.describe Events::Weighing do
 
   describe "#call" do
     it "cria evento de pesagem" do
+      occurred_at = Time.zone.parse("2026-05-05")
+
       params = {
         event_type: "weighing",
         occurred_at: "2026-05-05",
@@ -31,6 +33,7 @@ RSpec.describe Events::Weighing do
       expect(event.event_type).to eq("weighing")
       expect(event.data["weight"]).to eq(200)
       expect(cow.reload.weight).to eq(200)
+      expect(cow.reload.last_weighing_at).to eq(occurred_at)
     end
 
     it "é inválido sem peso" do
@@ -58,15 +61,18 @@ RSpec.describe Events::Weighing do
     end
 
     it "mantém o peso da pesagem mais recente" do
+      recent_occurred_at = Time.zone.parse("2026-05-05")
+      old_occurred_at = Time.zone.parse("2026-01-01")
+
       params_one = {
         event_type: "weighing",
-        occurred_at: "2026-05-05",
+        occurred_at: recent_occurred_at,
         data: { weight: 200 }
       }
 
       params_two = {
         event_type: "weighing",
-        occurred_at: "2026-01-01",
+        occurred_at: old_occurred_at,
         data: { weight: 190 }
       }
 
@@ -74,6 +80,7 @@ RSpec.describe Events::Weighing do
       described_class.new(cow: cow, params: params_two).call
 
       expect(cow.reload.weight).to eq(200)
+      expect(cow.last_weighing_at).to eq(recent_occurred_at)
     end
 
     it "é inválido se a cow estiver inativa" do

@@ -22,7 +22,10 @@ module Api
       end
 
       def create
-        cow = current_tenant.cows.create!(cow_params)
+        cow = Cows::Create.new(
+          tenant: current_tenant,
+          params: cow_params
+        ).call
 
         render json: cow, serializer: CowSerializer, status: :created
       end
