@@ -114,4 +114,25 @@ RSpec.describe "Api::V1::Cows", type: :request do
       expect(body["name"]).to eq("Mimosa Atualizada")
     end
   end
+
+  describe "DELETE /api/v1/cows/:id" do
+    it "remove uma matriz" do
+      cow = tenant.cows.create!(
+        name: "Mimosa",
+        ear_tag: "001",
+        birth_date: "2023-01-01",
+        breed: "Nelore",
+        weight: 180,
+        phase: "calf",
+        active: true
+      )
+
+      expect {
+        delete "/api/v1/cows/#{cow.id}", headers: headers
+      }.to change(Cow, :count).by(-1)
+
+      expect(response).to have_http_status(:no_content)
+      expect(response.body).to be_blank
+    end
+  end
 end
