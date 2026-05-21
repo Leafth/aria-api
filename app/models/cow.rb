@@ -36,15 +36,18 @@ class Cow < ApplicationRecord
   end
 
   def weight_from_history
-    last_weighing = events
+     events
       .where(event_type: "weighing")
       .order(occurred_at: :desc, created_at: :desc)
       .first
-
-    last_weighing&.data&.dig("weight")&.to_f || weight
   end
 
   def recalculate_weight!
-    update!(weight: weight_from_history)
+    last_weighing = weight_from_history
+
+    update!(
+      weight: last_weighing&.data&.dig("weight")&.to_f || weight,
+      last_weighing_at: last_weighing&.occurred_at
+    )
   end
 end
