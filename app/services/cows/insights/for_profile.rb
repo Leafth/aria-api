@@ -19,7 +19,9 @@ module Cows
           weight_insight: weight_insight,
           phase_insight: phase_insight,
           recommended_next_action: recommended_next_action
-        }
+        }.tap do |profile|
+          profile[:days_since_last_calving] = days_since_last_calving if show_days_since_last_calving?
+        end
       end
 
       private
@@ -75,6 +77,14 @@ module Cows
 
       def last_weighing_at
         cow.last_weighing_at
+      end
+
+      def days_since_last_calving
+        (Date.current - cow.last_calving_at.to_date).to_i
+      end
+
+      def show_days_since_last_calving?
+        cow.reproductive_status != "pregnant" && cow.last_calving_at
       end
     end
   end
