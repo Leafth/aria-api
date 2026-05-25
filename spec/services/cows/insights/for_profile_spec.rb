@@ -204,5 +204,41 @@ RSpec.describe Cows::Insights::ForProfile do
         end
       end
     end
+
+    context "quando calcula os dias desde o último parto" do
+      let(:phase) { "primiparous" }
+      let(:reproductive_status) { "open" }
+      let(:last_calving_at) { 10.days.ago.change(usec: 0) }
+
+      before do
+        cow.update!(last_calving_at: last_calving_at)
+      end
+
+      it "retorna os dias desde o último parto quando o parto existe" do
+        result = described_class.new(cow: cow).call
+
+        expect(result[:days_since_last_calving]).to eq(10)
+      end
+
+      context "quando matriz está prenha" do
+        let(:reproductive_status) { "pregnant" }
+
+        it "não retorna os dias desde o último parto" do
+          result = described_class.new(cow: cow).call
+
+          expect(result).not_to have_key(:days_since_last_calving)
+        end
+      end
+
+      context "quando não existe último parto" do
+        let(:last_calving_at) { nil }
+
+        it "não retorna os dias desde o último parto" do
+          result = described_class.new(cow: cow.reload).call
+
+          expect(result).not_to have_key(:days_since_last_calving)
+        end
+      end
+    end
   end
 end

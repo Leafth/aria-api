@@ -63,7 +63,7 @@ module Api
       def apply_filters(scope)
         scope = scope.reproductive if reproductive_filter?
 
-        scope = scope.where(event_type: params[:event_type]) if params[:event_type].present?
+        scope = scope.where(event_type: event_types_filter) if event_types_filter.present?
         scope = scope.where("occurred_at >= ?", params[:occurred_from]) if params[:occurred_from].present?
         scope = scope.where("occurred_at <= ?", params[:occurred_to]) if params[:occurred_to].present?
         scope = scope.where("created_at >= ?", params[:created_from]) if params[:created_from].present?
@@ -92,6 +92,13 @@ module Api
 
       def reproductive_filter?
         ActiveModel::Type::Boolean.new.cast(params[:reproductive])
+      end
+
+      def event_types_filter
+        Array(params[:event_type])
+          .flat_map { |event_type| event_type.to_s.split(",") }
+          .map(&:strip)
+          .reject(&:blank?)
       end
     end
   end
