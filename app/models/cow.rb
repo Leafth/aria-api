@@ -2,6 +2,8 @@ class Cow < ApplicationRecord
   belongs_to :tenant
   has_many :events, dependent: :destroy
 
+  include HasTenantBreed
+
   enum :phase, {
     calf: "calf",
     heifer: "heifer",
@@ -21,7 +23,6 @@ class Cow < ApplicationRecord
   validates :name, presence: true
   validates :ear_tag, presence: true, uniqueness: { scope: :tenant_id }
   validates :birth_date, presence: true
-  validates :breed, presence: true
   validates :weight, presence: true, numericality: { greater_than: 0 }
   validates :phase, presence: true
   validates :reproductive_status, presence: true
