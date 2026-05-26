@@ -191,6 +191,7 @@ pt-BR:
   activerecord:
     attributes:
       cow:
+        breed: "Raça"
         phases:
           calf: "Bezerra"
           heifer: "Garrota"
@@ -233,10 +234,12 @@ pt-BR:
 
         cow:
           attributes:
-            phase:
-              invalid_phase: "é inválida"
+            breed:
+              required: "é obrigatória"
             birth_date:
               future_date: "não pode estar no futuro"
+            phase:
+              invalid_phase: "é inválida"
 
         event:
           attributes:

@@ -7,7 +7,7 @@ module Api
       before_action :set_cow, only: [ :show, :update, :destroy ]
 
       def index
-        cows = current_tenant.cows
+        cows = current_tenant.cows.includes(:breed)
 
         cows = apply_filters(cows)
         cows = apply_search(cows)
@@ -37,9 +37,12 @@ module Api
           }, status: :unprocessable_entity
         end
 
-        @cow.update!(update_cow_params)
+        cow = Cows::Update.new(
+          cow: @cow,
+          params: update_cow_params
+        )
 
-        render json: @cow, serializer: CowSerializer, status: :ok
+        render json: cow, serializer: CowSerializer, status: :ok
       end
 
       def destroy
@@ -58,7 +61,8 @@ module Api
           :name,
           :ear_tag,
           :birth_date,
-          :breed,
+          :breed_id,
+          :breed_name,
           :weight,
           :phase,
           :active
@@ -70,7 +74,8 @@ module Api
           :name,
           :ear_tag,
           :birth_date,
-          :breed
+          :breed_id,
+          :breed_name
         )
       end
 
@@ -79,6 +84,7 @@ module Api
         scope = scope.where("birth_date <= ?", params[:birth_to]) if params[:birth_to].present?
         scope = scope.where("weight >= ?", params[:weight_from]) if params[:weight_from].present?
         scope = scope.where("weight <= ?", params[:weight_to]) if params[:weight_to].present?
+        scope = scope.where(breed_id: params[:breed_id]) if params[:breed_id].present?
         scope = scope.where(phase: params[:phase]) if params[:phase].present?
         scope = scope.where(reproductive_status: params[:reproductive_status]) if params[:reproductive_status].present?
         scope = scope.where(active: params[:active]) if params[:active].present?
@@ -92,7 +98,7 @@ module Api
         return scope if params[:q].blank?
 
         scope.where(
-          "LOWER(cows.name) LIKE :q OR LOWER(cows.breed) LIKE :q OR LOWER(cows.ear_tag) LIKE :q",
+          "LOWER(cows.name) LIKE :q OR LOWER(cows.ear_tag) LIKE :q",
           q: "%#{params[:q].downcase}%"
         )
       end
@@ -101,7 +107,7 @@ module Api
         sort_by = params[:sort_by].presence || "updated_at"
         sort_dir = params[:sort_dir] == "asc" ? :asc : :desc
 
-        allowed_fields = %w[name ear_tag breed phase birth_date weight created_at updated_at]
+        allowed_fields = %w[name ear_tag phase birth_date weight created_at updated_at]
 
         return scope.order(created_at: :desc) unless allowed_fields.include?(sort_by)
 
