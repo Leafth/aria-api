@@ -22,6 +22,8 @@ module Events
         pregnancy_check_observation
       when "calving"
         calving_observation
+      when "pregnancy_interruption"
+        pregnancy_interruption_observation
       else
         nil
       end
@@ -114,6 +116,10 @@ module Events
     end
 
     def calving_observation
+      event.data["observation".presence]
+    end
+
+    def pregnancy_interruption_observation
       event.data["observation".presence]
     end
 
