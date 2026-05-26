@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Cow, type: :model do
   let(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste") }
+  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
 
   def build_cow(attrs = {})
     Cow.new({
@@ -9,7 +10,7 @@ RSpec.describe Cow, type: :model do
       name: "Mimosa",
       ear_tag: "001",
       birth_date: Date.new(2023, 1, 1),
-      breed: "Nelore",
+      breed: breed,
       weight: 180,
       phase: "calf",
       active: true
@@ -49,7 +50,7 @@ RSpec.describe Cow, type: :model do
       name: "Mimosa",
       ear_tag: "001",
       birth_date: Date.new(2023, 1, 1),
-      breed: "Nelore",
+      breed: breed,
       weight: 180,
       phase: "calf",
       active: true

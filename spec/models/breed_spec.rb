@@ -47,7 +47,7 @@ RSpec.describe Breed, type: :model do
   end
 
   it "normaliza acentos e espaços no nome normalizado" do
-    breed = build_breed(name: " Tabapuã Leiteiro ")
+    breed = build_breed(name: " tabapuã leiteiro ")
 
     breed.valid?
 

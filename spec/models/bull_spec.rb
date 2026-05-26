@@ -3,12 +3,13 @@ require 'rails_helper'
 RSpec.describe Bull, type: :model do
   let(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste") }
   let(:company) { Company.create!(tenant: tenant, name: "Empresa Teste") }
+  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
 
   def build_bull(attrs = {})
     Bull.new({
       tenant: tenant,
       name: "Touro 1",
-      breed: "Nelore",
+      breed: breed,
       origin: :local,
       ear_tag: "001",
       company: nil
@@ -63,7 +64,7 @@ RSpec.describe Bull, type: :model do
     Bull.create!(
       tenant: tenant,
       name: "Touro 2",
-      breed: "Nelore",
+      breed: breed,
       origin: :local,
       ear_tag: "001",
     )
