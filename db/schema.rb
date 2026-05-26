@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_21_164356) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_25_173835) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -29,6 +29,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_164356) do
     t.index ["revoked_at"], name: "index_auth_sessions_on_revoked_at"
     t.index ["tenant_id"], name: "index_auth_sessions_on_tenant_id"
     t.index ["user_id"], name: "index_auth_sessions_on_user_id"
+  end
+
+  create_table "breeds", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "normalized_name", null: false
+    t.uuid "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id", "normalized_name"], name: "index_breeds_on_tenant_id_and_normalized_name", unique: true
+    t.index ["tenant_id"], name: "index_breeds_on_tenant_id"
   end
 
   create_table "bulls", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -119,6 +129,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_164356) do
 
   add_foreign_key "auth_sessions", "tenants"
   add_foreign_key "auth_sessions", "users"
+  add_foreign_key "breeds", "tenants"
   add_foreign_key "bulls", "companies"
   add_foreign_key "bulls", "tenants"
   add_foreign_key "companies", "tenants"
