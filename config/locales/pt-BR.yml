@@ -133,6 +133,7 @@ pt-BR:
       invalid_insemination_transition: "A inseminação só pode ser registrada para matrizes em cio."
       invalid_pregnancy_check_transition: "A verificação de prenhez só pode ser registrada para matrizes inseminadas."
       invalid_calving_transition: "O parto só pode ser registrado para matrizes prenhas."
+      invalid_pregnancy_interruption_transition: "A interrupção de prenhez só pode ser registrada em matrizes prenhas"
 
       insemination:
         heat_expired: "A inseminação deve ocorrer em até 24 horas após a detecção do cio."
@@ -144,7 +145,7 @@ pt-BR:
         natural_mating_requires_local_bull: "A monta natural exige um touro local"
 
       pregnancy_check:
-        invalid_result: "O resultado da verificação de prenhez deve ser positive ou negative."
+        invalid_result: "O resultado da verificação de prenhez deve ser positivo ou negativo."
 
     observations:
       weighing:
@@ -209,6 +210,7 @@ pt-BR:
           insemination: "Cobertura realizada"
           pregnancy_check: "Diagnóstico de prenhez"
           calving: "Parto registrado"
+          pregnancy_interruption: "Interrupção de prenhez"
 
       bull:
         breed: "Raça"
