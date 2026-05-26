@@ -40,7 +40,7 @@ module Api
         cow = Cows::Update.new(
           cow: @cow,
           params: update_cow_params
-        )
+        ).call
 
         render json: cow, serializer: CowSerializer, status: :ok
       end
