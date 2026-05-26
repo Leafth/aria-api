@@ -209,6 +209,9 @@ pt-BR:
           pregnancy_check: "Diagnóstico de prenhez"
           calving: "Parto registrado"
 
+      bull:
+        breed: "Raça"
+
     errors:
       models:
         user:
@@ -218,6 +221,8 @@ pt-BR:
 
         bull:
           attributes:
+            breed:
+              required: "é obrigatória"
             origin:
               invalid_origin: "é inválida"
             company:

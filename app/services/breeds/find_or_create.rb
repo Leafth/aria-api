@@ -8,9 +8,7 @@ module Breeds
 
     def call
       return find_breed if breed_id.present?
-      return find_or_create_breed if breed_name.present?
-
-      raise ActiveRecord::RecordInvalid, invalid_breed_record
+      find_or_create_breed if breed_name.present?
     end
 
     private
@@ -35,12 +33,6 @@ module Breeds
 
     def normalized_breed_name
       sanitized_breed_name.parameterize
-    end
-
-    def invalid_breed_record
-      Breed.new.tap do |breed|
-        breed.errors.add(:name, :blank)
-      end
     end
   end
 end
