@@ -3,12 +3,14 @@ require "rails_helper"
 RSpec.describe "Api::V1::Events", type: :request do
   let!(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active) }
 
+  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
+
   let(:headers) { { "X-Tenant-Slug" => tenant.slug } }
 
   let!(:bull) do
     tenant.bulls.create!(
       name: "Touro Local",
-      breed: "Nelore",
+      breed: breed,
       origin: :local,
       ear_tag: "001"
     )
@@ -19,7 +21,7 @@ RSpec.describe "Api::V1::Events", type: :request do
       name: "Mimosa",
       ear_tag: "002",
       birth_date: "2023-01-01",
-      breed: "Nelore",
+      breed: breed,
       weight: 180,
       phase: "young",
       reproductive_status: "open",

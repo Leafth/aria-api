@@ -3,6 +3,8 @@ require "rails_helper"
 RSpec.describe "Api::V1::Bulls", type: :request do
   let!(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active) }
 
+  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
+
   let(:headers) { { "X-Tenant-Slug" => tenant.slug } }
 
   before do
@@ -22,7 +24,7 @@ RSpec.describe "Api::V1::Bulls", type: :request do
           params: {
             bull: {
               name: "Touro 1",
-              breed: "Nelore",
+              breed_name: "nelore",
               origin: "local",
               ear_tag: "001"
             }
@@ -44,7 +46,7 @@ RSpec.describe "Api::V1::Bulls", type: :request do
     it "lista touros com paginação" do
       tenant.bulls.create!(
         name: "Touro 1",
-        breed: "Nelore",
+        breed: breed,
         origin: "local",
         ear_tag: "001"
       )
@@ -64,7 +66,7 @@ RSpec.describe "Api::V1::Bulls", type: :request do
     it "exibe um touro" do
       bull = tenant.bulls.create!(
         name: "Touro 1",
-        breed: "Nelore",
+        breed: breed,
         origin: "local",
         ear_tag: "001"
       )
@@ -84,7 +86,7 @@ RSpec.describe "Api::V1::Bulls", type: :request do
     it "atualiza um touro" do
       bull = tenant.bulls.create!(
         name: "Touro 1",
-        breed: "Nelore",
+        breed: breed,
         origin: "local",
         ear_tag: "001"
       )
@@ -110,7 +112,7 @@ RSpec.describe "Api::V1::Bulls", type: :request do
     it "remove um touro" do
       bull = tenant.bulls.create!(
         name: "Touro 1",
-        breed: "Nelore",
+        breed: breed,
         origin: "local",
         ear_tag: "001"
       )
