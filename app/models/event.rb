@@ -11,6 +11,7 @@ class Event < ApplicationRecord
     insemination
     pregnancy_check
     calving
+    pregnancy_interruption
   ].freeze
 
   REPRODUCTIVE_EVENT_TYPES = %w[
@@ -18,6 +19,7 @@ class Event < ApplicationRecord
     insemination
     pregnancy_check
     calving
+    pregnancy_interruption
   ].freeze
 
   scope :reproductive, -> { where(event_type: REPRODUCTIVE_EVENT_TYPES) }

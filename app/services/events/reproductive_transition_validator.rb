@@ -13,6 +13,9 @@ module Events
       ],
       "calving" => %i[
         reproductive_pregnant?
+      ],
+      "pregnancy_interruption" => %i[
+        reproductive_pregnant?
       ]
     }.freeze
 
