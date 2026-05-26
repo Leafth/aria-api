@@ -14,7 +14,7 @@ class Breed < ApplicationRecord
   def normalize_name
     return if name.blank?
 
-    self.name = name.strip
+    self.name = name.strip.downcase.titleize
     self.normalized_name = name.parameterize
   end
 end
