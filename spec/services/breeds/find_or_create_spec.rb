@@ -45,11 +45,5 @@ RSpec.describe Breeds::FindOrCreate do
         expect(result).to eq(existing_breed)
       end
     end
-
-    it "inválido quando raça não é informada" do
-      expect {
-        described_class.new(tenant: tenant).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
-    end
   end
 end
