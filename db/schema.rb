@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_21_164356) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_26_110346) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -31,8 +31,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_164356) do
     t.index ["user_id"], name: "index_auth_sessions_on_user_id"
   end
 
+  create_table "breeds", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "normalized_name", null: false
+    t.uuid "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id", "normalized_name"], name: "index_breeds_on_tenant_id_and_normalized_name", unique: true
+    t.index ["tenant_id"], name: "index_breeds_on_tenant_id"
+  end
+
   create_table "bulls", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "breed", null: false
+    t.uuid "breed_id", null: false
     t.uuid "company_id"
     t.datetime "created_at", null: false
     t.string "ear_tag"
@@ -40,6 +50,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_164356) do
     t.string "origin", null: false
     t.uuid "tenant_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["breed_id"], name: "index_bulls_on_breed_id"
     t.index ["company_id"], name: "index_bulls_on_company_id"
     t.index ["tenant_id", "ear_tag"], name: "index_bulls_on_tenant_id_and_ear_tag", unique: true, where: "(ear_tag IS NOT NULL)"
     t.index ["tenant_id", "name"], name: "index_bulls_on_tenant_id_and_name"
@@ -59,7 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_164356) do
   create_table "cows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.date "birth_date", null: false
-    t.string "breed", null: false
+    t.uuid "breed_id", null: false
     t.datetime "created_at", null: false
     t.string "ear_tag", null: false
     t.datetime "last_calving_at"
@@ -73,6 +84,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_164356) do
     t.uuid "tenant_id", null: false
     t.datetime "updated_at", null: false
     t.decimal "weight", precision: 10, scale: 2, null: false
+    t.index ["breed_id"], name: "index_cows_on_breed_id"
     t.index ["reproductive_status"], name: "index_cows_on_reproductive_status"
     t.index ["tenant_id", "ear_tag"], name: "index_cows_on_tenant_id_and_ear_tag", unique: true
     t.index ["tenant_id"], name: "index_cows_on_tenant_id"
@@ -119,9 +131,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_164356) do
 
   add_foreign_key "auth_sessions", "tenants"
   add_foreign_key "auth_sessions", "users"
+  add_foreign_key "breeds", "tenants"
+  add_foreign_key "bulls", "breeds"
   add_foreign_key "bulls", "companies"
   add_foreign_key "bulls", "tenants"
   add_foreign_key "companies", "tenants"
+  add_foreign_key "cows", "breeds"
   add_foreign_key "cows", "tenants"
   add_foreign_key "events", "cows"
   add_foreign_key "events", "tenants"

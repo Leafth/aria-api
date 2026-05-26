@@ -2,13 +2,14 @@ class Bull < ApplicationRecord
   belongs_to :tenant
   belongs_to :company, optional: true
 
+  include HasTenantBreed
+
   enum :origin, {
     local: "local",
     company: "company"
   }, validate: { message: :invalid_origin }
 
   validates :name, presence: true
-  validates :breed, presence: true
   validates :origin, presence: true
 
   validates :ear_tag, uniqueness: { scope: :tenant_id }, allow_nil: true

@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe "Api::V1::Cows", type: :request do
   let!(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active) }
 
+  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
+
   let(:headers) { { "X-Tenant-Slug" => tenant.slug } }
 
   before do
@@ -24,7 +26,7 @@ RSpec.describe "Api::V1::Cows", type: :request do
               name: "Mimosa",
               ear_tag: "001",
               birth_date: "2023-01-01",
-              breed: "Nelore",
+              breed_name: "nelore",
               weight: 180,
               phase: "calf",
               active: true
@@ -46,7 +48,7 @@ RSpec.describe "Api::V1::Cows", type: :request do
         name: "Mimosa",
         ear_tag: "001",
         birth_date: "2023-01-01",
-        breed: "Nelore",
+        breed: breed,
         weight: 180,
         phase: "calf",
         active: true
@@ -69,7 +71,7 @@ RSpec.describe "Api::V1::Cows", type: :request do
         name: "Mimosa",
         ear_tag: "001",
         birth_date: "2023-01-01",
-        breed: "Nelore",
+        breed: breed,
         weight: 180,
         phase: "calf",
         active: true
@@ -92,7 +94,7 @@ RSpec.describe "Api::V1::Cows", type: :request do
         name: "Mimosa",
         ear_tag: "001",
         birth_date: "2023-01-01",
-        breed: "Nelore",
+        breed: breed,
         weight: 180,
         phase: "calf",
         active: true
@@ -121,7 +123,7 @@ RSpec.describe "Api::V1::Cows", type: :request do
         name: "Mimosa",
         ear_tag: "001",
         birth_date: "2023-01-01",
-        breed: "Nelore",
+        breed: breed,
         weight: 180,
         phase: "calf",
         active: true

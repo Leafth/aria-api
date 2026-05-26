@@ -5,12 +5,14 @@ RSpec.describe Cows::Insights::ForProfile do
     Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
   end
 
+  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
+
   let(:cow) do
     tenant.cows.create!(
       name: "Mimosa",
       ear_tag: "001",
       birth_date: "2023-01-01",
-      breed: "Nelore",
+      breed: breed,
       weight: weight,
       phase: phase,
       reproductive_status: reproductive_status,

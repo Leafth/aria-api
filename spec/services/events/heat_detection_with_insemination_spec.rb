@@ -5,10 +5,12 @@ RSpec.describe Events::HeatDetectionWithInsemination do
     Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
   end
 
+  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
+
   let!(:bull) do
     tenant.bulls.create!(
       name: "Touro Local",
-      breed: "Nelore",
+      breed: breed,
       origin: :local,
       ear_tag: "001"
     )
@@ -19,7 +21,7 @@ RSpec.describe Events::HeatDetectionWithInsemination do
       name: "Mimosa",
       ear_tag: "001",
       birth_date: "2023-01-01",
-      breed: "Nelore",
+      breed: breed,
       weight: 180,
       phase: "calf",
       reproductive_status: "open",

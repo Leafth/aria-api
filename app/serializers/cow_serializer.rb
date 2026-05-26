@@ -12,6 +12,10 @@ class CowSerializer < ActiveModel::Serializer
     attribute :insights, if: :active?
     attribute :inactive_status, unless: :active?
 
+    def breed
+      object.breed&.name
+    end
+
     def insights
       Cows::Insights::ForIndex.new(cow: object).call
     end

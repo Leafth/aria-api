@@ -1,4 +1,4 @@
-module Cows
+module Bulls
   class Create
     def initialize(tenant:, params:)
       @tenant = tenant
@@ -9,11 +9,7 @@ module Cows
       ActiveRecord::Base.transaction do
         breed = find_or_create_breed
 
-        cow = tenant.cows.create!(cow_params.merge(breed: breed))
-
-        create_initial_weighing!(cow)
-
-        cow
+        tenant.bulls.create!(bull_params.merge(breed: breed))
       end
     end
 
@@ -21,7 +17,7 @@ module Cows
 
     attr_reader :tenant, :params
 
-    def cow_params
+    def bull_params
       params.except(:breed_id, :breed_name)
     end
 
@@ -30,18 +26,6 @@ module Cows
         tenant: tenant,
         breed_id: params[:breed_id],
         breed_name: params[:breed_name]
-      ).call
-    end
-
-    def create_initial_weighing!(cow)
-      Events::Weighing.new(
-        cow: cow,
-        params: {
-          occurred_at: cow.created_at.beginning_of_day,
-          data: {
-            weight: cow.weight
-          }
-        }
       ).call
     end
   end

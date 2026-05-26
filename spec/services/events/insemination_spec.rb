@@ -5,12 +5,14 @@ RSpec.describe Events::Insemination do
     Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
   end
 
+  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
+
   let!(:company) { Company.create!(tenant: tenant, name: "Empresa Teste") }
 
   let!(:local_bull) do
     tenant.bulls.create!(
       name: "Touro Local",
-      breed: "Nelore",
+      breed: breed,
       origin: :local,
       ear_tag: "001"
     )
@@ -19,7 +21,7 @@ RSpec.describe Events::Insemination do
   let!(:company_bull) do
     tenant.bulls.create!(
       name: "Touro Empresa",
-      breed: "Nelore",
+      breed: breed,
       origin: :company,
       company: company
     )
@@ -33,7 +35,7 @@ RSpec.describe Events::Insemination do
       name: "Mimosa",
       ear_tag: "001",
       birth_date: "2023-01-01",
-      breed: "Nelore",
+      breed: breed,
       weight: 180,
       phase: "young",
       reproductive_status: "in_heat",

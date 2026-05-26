@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       resources :cows do
         resources :events, only: [ :index, :create ], controller: "events"
       end
+      resources :breeds, only: [ :index ]
     end
   end
 end
