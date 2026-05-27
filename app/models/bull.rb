@@ -20,6 +20,7 @@ class Bull < ApplicationRecord
 
   def origin_rules
     if local?
+      errors.add(:ear_tag, :local_without_ear_tag) if ear_tag.blank?
       errors.add(:company, :local_with_company) if company_id.present?
     end
 
