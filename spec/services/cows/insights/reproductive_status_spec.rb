@@ -20,6 +20,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
       last_insemination_at: last_insemination_at,
       pregnancy_confirmed_at: pregnancy_confirmed_at,
       last_calving_at: last_calving_at,
+      last_pregnancy_interruption_at: last_pregnancy_interruption_at,
       active: true
     )
   end
@@ -29,12 +30,29 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
   let(:last_insemination_at) { nil }
   let(:pregnancy_confirmed_at) { nil }
   let(:last_calving_at) { nil }
+  let(:last_pregnancy_interruption_at) { nil }
 
   describe "#call" do
     context "quando a matriz está aguardando cio" do
       let(:reproductive_status) { "open" }
 
       context "sem data de cio anterior" do
+        it "retorna mensagem e nenhum alerta" do
+          result = described_class.new(cow: cow).call
+
+          expect(result).to eq(
+            status: "open",
+            message: I18n.t!("cows.insights.profile.reproductive_status.messages.open"),
+            observation: nil,
+            alerts: []
+          )
+        end
+      end
+
+      context "e teve parto interrompido recentemente" do
+        let(:last_heat_at) { 50.days.ago.change(usec: 0) }
+        let(:last_pregnancy_interruption_at) { 3.days.ago.change(usec: 0) }
+
         it "retorna mensagem e nenhum alerta" do
           result = described_class.new(cow: cow).call
 
@@ -296,7 +314,6 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
       it "retorna data do parto e nenhum alerta" do
         result = described_class.new(cow: cow).call
         days_since_calving = (Time.zone.today - cow.last_calving_at.to_date).to_i
-
 
         expect(result).to eq(
           status: "postpartum",
