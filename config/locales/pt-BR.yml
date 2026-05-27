@@ -174,8 +174,9 @@ pt-BR:
         death: "morte"
 
     weighing:
-      weight_required: "O peso é obrigatório"
-      invalid_weight: "Peso inválido"
+      weight_required: "- Peso é obrigatório"
+      invalid_weight: "- Peso deve ser um número"
+      greater_than: "- Peso deve ser maior que 0"
 
     phase_change:
       phase_required: "A fase é obrigatória"
@@ -227,8 +228,11 @@ pt-BR:
           multiparous: "Multípara"
 
       event:
+        event_type: "Tipo de evento"
         occurred_at: "Data do evento"
-        event_type:
+        cow: "Matriz"
+        data: "Dados"
+        event_types:
           weighing: "Pesagem"
           phase_change: "Mudança de fase"
           inactivation: "Inativação"
@@ -278,5 +282,5 @@ pt-BR:
         event:
           attributes:
             occurred_at:
-              future_date: "não pode estar no futuro"
-              before_birth_date: "não pode ser anterior ao nascimento da matriz"
+              future_date: "não pode ser uma data futura"
+              before_birth_date: "não pode ser anterior à data de nascimento da matriz"

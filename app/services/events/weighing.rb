@@ -20,11 +20,13 @@ module Events
 
     def validate!
       raise invalid!(I18n.t!("cows.errors.cow_inactive")) unless cow.active?
-
       weight = data[:weight]
 
+      numeric_weight = Float(weight, exception: false)
+
+      raise invalid!(I18n.t!("events.weighing.invalid_weight")) if numeric_weight.nil?
       raise invalid!(I18n.t!("events.weighing.weight_required")) if weight.blank?
-      raise invalid!(I18n.t!("events.weighing.invalid_weight")) if weight <= 0
+      raise invalid!(I18n.t!("events.weighing.greater_than")) if weight <= 0
     end
 
     def invalid!(message)
