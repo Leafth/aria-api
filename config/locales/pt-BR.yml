@@ -124,6 +124,7 @@ pt-BR:
           pregnant: "Prenhez confirmada"
           postpartum: "Parto"
           weighing: "Pesagem"
+          interrupted_pregnancy: "Prenhez interrompida"
 
   events:
     errors:

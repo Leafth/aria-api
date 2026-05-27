@@ -26,12 +26,14 @@ module Cows
 
       def status_code
         return "weighing" if show_growth_status?
+        return "interrupted_pregnancy" if waiting_heat_after_pregnancy_interruption?
 
         reproductive_status[:status]
       end
 
       def status_message
         return I18n.t!("cows.insights.index.status.weighing") if show_growth_status?
+        return I18n.t!("cows.insights.index.status.interrupted_pregnancy") if waiting_heat_after_pregnancy_interruption?
 
         I18n.t!("cows.insights.index.status.#{cow.reproductive_status}")
       end
@@ -44,6 +46,7 @@ module Cows
 
       def status_occurred_at
         return cow.last_weighing_at if show_growth_status?
+        return cow.last_pregnancy_interruption_at if waiting_heat_after_pregnancy_interruption?
 
         case cow.reproductive_status
         when "open", "in_heat"
@@ -63,6 +66,7 @@ module Cows
 
       def info_alert
         return growth_phase_alert if show_growth_status?
+        return waiting_heat_after_pregnancy_interruption_alert if waiting_heat_after_pregnancy_interruption?
 
         return if reproductive_status[:observation].blank?
 
@@ -81,6 +85,14 @@ module Cows
         }
       end
 
+      def waiting_heat_after_pregnancy_interruption_alert
+        {
+          level: "info",
+          code: "waiting_heat",
+          message: I18n.t!("cows.insights.profile.reproductive_status.messages.open")
+        }
+      end
+
       def phase_message
         profile_insights.dig(:phase_insight, :message)
       end
@@ -91,6 +103,14 @@ module Cows
 
       def show_growth_status?
         cow.last_heat_at.blank?
+      end
+
+      def waiting_heat_after_pregnancy_interruption?
+        return false unless cow.reproductive_status == "open"
+        return false if cow.last_pregnancy_interruption_at.blank?
+
+        cow.last_heat_at.blank? ||
+        cow.last_heat_at <= cow.last_pregnancy_interruption_at
       end
 
       def reproductive_status

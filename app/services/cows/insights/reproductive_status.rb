@@ -80,6 +80,7 @@ module Cows
 
       def open_observation
         return nil if cow.last_heat_at.blank?
+        return nil if heat_before_or_same_as_pregnancy_interruption?
 
         I18n.t!(
           "cows.insights.profile.reproductive_status.observations.open",
@@ -114,6 +115,8 @@ module Cows
       end
 
       def open_heat_overdue?
+        return false if cow.last_heat_at.blank?
+        return false if heat_before_or_same_as_pregnancy_interruption?
         cow.last_heat_at.present? && expected_next_heat_date < Date.current
       end
 
@@ -186,6 +189,12 @@ module Cows
           code: "calving_overdue",
           message: I18n.t!("cows.insights.profile.reproductive_status.alerts.calving_overdue")
         }
+      end
+
+      def heat_before_or_same_as_pregnancy_interruption?
+        return false if cow.last_pregnancy_interruption_at.blank?
+
+        cow.last_heat_at <= cow.last_pregnancy_interruption_at
       end
 
       def expected_next_heat_date
