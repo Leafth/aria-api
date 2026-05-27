@@ -1,94 +1,152 @@
 en:
+  date:
+    formats:
+      default: "%m/%d/%Y"
+      short: "%m/%d"
+      long: "%B %d, %Y"
+
+    day_names:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+
+    abbr_day_names:
+      - Sun
+      - Mon
+      - Tue
+      - Wed
+      - Thu
+      - Fri
+      - Sat
+
+    month_names:
+      -
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
+
+    abbr_month_names:
+      -
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - May
+      - Jun
+      - Jul
+      - Aug
+      - Sep
+      - Oct
+      - Nov
+      - Dec
+
   errors:
     messages:
-      invalid_foreign_key: "The referenced resource does not exist or cannot be used"
+      invalid_foreign_key: "The referenced resource does not exist or cannot be used."
+
   auth:
     errors:
-      invalid_credentials: "Invalid credentials"
-      inactive_user: "Inactive user"
+      invalid_credentials: "Invalid credentials."
+      inactive_user: "Inactive user."
 
-      missing_refresh_token: "Refresh token is missing"
-      invalid_refresh_token: "Invalid refresh token"
+      missing_refresh_token: "Refresh token is missing."
+      invalid_refresh_token: "Invalid refresh token."
 
-      missing_access_token: "Access token is missing"
-      invalid_access_token: "Invalid access token"
-      expired_access_token: "Access token has expired"
+      missing_access_token: "Access token is missing."
+      invalid_access_token: "Invalid access token."
+      expired_access_token: "Access token has expired."
 
-      session_not_found: "Session not found"
-      revoked_session: "Session has been revoked"
-      expired_session: "Session has expired"
+      session_not_found: "Session not found."
+      revoked_session: "Session has been revoked."
+      expired_session: "Session has expired."
 
   tenant:
     errors:
-      invalid_tenant: "Invalid tenant"
-      missing_tenant: "Tenant not informed"
-      tenant_not_found: "Tenant not found"
-      inactive_tenant: "Inactive tenant"
+      invalid_tenant: "Invalid tenant."
+      missing_tenant: "Tenant is missing."
+      tenant_not_found: "Tenant not found."
+      inactive_tenant: "Inactive tenant."
 
   cows:
     errors:
-      forbidden_fields: "Some fields cannot be updated here"
-      cow_inactive: "cow is inactive"
+      forbidden_fields: "Some fields cannot be updated here."
+      cow_inactive: "The cow is inactive."
 
     insights:
       profile:
         phase:
           adequate: "Adequate phase"
-          below_weight: "Cow is below the expected weight"
+          below_weight: "Below the expected weight"
           change_suggested: "Suggestion: change phase to %{phase}"
 
         reproductive_status:
           messages:
             open: "Waiting for heat"
-            in_heat: "In Heat"
-            inseminated: "Inseminated"
+            in_heat: "In heat"
+            inseminated: "Breeding completed"
             pregnant: "Pregnant"
             postpartum: "Postpartum"
 
           observations:
             open: "Next heat: %{next_heat_date}"
-            in_heat: "Register an insemination"
+            in_heat: "Waiting for breeding"
             heat_expired: "Heat expired"
-            inseminated: "Waiting for pregnancy diagnosis"
-            pregnant: "Estimated calving date: %{calving_date}"
+            inseminated: "Waiting for pregnancy check"
+            pregnant: "Expected calving date: %{calving_date}"
             postpartum: "%{days_since_calving} days since calving"
 
           alerts:
-            heat_overdue: "Cio outside the estimated period"
-            heat_ending_soon: "%{remaining_hours}h left in heat"
-            pregnancy_check_due: "Register pregnancy verification soon"
+            heat_overdue: "Heat is outside the estimated period"
+            heat_ending_soon: "%{remaining_hours} hours of heat remaining"
+            pregnancy_check_due: "Register the pregnancy check soon"
             pregnancy_check_overdue: "Pregnancy check overdue"
-            calving_due_soon: "Late stage pregnancy"
-            calving_overdue: "Birth passed the scheduled date"
+            calving_due_soon: "Late-stage pregnancy"
+            calving_overdue: "Calving is past the expected date"
 
       index:
         status:
           open: "Last heat"
-          in_heat: "Heat confirmed"
+          in_heat: "In heat"
           inseminated: "Breeding completed"
           pregnant: "Pregnancy confirmed"
           postpartum: "Calving"
           weighing: "Weighing"
+          interrupted_pregnancy: "Pregnancy interrupted"
 
   events:
     errors:
-      unsupported_event_type: "is not supported"
-      occurred_at_must_be_after_last_reproductive_event: "The reproductive event date must be after the last registered reproductive event"
-      invalid_heat_detection_transition: "Heat detection can only be recorded for cows that are open or postpartum."
-      invalid_insemination_transition: "Insemination can only be recorded for cows that are in heat."
-      invalid_pregnancy_check_transition: "Pregnancy check can only be recorded for cows that are inseminated."
-      invalid_calving_transition: "Calving can only be recorded for cows that are pregnant."
+      unsupported_event_type: "is not supported."
+      occurred_at_must_be_after_last_reproductive_event: "The reproductive event date must be after the last registered reproductive event."
+      invalid_heat_detection_transition: "Heat detection can only be recorded for open or postpartum cows."
+      invalid_insemination_transition: "Insemination can only be recorded for cows in heat."
+      invalid_pregnancy_check_transition: "Pregnancy check can only be recorded for inseminated cows."
+      invalid_calving_transition: "Calving can only be recorded for pregnant cows."
+      invalid_pregnancy_interruption_transition: "Pregnancy interruption can only be recorded for pregnant cows."
 
       insemination:
         heat_expired: "Insemination must occur within 24 hours after heat detection."
         method_required: "Method is required."
-        invalid_method: "Method must be natural_mating or artificial_insemination."
+        invalid_method: "Method must be natural mating or artificial insemination."
         bull_required: "Bull is required."
         bull_not_found: "Bull not found."
-        artificial_insemination_requires_company_bull: "Artificial insemination requires a company bull"
-        natural_mating_requires_local_bull: "Natural mating requires a local bull"
+        artificial_insemination_requires_company_bull: "Artificial insemination requires a company bull."
+        natural_mating_requires_local_bull: "Natural mating requires a local bull."
 
       pregnancy_check:
+        result_required: "Pregnancy check result is required."
         invalid_result: "Pregnancy check result must be positive or negative."
 
     observations:
@@ -98,63 +156,107 @@ en:
         lost: "-%{difference} kg, from %{previous_weight} kg to %{weight} kg"
         maintained: "Weight maintained at %{weight} kg"
 
-      phase_change: "Changed from %{previous_phase} to %{phase}"
+      phase_change: "From %{previous_phase} to %{phase}"
 
       inactivation: "Inactivated due to %{reason}"
 
       insemination: "%{method}: %{bull}"
-      insemination_with_company: "%{method}: %{bull} - %{company}"
+      insemination_with_company: "%{method}: %{bull} (%{company})"
 
       pregnancy_check:
         positive: "Positive result"
         negative: "Negative result"
 
     inactivation:
-      reason_required: "reason is required"
-      invalid_reason: "invalid reason"
+      reason_required: "Reason is required."
+      invalid_reason: "Invalid reason."
       reasons:
         sale: "sale"
         death: "death"
 
     weighing:
-      weight_required: "weight is required"
-      invalid_weight: "invalid weight"
+      weight_required: "Weight is required."
+      invalid_weight: "Weight must be a number."
+      greater_than: "Weight must be greater than 0."
+
+    phase_change:
+      phase_required: "Phase is required."
+      invalid_phase: "Invalid phase."
+      current_phase_cannot_be_changed_manually: "The current phase cannot be changed manually."
+      phase_cannot_be_changed_manually: "The phase cannot be changed manually."
+      phase_already_is: "The phase is already %{phase}"
+      phase_cannot_go_backwards: "The phase cannot go backwards"
 
     insemination:
       methods:
         natural_mating: "Natural mating"
         artificial_insemination: "Artificial insemination"
 
-    phase_change:
-      phase_required: "phase is required"
-      invalid_phase: "invalid phase"
-      current_phase_cannot_be_changed_manually: "current phase cannot be changed manually"
-      phase_cannot_be_changed_manually: "phase cannot be changed manually"
-      phase_already_is: "phase already is %{phase}"
-      phase_cannot_go_backwards: "phase cannot go backwards"
-
   activerecord:
     attributes:
+      company:
+        name: "Name"
+        bulls: "Bulls"
+
+      bull:
+        name: "Name"
+        origin: "Origin"
+        ear_tag: "Ear tag"
+        breed: "Breed"
+        company: "Company"
+
       cow:
+        name: "Name"
+        ear_tag: "Ear tag"
+        birth_date: "Birth date"
+        breed: "Breed"
+        weight: "Weight"
+        phase: "Phase"
+        reproductive_status: "Reproductive status"
+        active: "Active"
+
+        reproductive_statuses:
+          open: "Open"
+          in_heat: "In heat"
+          inseminated: "Inseminated"
+          pregnant: "Pregnant"
+          postpartum: "Postpartum"
+
         phases:
-          calf: "calf"
-          heifer: "heifer"
-          young: "young"
-          primiparous: "primiparous"
-          multiparous: "multiparous"
+          calf: "Calf"
+          heifer: "Heifer"
+          young: "Young"
+          primiparous: "Primiparous"
+          multiparous: "Multiparous"
 
       event:
+        event_type: "Event type"
         occurred_at: "Event date"
-        event_type:
+        cow: "Cow"
+        data: "Data"
+        event_types:
           weighing: "Weighing"
           phase_change: "Phase change"
           inactivation: "Inactivation"
-          heat_detection: "Heat detection"
-          insemination: "Insemination"
+          heat_detection: "Heat detected"
+          insemination: "Breeding completed"
           pregnancy_check: "Pregnancy check"
-          calving: "Calving"
+          calving: "Calving registered"
+          pregnancy_interruption: "Pregnancy interruption"
 
     errors:
+      messages:
+        record_invalid: "Validation failed: %{errors}"
+        restrict_dependent_destroy:
+          has_many: "Cannot delete record because dependent %{record} exist."
+          has_one: "Cannot delete record because a dependent %{record} exists."
+
+        blank: "is required."
+        required: "is required."
+        taken: "has already been taken."
+        not_a_number: "must be a number."
+        greater_than: "must be greater than %{count}."
+
       models:
         user:
           attributes:
@@ -164,22 +266,23 @@ en:
         bull:
           attributes:
             origin:
-              invalid_origin: "is invalid"
+              invalid_origin: "is invalid."
             company:
-              local_with_company: "must not be associated with local bulls"
-              company_required: "must be associated when the bull origin is company"
+              local_with_company: "must not be associated with local bulls."
+              company_required: "must be associated when the bull origin is company."
             ear_tag:
-              company_with_ear_tag: "must not exist for company bulls"
+              local_without_ear_tag: "is required for local bulls."
+              company_with_ear_tag: "must not exist for company bulls."
 
         cow:
           attributes:
-            phase:
-              invalid_phase: "is invalid"
             birth_date:
-              future_date: "cannot be in the future"
+              future_date: "cannot be in the future."
+            phase:
+              invalid_phase: "is invalid."
 
         event:
           attributes:
             occurred_at:
-              future_date: "cannot be in the future"
-              before_birth_date: "cannot be before cow's birth date"
+              future_date: "cannot be a future date."
+              before_birth_date: "cannot be before the cow birth date."
