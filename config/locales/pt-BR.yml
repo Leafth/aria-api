@@ -225,6 +225,11 @@ pt-BR:
 
     errors:
       messages:
+        record_invalid: "A validação falhou: %{errors}"
+        restrict_dependent_destroy:
+          has_many: "Não é possível excluir o registro porque existem %{record} dependentes"
+          has_one: "Não é possível excluir o registro porque existe um %{record} dependente"
+
         blank: "não pode ficar em branco"
         required: "é obrigatório"
         taken: "já em uso"
