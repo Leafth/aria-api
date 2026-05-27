@@ -111,8 +111,8 @@ pt-BR:
           alerts:
             heat_overdue: "Cio fora do período estimado"
             heat_ending_soon: "Restam %{remaining_hours} horas de cio"
-            pregnancy_check_due: "Registre a verificação de prenhez em breve"
-            pregnancy_check_overdue: "Verificação de prenhez atrasada"
+            pregnancy_check_due: "Registre o diagnóstico de prenhez em breve"
+            pregnancy_check_overdue: "Diagnóstico de prenhez atrasada"
             calving_due_soon: "Prenhez em fase final"
             calving_overdue: "Parto fora da data prevista"
 
@@ -132,7 +132,7 @@ pt-BR:
       occurred_at_must_be_after_last_reproductive_event: "A data do evento reprodutivo deve ser posterior ao último evento reprodutivo registrado"
       invalid_heat_detection_transition: "A detecção de cio só pode ser registrada para matrizes abertas ou em pós-parto."
       invalid_insemination_transition: "A inseminação só pode ser registrada para matrizes em cio."
-      invalid_pregnancy_check_transition: "A verificação de prenhez só pode ser registrada para matrizes inseminadas."
+      invalid_pregnancy_check_transition: "O diagnóstico de prenhez só pode ser registrada para matrizes inseminadas."
       invalid_calving_transition: "O parto só pode ser registrado para matrizes prenhas."
       invalid_pregnancy_interruption_transition: "A interrupção de prenhez só pode ser registrada em matrizes prenhas"
 
@@ -146,7 +146,8 @@ pt-BR:
         natural_mating_requires_local_bull: "A monta natural exige um touro local."
 
       pregnancy_check:
-        invalid_result: "O resultado da verificação de prenhez deve ser positivo ou negativo."
+        result_required: "Resultado do diagnóstico de prenhez é obrigatório."
+        invalid_result: "O resultado do diagnóstico de prenhez deve ser positivo ou negativo."
 
     observations:
       weighing:
