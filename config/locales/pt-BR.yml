@@ -203,7 +203,22 @@ pt-BR:
         company: "Empresa"
 
       cow:
+        name: "Nome"
+        ear_tag: "Brinco"
+        birth_date: "Data de nascimento"
         breed: "Raça"
+        weight: "Peso"
+        phase: "Fase"
+        reproductive_status: "Status reprodutivo"
+        active: "Ativa"
+
+        reproductive_statuses:
+          open: "Aberta"
+          in_heat: "Em cio"
+          inseminated: "Inseminada"
+          pregnant: "Prenha"
+          postpartum: "Pós-parto"
+
         phases:
           calf: "Bezerra"
           heifer: "Garrota"
@@ -233,6 +248,8 @@ pt-BR:
         blank: "não pode ficar em branco"
         required: "é obrigatório"
         taken: "já em uso"
+        not_a_number: "deve ser um número"
+        greater_than: "deve ser maior que %{count}"
 
       models:
         user:
@@ -253,8 +270,6 @@ pt-BR:
 
         cow:
           attributes:
-            breed:
-              required: "é obrigatória"
             birth_date:
               future_date: "não pode estar no futuro"
             phase:
