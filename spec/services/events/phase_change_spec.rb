@@ -75,7 +75,7 @@ RSpec.describe Events::PhaseChange do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("calf")
     end
@@ -88,7 +88,7 @@ RSpec.describe Events::PhaseChange do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("calf")
     end
@@ -101,7 +101,7 @@ RSpec.describe Events::PhaseChange do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
     end
 
     it "é inválido se tentar voltar de heifer para calf" do
@@ -114,7 +114,7 @@ RSpec.describe Events::PhaseChange do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("heifer")
     end
@@ -129,7 +129,7 @@ RSpec.describe Events::PhaseChange do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("young")
     end
@@ -144,7 +144,7 @@ RSpec.describe Events::PhaseChange do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("young")
     end
@@ -157,7 +157,7 @@ RSpec.describe Events::PhaseChange do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("calf")
     end
@@ -172,7 +172,7 @@ RSpec.describe Events::PhaseChange do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("primiparous")
     end
@@ -185,7 +185,7 @@ RSpec.describe Events::PhaseChange do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("calf")
     end
@@ -200,7 +200,7 @@ RSpec.describe Events::PhaseChange do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("multiparous")
     end

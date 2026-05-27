@@ -27,6 +27,8 @@ module Events
       ).validate!
 
       result = data[:result]
+
+      raise Events::Error, I18n.t!("events.errors.pregnancy_check.result_required") if result.blank?
       raise Events::Error, I18n.t!("events.errors.pregnancy_check.invalid_result") unless VALID_RESULTS.include?(result)
     end
 

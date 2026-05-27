@@ -29,12 +29,14 @@ module Events
 
       method = data[:method]
       bull_id = data[:bull_id]
-      bull = cow.tenant.bulls.find_by(id: bull_id)
 
       raise Events::Error, I18n.t!("events.errors.insemination.heat_expired") if cow.last_heat_at < occurred_at - 24.hours
       raise Events::Error, I18n.t!("events.errors.insemination.method_required") if method.blank?
       raise Events::Error, I18n.t!("events.errors.insemination.invalid_method") unless VALID_METHODS.include?(method)
       raise Events::Error, I18n.t!("events.errors.insemination.bull_required") if bull_id.blank?
+
+      bull = cow.tenant.bulls.find_by(id: bull_id)
+
       raise Events::Error, I18n.t!("events.errors.insemination.bull_not_found") if bull.blank?
 
       validate_method_matches_bull!(method, bull)

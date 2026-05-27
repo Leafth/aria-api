@@ -55,35 +55,35 @@ pt-BR:
 
   errors:
     messages:
-      invalid_foreign_key: "O recurso referenciado não existe ou não pode ser utilizado"
+      invalid_foreign_key: "O recurso referenciado não existe ou não pode ser utilizado."
 
   auth:
     errors:
-      invalid_credentials: "Credenciais inválidas"
-      inactive_user: "Usuário inativo"
+      invalid_credentials: "Credenciais inválidas."
+      inactive_user: "Usuário inativo."
 
-      missing_refresh_token: "Refresh token ausente"
-      invalid_refresh_token: "Refresh token inválido"
+      missing_refresh_token: "Refresh token ausente."
+      invalid_refresh_token: "Refresh token inválido."
 
-      missing_access_token: "Access token ausente"
-      invalid_access_token: "Access token inválido"
-      expired_access_token: "Access token expirado"
+      missing_access_token: "Access token ausente."
+      invalid_access_token: "Access token inválido."
+      expired_access_token: "Access token expirado."
 
-      session_not_found: "Sessão não encontrada"
-      revoked_session: "Sessão revogada"
-      expired_session: "Sessão expirada"
+      session_not_found: "Sessão não encontrada."
+      revoked_session: "Sessão revogada."
+      expired_session: "Sessão expirada."
 
   tenant:
     errors:
-      invalid_tenant: "Tenant inválido"
-      missing_tenant: "Tenant não informado"
-      tenant_not_found: "Tenant não encontrado"
-      inactive_tenant: "Tenant inativo"
+      invalid_tenant: "Tenant inválido."
+      missing_tenant: "Tenant não informado."
+      tenant_not_found: "Tenant não encontrado."
+      inactive_tenant: "Tenant inativo."
 
   cows:
     errors:
-      forbidden_fields: "Alguns campos não podem ser atualizados aqui"
-      cow_inactive: "A matriz está inativa"
+      forbidden_fields: "Alguns campos não podem ser atualizados aqui."
+      cow_inactive: "A matriz está inativa."
 
     insights:
       profile:
@@ -111,8 +111,8 @@ pt-BR:
           alerts:
             heat_overdue: "Cio fora do período estimado"
             heat_ending_soon: "Restam %{remaining_hours} horas de cio"
-            pregnancy_check_due: "Registre a verificação de prenhez em breve"
-            pregnancy_check_overdue: "Verificação de prenhez atrasada"
+            pregnancy_check_due: "Registre o diagnóstico de prenhez em breve"
+            pregnancy_check_overdue: "Diagnóstico de prenhez atrasada"
             calving_due_soon: "Prenhez em fase final"
             calving_overdue: "Parto fora da data prevista"
 
@@ -128,25 +128,26 @@ pt-BR:
 
   events:
     errors:
-      unsupported_event_type: "não é suportado"
-      occurred_at_must_be_after_last_reproductive_event: "A data do evento reprodutivo deve ser posterior ao último evento reprodutivo registrado"
+      unsupported_event_type: "não é suportado."
+      occurred_at_must_be_after_last_reproductive_event: "A data do evento reprodutivo deve ser posterior ao último evento reprodutivo registrado."
       invalid_heat_detection_transition: "A detecção de cio só pode ser registrada para matrizes abertas ou em pós-parto."
       invalid_insemination_transition: "A inseminação só pode ser registrada para matrizes em cio."
-      invalid_pregnancy_check_transition: "A verificação de prenhez só pode ser registrada para matrizes inseminadas."
+      invalid_pregnancy_check_transition: "O diagnóstico de prenhez só pode ser registrado para matrizes inseminadas."
       invalid_calving_transition: "O parto só pode ser registrado para matrizes prenhas."
-      invalid_pregnancy_interruption_transition: "A interrupção de prenhez só pode ser registrada em matrizes prenhas"
+      invalid_pregnancy_interruption_transition: "A interrupção de prenhez só pode ser registrada em matrizes prenhas."
 
       insemination:
         heat_expired: "A inseminação deve ocorrer em até 24 horas após a detecção do cio."
         method_required: "O método é obrigatório."
-        invalid_method: "O método deve ser natural_mating ou artificial_insemination."
+        invalid_method: "O método deve ser monta natural ou inseminação artificial."
         bull_required: "O touro é obrigatório."
         bull_not_found: "Touro não encontrado."
-        artificial_insemination_requires_company_bull: "A inseminação artificial exige um touro da empresa"
-        natural_mating_requires_local_bull: "A monta natural exige um touro local"
+        artificial_insemination_requires_company_bull: "A inseminação artificial exige um touro de empresa."
+        natural_mating_requires_local_bull: "A monta natural exige um touro local."
 
       pregnancy_check:
-        invalid_result: "O resultado da verificação de prenhez deve ser positivo ou negativo."
+        result_required: "Resultado do diagnóstico de prenhez é obrigatório."
+        invalid_result: "O resultado do diagnóstico de prenhez deve ser positivo ou negativo."
 
     observations:
       weighing:
@@ -167,21 +168,22 @@ pt-BR:
         negative: "Resultado negativo"
 
     inactivation:
-      reason_required: "O motivo é obrigatório"
-      invalid_reason: "Motivo inválido"
+      reason_required: "Motivo é obrigatório."
+      invalid_reason: "Motivo inválido."
       reasons:
         sale: "venda"
         death: "morte"
 
     weighing:
-      weight_required: "O peso é obrigatório"
-      invalid_weight: "Peso inválido"
+      weight_required: "O peso é obrigatório."
+      invalid_weight: "O peso deve ser um número."
+      greater_than: "O peso deve ser maior que 0."
 
     phase_change:
-      phase_required: "A fase é obrigatória"
-      invalid_phase: "Fase inválida"
-      current_phase_cannot_be_changed_manually: "A fase atual não pode ser alterada manualmente"
-      phase_cannot_be_changed_manually: "A fase não pode ser alterada manualmente"
+      phase_required: "A fase é obrigatória."
+      invalid_phase: "Fase inválida."
+      current_phase_cannot_be_changed_manually: "A fase atual não pode ser alterada manualmente."
+      phase_cannot_be_changed_manually: "A fase não pode ser alterada manualmente."
       phase_already_is: "A fase já é %{phase}"
       phase_cannot_go_backwards: "A fase não pode regredir"
 
@@ -192,8 +194,34 @@ pt-BR:
 
   activerecord:
     attributes:
-      cow:
+      company:
+        name: "Nome"
+        bulls: "Touros"
+
+      bull:
+        name: "Nome"
+        origin: "Origem"
+        ear_tag: "Brinco"
         breed: "Raça"
+        company: "Empresa"
+
+      cow:
+        name: "Nome"
+        ear_tag: "Brinco"
+        birth_date: "Data de nascimento"
+        breed: "Raça"
+        weight: "Peso"
+        phase: "Fase"
+        reproductive_status: "Status reprodutivo"
+        active: "Ativa"
+
+        reproductive_statuses:
+          open: "Aberta"
+          in_heat: "Em cio"
+          inseminated: "Inseminada"
+          pregnant: "Prenha"
+          postpartum: "Pós-parto"
+
         phases:
           calf: "Bezerra"
           heifer: "Garrota"
@@ -202,8 +230,11 @@ pt-BR:
           multiparous: "Multípara"
 
       event:
+        event_type: "Tipo de evento"
         occurred_at: "Data do evento"
-        event_type:
+        cow: "Matriz"
+        data: "Dados"
+        event_types:
           weighing: "Pesagem"
           phase_change: "Mudança de fase"
           inactivation: "Inativação"
@@ -213,10 +244,19 @@ pt-BR:
           calving: "Parto registrado"
           pregnancy_interruption: "Interrupção de prenhez"
 
-      bull:
-        breed: "Raça"
-
     errors:
+      messages:
+        record_invalid: "A validação falhou: %{errors}"
+        restrict_dependent_destroy:
+          has_many: "Não é possível excluir o registro porque existem %{record} dependentes."
+          has_one: "Não é possível excluir o registro porque existe um %{record} dependente."
+
+        blank: "é obrigatório."
+        required: "é obrigatório."
+        taken: "já está em uso."
+        not_a_number: "deve ser um número."
+        greater_than: "deve ser maior que %{count}."
+
       models:
         user:
           attributes:
@@ -225,27 +265,24 @@ pt-BR:
 
         bull:
           attributes:
-            breed:
-              required: "é obrigatória"
             origin:
-              invalid_origin: "é inválida"
+              invalid_origin: "é inválida."
             company:
-              local_with_company: "não deve estar associada a touros locais"
-              company_required: "deve estar associada quando a origem do touro for company"
+              local_with_company: "não deve estar associada a touros locais."
+              company_required: "deve estar associada quando a origem do touro for de empresa."
             ear_tag:
-              company_with_ear_tag: "não deve existir para touros company"
+              local_without_ear_tag: "é obrigatório para touro local."
+              company_with_ear_tag: "não deve existir para touros de empresa."
 
         cow:
           attributes:
-            breed:
-              required: "é obrigatória"
             birth_date:
-              future_date: "não pode estar no futuro"
+              future_date: "não pode estar no futuro."
             phase:
-              invalid_phase: "é inválida"
+              invalid_phase: "é inválida."
 
         event:
           attributes:
             occurred_at:
-              future_date: "não pode estar no futuro"
-              before_birth_date: "não pode ser anterior ao nascimento da matriz"
+              future_date: "não pode ser uma data futura."
+              before_birth_date: "não pode ser anterior à data de nascimento da matriz."
