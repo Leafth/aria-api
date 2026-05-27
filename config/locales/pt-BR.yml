@@ -196,7 +196,11 @@ pt-BR:
         name: "Nome"
 
       bull:
+        name: "Nome"
+        origin: "Origem"
+        ear_tag: "Brinco"
         breed: "Raça"
+        company: "Empresa"
 
       cow:
         breed: "Raça"
@@ -223,6 +227,7 @@ pt-BR:
       messages:
         blank: "não pode ficar em branco"
         required: "é obrigatório"
+        taken: "já em uso"
 
       models:
         user:
@@ -236,9 +241,10 @@ pt-BR:
               invalid_origin: "é inválida"
             company:
               local_with_company: "não deve estar associada a touros locais"
-              company_required: "deve estar associada quando a origem do touro for company"
+              company_required: "deve estar associada quando a origem do touro for de empresa"
             ear_tag:
-              company_with_ear_tag: "não deve existir para touros company"
+              local_without_ear_tag: "é obrigatório para touro local"
+              company_with_ear_tag: "não deve existir para touros de empresa"
 
         cow:
           attributes:
