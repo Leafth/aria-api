@@ -167,24 +167,24 @@ pt-BR:
         negative: "Resultado negativo"
 
     inactivation:
-      reason_required: "- Motivo é obrigatório"
-      invalid_reason: "- Motivo inválido"
+      reason_required: "Motivo é obrigatório"
+      invalid_reason: "Motivo inválido"
       reasons:
         sale: "venda"
         death: "morte"
 
     weighing:
-      weight_required: "- Peso é obrigatório"
-      invalid_weight: "- Peso deve ser um número"
-      greater_than: "- Peso deve ser maior que 0"
+      weight_required: "O peso é obrigatório"
+      invalid_weight: "O peso deve ser um número"
+      greater_than: "O peso deve ser maior que 0"
 
     phase_change:
-      phase_required: "- A fase é obrigatória"
-      invalid_phase: "- Fase inválida"
-      current_phase_cannot_be_changed_manually: "- Fase atual não pode ser alterada manualmente"
-      phase_cannot_be_changed_manually: "- Fase não pode ser alterada manualmente"
-      phase_already_is: "- Fase já é %{phase}"
-      phase_cannot_go_backwards: "- Fase não pode regredir"
+      phase_required: "A fase é obrigatória"
+      invalid_phase: "Fase inválida"
+      current_phase_cannot_be_changed_manually: "A fase atual não pode ser alterada manualmente"
+      phase_cannot_be_changed_manually: "A fase não pode ser alterada manualmente"
+      phase_already_is: "A fase já é %{phase}"
+      phase_cannot_go_backwards: "A fase não pode regredir"
 
     insemination:
       methods:

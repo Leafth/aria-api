@@ -53,10 +53,7 @@ module Events
     end
 
     def invalid!(message)
-      event = Event.new
-      event.errors.add(:data, message)
-
-      ActiveRecord::RecordInvalid.new(event)
+      Events::Error.new(message)
     end
   end
 end
