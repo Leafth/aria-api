@@ -43,7 +43,7 @@ RSpec.describe Events::Inactivation do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
     end
 
     it "é inválido com reason inválido" do
@@ -54,7 +54,7 @@ RSpec.describe Events::Inactivation do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
     end
   end
 end

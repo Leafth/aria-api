@@ -47,7 +47,7 @@ RSpec.describe Events::Weighing do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
     end
 
     it "é inválido com peso negativo" do
@@ -59,7 +59,7 @@ RSpec.describe Events::Weighing do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
     end
 
     it "mantém o peso da pesagem mais recente" do
@@ -96,7 +96,7 @@ RSpec.describe Events::Weighing do
 
       expect {
         described_class.new(cow: cow, params: params).call
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      }.to raise_error(Events::Error)
 
       expect(cow.reload.weight).to eq(180)
     end

@@ -116,7 +116,7 @@ RSpec.describe Events::PregnancyCheck do
         described_class.new(cow: cow, params: params).call
       }.to raise_error(
         Events::Error,
-        I18n.t!("events.errors.pregnancy_check.invalid_result")
+        I18n.t!("events.errors.pregnancy_check.result_required")
       )
 
       expect(Event.count).to eq(0)
