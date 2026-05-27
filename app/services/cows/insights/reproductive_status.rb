@@ -96,7 +96,7 @@ module Cows
 
       def inseminated_observation
         I18n.t!(
-          "cows.insights.profile.reproductive_status.messages.inseminated"
+          "cows.insights.profile.reproductive_status.observations.inseminated"
         )
       end
 
