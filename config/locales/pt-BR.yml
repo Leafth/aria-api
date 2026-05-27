@@ -139,11 +139,11 @@ pt-BR:
       insemination:
         heat_expired: "A inseminação deve ocorrer em até 24 horas após a detecção do cio."
         method_required: "O método é obrigatório."
-        invalid_method: "O método deve ser natural_mating ou artificial_insemination."
+        invalid_method: "O método deve ser monta natural ou inseminação artificial."
         bull_required: "O touro é obrigatório."
         bull_not_found: "Touro não encontrado."
-        artificial_insemination_requires_company_bull: "A inseminação artificial exige um touro da empresa"
-        natural_mating_requires_local_bull: "A monta natural exige um touro local"
+        artificial_insemination_requires_company_bull: "A inseminação artificial exige um touro de empresa."
+        natural_mating_requires_local_bull: "A monta natural exige um touro local."
 
       pregnancy_check:
         invalid_result: "O resultado da verificação de prenhez deve ser positivo ou negativo."
@@ -167,8 +167,8 @@ pt-BR:
         negative: "Resultado negativo"
 
     inactivation:
-      reason_required: "O motivo é obrigatório"
-      invalid_reason: "Motivo inválido"
+      reason_required: "- Motivo é obrigatório"
+      invalid_reason: "- Motivo inválido"
       reasons:
         sale: "venda"
         death: "morte"
@@ -179,12 +179,12 @@ pt-BR:
       greater_than: "- Peso deve ser maior que 0"
 
     phase_change:
-      phase_required: "A fase é obrigatória"
-      invalid_phase: "Fase inválida"
-      current_phase_cannot_be_changed_manually: "A fase atual não pode ser alterada manualmente"
-      phase_cannot_be_changed_manually: "A fase não pode ser alterada manualmente"
-      phase_already_is: "A fase já é %{phase}"
-      phase_cannot_go_backwards: "A fase não pode regredir"
+      phase_required: "- A fase é obrigatória"
+      invalid_phase: "- Fase inválida"
+      current_phase_cannot_be_changed_manually: "- Fase atual não pode ser alterada manualmente"
+      phase_cannot_be_changed_manually: "- Fase não pode ser alterada manualmente"
+      phase_already_is: "- Fase já é %{phase}"
+      phase_cannot_go_backwards: "- Fase não pode regredir"
 
     insemination:
       methods:
