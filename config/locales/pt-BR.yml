@@ -192,6 +192,12 @@ pt-BR:
 
   activerecord:
     attributes:
+      company:
+        name: "Nome"
+
+      bull:
+        breed: "Raça"
+
       cow:
         breed: "Raça"
         phases:
@@ -213,10 +219,11 @@ pt-BR:
           calving: "Parto registrado"
           pregnancy_interruption: "Interrupção de prenhez"
 
-      bull:
-        breed: "Raça"
-
     errors:
+      messages:
+        blank: "não pode ficar em branco"
+        required: "é obrigatório"
+
       models:
         user:
           attributes:
@@ -225,8 +232,6 @@ pt-BR:
 
         bull:
           attributes:
-            breed:
-              required: "é obrigatória"
             origin:
               invalid_origin: "é inválida"
             company:
