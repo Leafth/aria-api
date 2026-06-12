@@ -112,7 +112,7 @@ pt-BR:
             heat_overdue: "Cio fora do período estimado"
             heat_ending_soon: "Restam %{remaining_hours} horas de cio"
             pregnancy_check_due: "Registre o diagnóstico de prenhez em breve"
-            pregnancy_check_overdue: "Diagnóstico de prenhez atrasada"
+            pregnancy_check_overdue: "Diagnóstico de prenhez atrasado"
             calving_due_soon: "Prenhez em fase final"
             calving_overdue: "Parto fora da data prevista"
 
