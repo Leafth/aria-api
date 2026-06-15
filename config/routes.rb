@@ -19,6 +19,8 @@ Rails.application.routes.draw do
         resources :events, only: [ :index, :create ], controller: "events"
       end
       resources :breeds, only: [ :index ]
+
+      get :summary, to: "summary#show"
     end
   end
 end
