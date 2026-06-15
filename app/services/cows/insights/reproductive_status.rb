@@ -14,6 +14,21 @@ module Cows
         }
       end
 
+      def alerts
+        case cow.reproductive_status
+        when "open"
+          open_alerts
+        when "in_heat"
+          in_heat_alerts
+        when "inseminated"
+          inseminated_alerts
+        when "pregnant"
+          pregnant_alerts
+        else
+          []
+        end
+      end
+
       private
 
       attr_reader :cow
@@ -34,21 +49,6 @@ module Cows
           pregnant_observation
         when "postpartum"
           postpartum_observation
-        end
-      end
-
-      def alerts
-        case cow.reproductive_status
-        when "open"
-          open_alerts
-        when "in_heat"
-          in_heat_alerts
-        when "inseminated"
-          inseminated_alerts
-        when "pregnant"
-          pregnant_alerts
-        else
-          []
         end
       end
 
