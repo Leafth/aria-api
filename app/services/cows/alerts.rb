@@ -1,5 +1,3 @@
-# app/services/cows/alerts/list_service.rb
-
 module Cows
   class Alerts
     def initialize(tenant:)

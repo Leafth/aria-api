@@ -1,5 +1,3 @@
-# app/services/dashboard/summary_service.rb
-
 module Dashboard
   class SummaryService
     def initialize(tenant:)
@@ -8,7 +6,8 @@ module Dashboard
 
     def call
       {
-        summary: cow_counts,
+        reproductive_summary: cow_counts,
+        phase_summary: phase_counts,
         alerts: alerts
       }
     end
@@ -19,6 +18,10 @@ module Dashboard
 
     def cow_counts
       Dashboard::CountsService.new(tenant: tenant).call
+    end
+
+    def phase_counts
+      Dashboard::PhaseCountsService.new(tenant: tenant).call
     end
 
     def alerts
