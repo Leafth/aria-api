@@ -20,7 +20,11 @@ Rails.application.routes.draw do
       end
       resources :breeds, only: [ :index ]
 
-      get :summary, to: "summary#show"
+      scope "dashboard", controller: "dashboard" do
+        get "reproductive-summary", action: :reproductive_summary
+        get "phase-summary", action: :phase_summary
+        get "alerts", action: :alerts
+      end
     end
   end
 end

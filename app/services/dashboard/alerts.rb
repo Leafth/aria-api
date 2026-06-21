@@ -1,4 +1,4 @@
-module Cows
+module Dashboard
   class Alerts
     def initialize(tenant:)
       @tenant = tenant

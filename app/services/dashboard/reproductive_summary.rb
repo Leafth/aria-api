@@ -1,5 +1,5 @@
 module Dashboard
-  class CountsService
+  class ReproductiveSummary
     def initialize(tenant:)
       @tenant = tenant
     end
