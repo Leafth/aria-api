@@ -15,10 +15,20 @@ Rails.application.routes.draw do
 
       resources :companies
       resources :bulls
+
       resources :cows do
         resources :events, only: [ :index, :create ], controller: "events"
       end
+
+      resources :events, only: [ :index ]
+
       resources :breeds, only: [ :index ]
+
+      scope "dashboard", controller: "dashboard" do
+        get "reproductive-summary", action: :reproductive_summary
+        get "phase-summary", action: :phase_summary
+        get "alerts", action: :alerts
+      end
     end
   end
 end

@@ -13,15 +13,23 @@ module Api
       end
 
       def index
-        cow = current_tenant.cows.find(params[:cow_id])
-
-        events = cow.events
+        events = events_scope
 
         events = apply_filters(events)
         events = apply_sort(events)
         events = paginate(events)
 
-        render_paginated events, serializer: EventSerializer
+        render_paginated events, serializer: params[:cow_id].present? ? EventSerializer : EventWithCowSerializer
+      end
+
+      def events_scope
+        if params[:cow_id].present?
+          current_tenant.cows.find(params[:cow_id]).events
+        else
+          Event
+            .joins(:cow)
+            .where(cows: { tenant_id: current_tenant.id })
+        end
       end
 
       private
