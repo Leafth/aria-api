@@ -15,9 +15,13 @@ Rails.application.routes.draw do
 
       resources :companies
       resources :bulls
+
       resources :cows do
         resources :events, only: [ :index, :create ], controller: "events"
       end
+
+      resources :events, only: [ :index ]
+
       resources :breeds, only: [ :index ]
 
       scope "dashboard", controller: "dashboard" do
