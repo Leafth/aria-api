@@ -29,6 +29,7 @@ Rails.application.routes.draw do
         get "phase-summary", action: :phase_summary
         get "alerts", action: :alerts
         get "reproductive-indicators", action: :reproductive_indicators
+        get "event-counts", action: :event_counts
       end
     end
   end
