@@ -192,6 +192,12 @@ en:
         natural_mating: "Natural mating"
         artificial_insemination: "Artificial insemination"
 
+  dashboard:
+    errors:
+      invalid_period: "Invalid period. Use: week, month, semester or year."
+      invalid_date: "Invalid date: %{value}. Use the YYYY-MM-DD format."
+      invalid_date_range: "date_from cannot be greater than date_to."
+
   activerecord:
     attributes:
       company:
