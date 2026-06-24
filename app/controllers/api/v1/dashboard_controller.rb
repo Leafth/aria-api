@@ -21,6 +21,46 @@ module Api
           tenant: current_tenant
         ).call
       end
+
+      def reproductive_indicators
+        render json: Dashboard::Events::ReproductiveIndicators.new(
+          tenant: current_tenant,
+          params: dashboard_period_params
+        ).call
+      end
+
+      def event_counts
+        render json: Dashboard::Events::CountSummary.new(
+          tenant: current_tenant,
+          range: dashboard_period_range.current
+        ).call
+      end
+
+      def reproductive_rates_evolution
+        render json: Dashboard::Events::MonthlyRateEvolution.new(
+          tenant: current_tenant
+        ).call
+      end
+
+      def insemination_distribution
+        render json: Dashboard::Events::InseminationDistribution.new(
+          tenant: current_tenant,
+          range: dashboard_period_range.current
+        ).call
+      end
+
+      private
+
+      def dashboard_period_params
+        params.permit(:period, :date_from, :date_to)
+      end
+
+      def dashboard_period_range
+        Dashboard::PeriodRange.new(
+          tenant: current_tenant,
+          params: dashboard_period_params
+        )
+      end
     end
   end
 end

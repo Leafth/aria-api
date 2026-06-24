@@ -192,6 +192,12 @@ pt-BR:
         natural_mating: "Monta natural"
         artificial_insemination: "Inseminação artificial"
 
+  dashboard:
+    errors:
+      invalid_period: "Período inválido. Use: week, month, semester ou year."
+      invalid_date: "Data inválida: %{value}. Use o formato YYYY-MM-DD."
+      invalid_date_range: "date_from não pode ser maior que date_to."
+
   activerecord:
     attributes:
       company:
