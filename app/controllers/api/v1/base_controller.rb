@@ -9,6 +9,7 @@ module Api
       rescue_from ActionController::ParameterMissing, with: :bad_request
       rescue_from Auth::Error, with: :render_auth_error
       rescue_from Events::Error, with: :render_event_error
+      rescue_from Dashboard::Error, with: :render_dashboard_error
 
       private
 
@@ -57,6 +58,10 @@ module Api
       end
 
       def render_event_error(error)
+        render json: { errors: { base: [ error.message ] } }, status: :unprocessable_entity
+      end
+
+      def render_dashboard_error(error)
         render json: { errors: { base: [ error.message ] } }, status: :unprocessable_entity
       end
     end
