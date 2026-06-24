@@ -24,7 +24,7 @@ module Dashboard
           .transform_keys(&:to_s)
       end
 
-      def default_count
+      def default_counts
         event_types.index_with(0)
       end
 
