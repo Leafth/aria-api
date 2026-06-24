@@ -21,6 +21,19 @@ module Api
           tenant: current_tenant
         ).call
       end
+
+      def reproductive_indicators
+        render json: Dashboard::Events::ReproductiveIndicators.new(
+          tenant: current_tenant,
+          params: reproductive_indicators_params
+        ).call
+      end
+
+      private
+
+      def reproductive_indicators_params
+        params.permit(:period, :date_from, :date_to)
+      end
     end
   end
 end
