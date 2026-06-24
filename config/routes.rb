@@ -30,6 +30,7 @@ Rails.application.routes.draw do
         get "alerts", action: :alerts
         get "reproductive-indicators", action: :reproductive_indicators
         get "reproductive-rates-evolution", action: :reproductive_rates_evolution
+        get "insemination-distribution", action: :insemination_distribution
       end
     end
   end
