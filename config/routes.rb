@@ -31,6 +31,7 @@ Rails.application.routes.draw do
         get "reproductive-indicators", action: :reproductive_indicators
         get "reproductive-rates-evolution", action: :reproductive_rates_evolution
         get "insemination-distribution", action: :insemination_distribution
+        get "reproductive-report", action: :reproductive_report
       end
     end
   end

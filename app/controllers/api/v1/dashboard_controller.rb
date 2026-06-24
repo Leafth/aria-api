@@ -49,6 +49,19 @@ module Api
         ).call
       end
 
+      def reproductive_report
+        pdf = Dashboard::Reports::ReproductivePdf.new(
+          tenant: current_tenant,
+          user: current_user,
+          params: dashboard_period_params
+        ).call
+
+        send_data pdf,
+          filename: "relatorio-reprodutivo.pdf",
+          type: "application/pdf",
+          disposition: "attachment"
+      end
+
       private
 
       def dashboard_period_params
