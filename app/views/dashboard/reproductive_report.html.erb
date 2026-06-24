@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Relatório Reprodutivo – ARIA</title>
+
+  <style>
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: #ffffff;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      color: #222222;
+      font-size: 13px;
+      line-height: 1.45;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 740px;
+      margin: 0 auto;
+      padding: 42px 40px 48px 40px;
+      background: #ffffff;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .logo-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-icon img {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .logo-name {
+      font-size: 17px;
+      font-weight: 600;
+      color: #1A1A1A;
+      letter-spacing: 0.3px;
+    }
+
+    .report-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 4px;
+    }
+
+    .report-period {
+      font-size: 13px;
+      color: #555555;
+      margin-bottom: 14px;
+    }
+
+    .report-meta {
+      font-size: 12.5px;
+      color: #555555;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1.5px solid #d0d0d0;
+      margin: 20px 0;
+    }
+
+    .divider-main {
+      border-top: 2.5px solid #d0d0d0;
+    }
+
+    .section {
+      width: 100%;
+    }
+
+    .fixed-block {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .dynamic-block {
+      page-break-inside: auto;
+      break-inside: auto;
+    }
+
+    .last-page {
+      page-break-before: always;
+      break-before: page;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      padding-top: 42px;
+    }
+
+    .section-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 12px;
+    }
+
+    .sub-section-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #555555;
+      margin-bottom: 8px;
+      margin-top: 14px;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    thead {
+      display: table-header-group;
+    }
+
+    thead th {
+      font-size: 12px;
+      font-weight: 400;
+      color: #888888;
+      padding: 0 0 8px 0;
+      text-align: left;
+      border-bottom: 1px solid #d0d0d0;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #eeeeee;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody td {
+      padding: 9px 0;
+      font-size: 13px;
+      color: #333333;
+      vertical-align: middle;
+    }
+
+    tr {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .indicator-table thead th,
+    .indicator-table tbody td {
+      padding: 9px 0;
+    }
+
+    .indicator-table th:nth-child(1),
+    .indicator-table td:nth-child(1) {
+      width: 28%;
+    }
+
+    .indicator-table th:nth-child(2),
+    .indicator-table td:nth-child(2) {
+      width: 18%;
+    }
+
+    .indicator-table th:nth-child(3),
+    .indicator-table td:nth-child(3) {
+      width: 18%;
+    }
+
+    .indicator-table th:nth-child(4),
+    .indicator-table td:nth-child(4) {
+      width: 14%;
+    }
+
+    .indicator-table th:nth-child(5),
+    .indicator-table td:nth-child(5) {
+      width: 11%;
+    }
+
+    .indicator-table th:nth-child(6),
+    .indicator-table td:nth-child(6) {
+      width: 11%;
+    }
+
+    .distribution-block {
+      width: 100%;
+      margin-bottom: 18px;
+    }
+
+    .distribution-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .distribution-table {
+      width: 100%;
+      margin-bottom: 0;
+    }
+
+    .distribution-table th:nth-child(1),
+    .distribution-table td:nth-child(1) {
+      width: 58%;
+    }
+
+    .distribution-table th:nth-child(2),
+    .distribution-table td:nth-child(2) {
+      width: 18%;
+    }
+
+    .distribution-table th:nth-child(3),
+    .distribution-table td:nth-child(3) {
+      width: 24%;
+    }
+
+    .dynamic-table {
+      page-break-inside: auto;
+      break-inside: auto;
+    }
+
+    .dynamic-table tbody tr {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .evolution-table th:nth-child(1),
+    .evolution-table td:nth-child(1) {
+      width: 34%;
+    }
+
+    .evolution-table th:nth-child(2),
+    .evolution-table td:nth-child(2),
+    .evolution-table th:nth-child(3),
+    .evolution-table td:nth-child(3),
+    .evolution-table th:nth-child(4),
+    .evolution-table td:nth-child(4) {
+      width: 22%;
+    }
+
+    .trend-up {
+      color: #2DBDAA;
+      font-size: 12px;
+    }
+
+    .trend-down {
+      color: #E8614A;
+      font-size: 12px;
+    }
+
+    .success {
+      color: #2DBDAA;
+    }
+
+    .failure {
+      color: #E8614A;
+    }
+
+    .empty-row {
+      color: #aaaaaa;
+      font-style: italic;
+    }
+
+    .funnel-section {
+      width: 100%;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .funnel-header {
+      font-size: 12px;
+      color: #888888;
+      margin-bottom: 12px;
+      text-align: right;
+    }
+
+    .funnel-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eeeeee;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .funnel-row:last-child {
+      border-bottom: none;
+    }
+
+    .funnel-label {
+      width: 120px;
+      font-size: 12.5px;
+      color: #888888;
+      flex-shrink: 0;
+    }
+
+    .funnel-bar-wrapper {
+      flex: 1;
+      background: #f2f2f2;
+      border-radius: 4px;
+      height: 15px;
+      overflow: hidden;
+    }
+
+    .funnel-bar {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    .bar-heats {
+      background: #3B82F6;
+    }
+
+    .bar-coverages {
+      background: #0EA5E9;
+    }
+
+    .bar-diagnoses {
+      background: #F59E0B;
+    }
+
+    .bar-confirmations {
+      background: #10B981;
+    }
+
+    .bar-calvings {
+      background: #8B5CF6;
+    }
+
+    .bar-interruptions {
+      background: #EF4444;
+    }
+
+    .funnel-count {
+      width: 32px;
+      text-align: right;
+      font-size: 13px;
+      color: #333333;
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11.5px;
+      color: #aaaaaa;
+      margin-top: 38px;
+      padding-top: 16px;
+      border-top: 1px solid #e8e8e8;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <div class="logo-area">
+      <div class="logo-icon">
+        <img src="https://raw.githubusercontent.com/ifelipelima/logo-aria/main/Logo.png" alt="Logo ARIA">
+      </div>
+      <span class="logo-name">ARIA</span>
+    </div>
+
+    <div class="report-title">Relatório Reprodutivo</div>
+
+    <div class="report-period">
+      Período: <%= @report[:meta][:period] %>
+    </div>
+
+    <div class="report-meta">
+      Gerado em: <%= @report[:meta][:generated_at] %><br>
+      Responsável: <%= @report[:meta][:responsible] %>
+    </div>
+
+    <hr class="divider divider-main">
+
+    <div class="fixed-block">
+      <div class="section">
+        <div class="section-title">Indicadores Reprodutivos</div>
+
+        <table class="indicator-table">
+          <thead>
+            <tr>
+              <th>Indicador</th>
+              <th>Sucessos</th>
+              <th>Falhas</th>
+              <th>Total</th>
+              <th class="right">Taxa</th>
+              <th class="right">Variação</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% Array(@report[:indicators]).each do |indicator| %>
+              <% trend_up = indicator[:variation].to_f >= 0 %>
+              <% trend_class = trend_up ? "trend-up" : "trend-down" %>
+              <% trend_signal = trend_up ? "▲ +" : "▼ " %>
+
+              <tr>
+                <td><%= indicator[:title] %></td>
+                <td class="success"><%= indicator[:success_label] %></td>
+                <td class="failure"><%= indicator[:failure_label] %></td>
+                <td><%= indicator[:total_label] %></td>
+                <td class="right">
+                  <%= number_to_percentage(indicator[:rate], precision: 2, separator: ",") %>
+                </td>
+                <td class="right">
+                  <span class="<%= trend_class %>">
+                    <%= trend_signal %><%= number_to_percentage(indicator[:variation].abs, precision: 2, separator: ",") %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="divider">
+
+      <div class="section">
+        <div class="section-title">Inseminações</div>
+
+        <div class="distribution-block">
+          <div class="sub-section-title" style="margin-top: 0;">Por Método</div>
+
+          <table class="distribution-table">
+            <thead>
+              <tr>
+                <th>Método</th>
+                <th class="center">Coberturas</th>
+                <th class="right">Proporção (%)</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% if Array(@report[:inseminations_by_method]).any? %>
+                <% Array(@report[:inseminations_by_method]).each do |item| %>
+                  <tr>
+                    <td><%= item[:name] %></td>
+                    <td class="center"><%= item[:coverings] %></td>
+                    <td class="right">
+                      <%= number_to_percentage(item[:proportion], precision: 2, separator: ",") %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% else %>
+                <tr>
+                  <td colspan="3" class="empty-row">Nenhuma inseminação registrada no período.</td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="dynamic-block">
+      <div class="distribution-block">
+        <div class="sub-section-title">Por Touro</div>
+
+        <table class="distribution-table dynamic-table">
+          <thead>
+            <tr>
+              <th>Touro</th>
+              <th class="center">Coberturas</th>
+              <th class="right">Proporção (%)</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% if Array(@report[:inseminations_by_bull]).any? %>
+              <% Array(@report[:inseminations_by_bull]).each do |item| %>
+                <tr>
+                  <td><%= item[:name] %></td>
+                  <td class="center"><%= item[:coverings] %></td>
+                  <td class="right">
+                    <%= number_to_percentage(item[:proportion], precision: 2, separator: ",") %>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="3" class="empty-row">Nenhum touro registrado no período.</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="distribution-block">
+        <div class="sub-section-title">Por Empresa</div>
+
+        <table class="distribution-table dynamic-table">
+          <thead>
+            <tr>
+              <th>Empresa</th>
+              <th class="center">Coberturas</th>
+              <th class="right">Proporção (%)</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% if Array(@report[:inseminations_by_company]).any? %>
+              <% Array(@report[:inseminations_by_company]).each do |item| %>
+                <tr>
+                  <td><%= item[:name] %></td>
+                  <td class="center"><%= item[:coverings] %></td>
+                  <td class="right">
+                    <%= number_to_percentage(item[:proportion], precision: 2, separator: ",") %>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="3" class="empty-row">Nenhuma empresa registrada no período.</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="last-page">
+      <div class="section funnel-section">
+        <div class="section-title">Funil Reprodutivo</div>
+
+        <div class="funnel-header">
+          Ciclo Atual
+        </div>
+
+        <% funnel = Array(@report[:funnel]) %>
+        <% max_funnel = funnel.map { |item| item[:value].to_i }.max.to_i %>
+        <% max_funnel = 1 if max_funnel.zero? %>
+
+        <div id="funnel-container">
+          <% funnel.each do |item| %>
+            <% width = ((item[:value].to_f / max_funnel) * 100).round %>
+
+            <div class="funnel-row">
+              <div class="funnel-label"><%= item[:step] %></div>
+
+              <div class="funnel-bar-wrapper">
+                <div class="funnel-bar <%= item[:bar_class] %>" style="width:<%= width %>%"></div>
+              </div>
+
+              <div class="funnel-count"><%= item[:value] %></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="section">
+        <div class="section-title">Evolução das Taxas (%)</div>
+
+        <table class="evolution-table">
+          <thead>
+            <tr>
+              <th>Mês</th>
+              <th class="center">Inseminação</th>
+              <th class="center">Cobertura</th>
+              <th class="center">Prenhez</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% Array(@report[:rate_evolution]).each do |month| %>
+              <tr>
+                <td style="font-weight: 500;"><%= month[:period] %></td>
+                <td class="center">
+                  <%= number_to_percentage(month[:insemination], precision: 2, separator: ",") %>
+                </td>
+                <td class="center">
+                  <%= number_to_percentage(month[:coverage], precision: 2, separator: ",") %>
+                </td>
+                <td class="center">
+                  <%= number_to_percentage(month[:pregnancy], precision: 2, separator: ",") %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer">
+        ARIA – Assistente de Reprodução e Inseminação Artificial &copy; <%= Date.current.year %>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
