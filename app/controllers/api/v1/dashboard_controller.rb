@@ -36,6 +36,12 @@ module Api
         ).call
       end
 
+      def reproductive_rates_evolution
+        render json: Dashboard::Events::MonthlyRateEvolution.new(
+          tenant: current_tenant
+        ).call
+      end
+
       private
 
       def reproductive_indicators_params
