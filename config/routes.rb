@@ -29,6 +29,7 @@ Rails.application.routes.draw do
         get "phase-summary", action: :phase_summary
         get "alerts", action: :alerts
         get "reproductive-indicators", action: :reproductive_indicators
+        get "event-counts", action: :event_counts
         get "reproductive-rates-evolution", action: :reproductive_rates_evolution
         get "insemination-distribution", action: :insemination_distribution
         get "reproductive-report", action: :reproductive_report
