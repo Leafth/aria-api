@@ -9,7 +9,9 @@ module Cows
         {
           status: status,
           alerts: alerts
-        }
+        }.tap do |profile|
+          profile[:days_since_last_calving] = days_since_last_calving if show_days_since_last_calving?
+        end
       end
 
       private
@@ -58,6 +60,14 @@ module Cows
         when "postpartum"
           cow.last_calving_at
         end
+      end
+
+      def days_since_last_calving
+        profile_insights[:days_since_last_calving]
+      end
+
+      def show_days_since_last_calving?
+        profile_insights[:days_since_last_calving].present?
       end
 
       def alerts
