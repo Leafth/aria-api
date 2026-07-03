@@ -107,6 +107,7 @@ en:
             inseminated: "Waiting for pregnancy check"
             pregnant: "Expected calving date: %{calving_date}"
             postpartum: "%{days_since_calving} days since calving"
+            after_pregnancy_interruption: "Waiting for return to heat"
 
           alerts:
             heat_overdue: "Heat is outside the estimated period"
@@ -282,6 +283,8 @@ en:
 
         cow:
           attributes:
+            ear_tag:
+              invalid_ear_tag_format: "must contain exactly 3 digits."
             birth_date:
               future_date: "cannot be in the future."
             phase:

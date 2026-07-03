@@ -115,6 +115,7 @@ pt-BR:
             inseminated: "Aguardando diagnóstico de prenhez"
             pregnant: "Parto previsto: %{calving_date}"
             postpartum: "%{days_since_calving} dias desde o parto"
+            after_pregnancy_interruption: "Aguardando retorno ao cio"
 
           alerts:
             heat_overdue: "Cio fora do período estimado"
@@ -290,6 +291,8 @@ pt-BR:
 
         cow:
           attributes:
+            ear_tag:
+              invalid_ear_tag_format: "deve conter exatamente 3 números."
             birth_date:
               future_date: "não pode estar no futuro."
             phase:
