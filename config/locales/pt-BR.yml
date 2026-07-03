@@ -115,6 +115,7 @@ pt-BR:
             inseminated: "Aguardando diagnóstico de prenhez"
             pregnant: "Parto previsto: %{calving_date}"
             postpartum: "%{days_since_calving} dias desde o parto"
+            after_pregnancy_interruption: "Aguardando retorno ao cio"
 
           alerts:
             heat_overdue: "Cio fora do período estimado"

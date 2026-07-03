@@ -99,7 +99,7 @@ module Cows
         {
           level: "info",
           code: "waiting_heat",
-          message: I18n.t!("cows.insights.profile.reproductive_status.messages.open")
+          message: I18n.t!("cows.insights.profile.reproductive_status.observations.after_pregnancy_interruption")
         }
       end
 
