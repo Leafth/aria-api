@@ -21,7 +21,14 @@ class Cow < ApplicationRecord
   }, prefix: :reproductive, validate: true
 
   validates :name, presence: true
-  validates :ear_tag, presence: true, uniqueness: { scope: :tenant_id }
+  validates :ear_tag,
+            presence: true,
+            uniqueness: { scope: :tenant_id },
+            format: {
+              with: /\A\d{3}\z/,
+              message: :invalid_ear_tag_format
+            }
+
   validates :birth_date, presence: true
   validates :weight, presence: true, numericality: { greater_than: 0 }
   validates :phase, presence: true

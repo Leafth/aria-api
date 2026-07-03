@@ -290,6 +290,8 @@ pt-BR:
 
         cow:
           attributes:
+            ear_tag:
+              invalid_ear_tag_format: "deve conter exatamente 3 números."
             birth_date:
               future_date: "não pode estar no futuro."
             phase:
