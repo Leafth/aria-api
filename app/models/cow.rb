@@ -4,6 +4,8 @@ class Cow < ApplicationRecord
 
   include HasTenantBreed
 
+  before_validation :normalize_ear_tag
+
   enum :phase, {
     calf: "calf",
     heifer: "heifer",
@@ -57,5 +59,11 @@ class Cow < ApplicationRecord
       weight: last_weighing&.data&.dig("weight")&.to_f || weight,
       last_weighing_at: last_weighing&.occurred_at
     )
+  end
+
+  def normalize_ear_tag
+    return if ear_tag.blank?
+
+    self.ear_tag = ear_tag.to_s.gsub(/\D/, "").rjust(3, "0")
   end
 end
