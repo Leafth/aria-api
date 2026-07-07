@@ -17,6 +17,7 @@ class Bull < ApplicationRecord
   validates :ear_tag,
             presence: true,
             uniqueness: { scope: :tenant_id },
+            allow_nil: true,
             format: {
               with: /\A\d{3}\z/,
               message: :invalid_ear_tag_format
