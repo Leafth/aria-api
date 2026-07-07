@@ -280,6 +280,8 @@ pt-BR:
 
         bull:
           attributes:
+            ear_tag:
+              invalid_ear_tag_format: "deve conter exatamente 3 números."
             origin:
               invalid_origin: "é inválida."
             company:

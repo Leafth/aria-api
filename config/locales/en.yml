@@ -272,6 +272,8 @@ en:
 
         bull:
           attributes:
+            ear_tag:
+              invalid_ear_tag_format: "must contain exactly 3 digits."
             origin:
               invalid_origin: "is invalid."
             company:

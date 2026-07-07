@@ -4,6 +4,8 @@ class Bull < ApplicationRecord
 
   include HasTenantBreed
 
+  before_validation :normalize_ear_tag
+
   enum :origin, {
     local: "local",
     company: "company"
@@ -12,7 +14,13 @@ class Bull < ApplicationRecord
   validates :name, presence: true
   validates :origin, presence: true
 
-  validates :ear_tag, uniqueness: { scope: :tenant_id }, allow_nil: true
+  validates :ear_tag,
+            presence: true,
+            uniqueness: { scope: :tenant_id },
+            format: {
+              with: /\A\d{3}\z/,
+              message: :invalid_ear_tag_format
+            }
 
   validate :origin_rules
 
@@ -28,5 +36,11 @@ class Bull < ApplicationRecord
       errors.add(:company, :company_required) if company_id.blank?
       errors.add(:ear_tag, :company_with_ear_tag) if ear_tag.present?
     end
+  end
+
+  def normalize_ear_tag
+    return if ear_tag.blank?
+
+    self.ear_tag = ear_tag.to_s.gsub(/\D/, "").rjust(3, "0")
   end
 end
