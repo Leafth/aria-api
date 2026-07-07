@@ -280,8 +280,6 @@ pt-BR:
 
         bull:
           attributes:
-            ear_tag:
-              invalid_ear_tag_format: "deve conter exatamente 3 números."
             origin:
               invalid_origin: "é inválida."
             company:
@@ -290,6 +288,7 @@ pt-BR:
             ear_tag:
               local_without_ear_tag: "é obrigatório para touro local."
               company_with_ear_tag: "não deve existir para touros de empresa."
+              invalid_ear_tag_format: "deve conter exatamente 3 números."
 
         cow:
           attributes:
