@@ -1,0 +1,44 @@
+ARG RUBY_VERSION=3.4.9
+
+FROM ruby:${RUBY_VERSION}-slim
+
+WORKDIR /rails
+
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+      build-essential \
+      git \
+      libpq-dev \
+      libvips \
+      libyaml-dev \
+      pkg-config \
+      postgresql-client \
+      nodejs \
+      npm \
+      chromium && \
+    rm -rf /var/lib/apt/lists/* \
+      /var/cache/apt/archives/*
+
+ENV RAILS_ENV="development" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium" \
+    PUPPETEER_SKIP_DOWNLOAD="true"
+
+COPY Gemfile Gemfile.lock ./
+
+RUN bundle install
+
+COPY package.json package-lock.json ./
+
+RUN npm ci && \
+    npm cache clean --force
+
+COPY . .
+
+RUN chmod +x bin/* && \
+    sed -i "s/\r$//g" bin/* && \
+    sed -i "s/ruby\.exe$/ruby/" bin/*
+
+EXPOSE 3000
+
+CMD ["./bin/rails", "server", "-b", "0.0.0.0"]

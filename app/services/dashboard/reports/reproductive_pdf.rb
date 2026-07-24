@@ -44,9 +44,13 @@ module Dashboard
       end
 
       def grover_options
-        {
+        options = {
           format: "A4",
           print_background: true,
+          executable_path: ENV.fetch(
+            "PUPPETEER_EXECUTABLE_PATH",
+            "/usr/bin/chromium"
+          ),
           margin: {
             top: "0mm",
             bottom: "0mm",
@@ -54,6 +58,15 @@ module Dashboard
             right: "0mm"
           }
         }
+
+        if Rails.env.development?
+          options[:launch_args] = [
+            "--no-sandbox",
+            "--disable-setuid-sandbox"
+          ]
+        end
+
+        options
       end
     end
   end

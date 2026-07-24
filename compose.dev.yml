@@ -1,0 +1,96 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+    container_name: aria-api-dev
+
+    command: >
+      bash -c "
+        rm -f tmp/pids/server.pid &&
+        bin/rails db:prepare &&
+        bin/rails db:seed &&
+        bin/rails server -b 0.0.0.0
+      "
+
+    ports:
+      - "127.0.0.1:3000:3000"
+
+    env_file:
+      - .env
+
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      REDIS_URL: redis://redis:6379/0
+
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+    container_name: aria-sidekiq-dev
+
+    command: bundle exec sidekiq -C config/sidekiq.yml
+
+    env_file:
+      - .env
+
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      REDIS_URL: redis://redis:6379/0
+
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  db:
+    image: postgres:15-alpine
+
+    container_name: aria-postgres-dev
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: aria_api_development
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d aria_api_development"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  
+  redis:
+    image: redis:7-alpine
+
+    container_name: aria-redis-dev
+
+    volumes:
+      - redis_data:/data
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
+  redis_data:
