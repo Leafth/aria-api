@@ -1,37 +1,28 @@
 require "rails_helper"
 
 RSpec.describe Breed, type: :model do
-  let(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste") }
-
-  def build_breed(attrs = {})
-    Breed.new({
-      tenant: tenant,
-      name: "Nelore"
-    }.merge(attrs))
-  end
-
   it "é válida com dados válidos" do
-    breed = build_breed
+    breed = build(:breed)
 
     expect(breed).to be_valid
   end
 
   it "inválida sem tenant" do
-    breed = build_breed(tenant: nil)
+    breed = build(:breed, tenant: nil)
 
     expect(breed).not_to be_valid
     expect(breed.errors[:tenant]).to be_present
   end
 
   it "inválida sem nome" do
-    breed = build_breed(name: nil)
+    breed = build(:breed, name: nil)
 
     expect(breed).not_to be_valid
     expect(breed.errors[:name]).to be_present
   end
 
   it "remove espaços do nome" do
-    breed = build_breed(name: "  Nelore  ")
+    breed = build(:breed, name: "  Nelore  ")
 
     breed.valid?
 
@@ -39,7 +30,7 @@ RSpec.describe Breed, type: :model do
   end
 
   it "preenche o nome normalizado a partir do nome" do
-    breed = build_breed(name: "Nelore")
+    breed = build(:breed, name: "Nelore")
 
     breed.valid?
 
@@ -47,7 +38,7 @@ RSpec.describe Breed, type: :model do
   end
 
   it "normaliza acentos e espaços no nome normalizado" do
-    breed = build_breed(name: " tabapuã leiteiro ")
+    breed = build(:breed, name: " tabapuã leiteiro ")
 
     breed.valid?
 
@@ -56,11 +47,14 @@ RSpec.describe Breed, type: :model do
   end
 
   it "inválida com nome normalizado duplicado no mesmo tenant" do
-    Breed.create!(tenant: tenant, name: "Nelore")
+    existing_breed = create(:breed, name: "Nelore")
 
-    breed = build_breed(name: " nelore ")
-
-    expect(breed).not_to be_valid
-    expect(breed.errors[:normalized_name]).to be_present
+    duplicate_breed = build(
+      :breed,
+      tenant: existing_breed.tenant,
+      name: " nelore "
+    )
+    expect(duplicate_breed).not_to be_valid
+    expect(duplicate_breed.errors[:normalized_name]).to be_present
   end
 end

@@ -1,5 +1,3 @@
-# spec/factories/auth_sessions.rb
-
 FactoryBot.define do
   factory :auth_session do
     user
