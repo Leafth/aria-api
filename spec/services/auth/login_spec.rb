@@ -1,18 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Auth::Login do
-  let(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste") }
-
-  let(:user) do
-    User.create!(
-      tenant: tenant,
-      name: "User 1",
-      email: "user@email.com",
-      password: "@Senha123",
-      password_confirmation: "@Senha123",
-      status: :active
-    )
-  end
+  let(:user) { create(:user) }
+  let(:tenant) { user.tenant }
 
   def call_service(attrs = {})
     described_class.new(**{
