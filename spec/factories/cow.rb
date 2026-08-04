@@ -18,5 +18,37 @@ FactoryBot.define do
     trait :inactive do
       active { false }
     end
+
+    trait :heifer do
+      phase { :heifer }
+    end
+
+    trait :young do
+      phase { :young }
+    end
+
+    trait :primiparous do
+      phase { :primiparous }
+    end
+
+    trait :multiparous do
+      phase { :multiparous }
+    end
+
+    trait :in_heat do
+      reproductive_status { :in_heat }
+    end
+
+    trait :inseminated do
+      reproductive_status { :inseminated }
+    end
+
+    trait :pregnant do
+      reproductive_status { :pregnant }
+    end
+
+    trait :postpartum do
+      reproductive_status { :postpartum }
+    end
   end
 end

@@ -1,31 +1,20 @@
 require "rails_helper"
 
 RSpec.describe Cows::Insights::ReproductiveStatus do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
   let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "young",
+    create(
+      :cow,
+      :young,
       reproductive_status: reproductive_status,
       last_heat_at: last_heat_at,
       last_insemination_at: last_insemination_at,
       pregnancy_confirmed_at: pregnancy_confirmed_at,
       last_calving_at: last_calving_at,
-      last_pregnancy_interruption_at: last_pregnancy_interruption_at,
-      active: true
+      last_pregnancy_interruption_at: last_pregnancy_interruption_at
     )
   end
 
-  let(:reproductive_status) { "open" }
+  let(:reproductive_status) { :open }
   let(:last_heat_at) { nil }
   let(:last_insemination_at) { nil }
   let(:pregnancy_confirmed_at) { nil }
@@ -34,7 +23,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
 
   describe "#call" do
     context "quando a matriz está aguardando cio" do
-      let(:reproductive_status) { "open" }
+      let(:reproductive_status) { :open }
 
       context "sem data de cio anterior" do
         it "retorna mensagem e nenhum alerta" do
@@ -67,7 +56,6 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
 
       context "com próximo cio ainda dentro do prazo" do
         let(:last_heat_at) { 10.days.ago.change(usec: 0) }
-        let(:expected_next_heat_date) { last_heat_at.to_date + 21.days }
 
         it "retorna a data estimada do próximo cio e nenhum alerta" do
           result = described_class.new(cow: cow).call
@@ -86,7 +74,6 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
 
       context "com cio previsto já atrasado" do
         let(:last_heat_at) { 22.days.ago.change(usec: 0) }
-        let(:expected_next_heat_date) { last_heat_at.to_date + 21.days }
 
         it "retorna alerta de cio atrasado" do
           result = described_class.new(cow: cow).call
@@ -111,12 +98,12 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
     end
 
     context "quando a matriz está em cio" do
-      let(:reproductive_status) { "in_heat" }
+      let(:reproductive_status) { :in_heat }
 
       context "com cio ativo e longe do fim" do
         let(:last_heat_at) { 10.hours.ago.change(usec: 0) }
 
-        it "retorna horas restantes e nenhum alerta" do
+        it "retorna observação e nenhum alerta" do
           result = described_class.new(cow: cow).call
 
           expect(result).to eq(
@@ -173,7 +160,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
     end
 
     context "quando a matriz está inseminada" do
-      let(:reproductive_status) { "inseminated" }
+      let(:reproductive_status) { :inseminated }
 
       context "antes do período de diagnóstico" do
         let(:last_insemination_at) { 10.days.ago.change(usec: 0) }
@@ -234,7 +221,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
     end
 
     context "quando a matriz está prenha" do
-      let(:reproductive_status) { "pregnant" }
+      let(:reproductive_status) { :pregnant }
       let(:pregnancy_confirmed_at) { 30.days.ago.change(usec: 0) }
 
       context "antes da fase final da gestação" do
@@ -242,7 +229,6 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
 
         it "retorna data prevista do parto e nenhum alerta" do
           result = described_class.new(cow: cow).call
-          expected_calving_date = last_insemination_at.to_date + 285.days
 
           expect(result).to eq(
             status: "pregnant",
@@ -261,7 +247,6 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
 
         it "retorna alerta de parto próximo" do
           result = described_class.new(cow: cow).call
-          expected_calving_date = last_insemination_at.to_date + 285.days
 
           expect(result).to eq(
             status: "pregnant",
@@ -286,7 +271,6 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
 
         it "retorna alerta de parto atrasado" do
           result = described_class.new(cow: cow).call
-          expected_calving_date = last_insemination_at.to_date + 285.days
 
           expect(result).to eq(
             status: "pregnant",
@@ -308,7 +292,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
     end
 
     context "quando a matriz está em pós-parto" do
-      let(:reproductive_status) { "postpartum" }
+      let(:reproductive_status) { :postpartum }
       let(:last_calving_at) { 3.days.ago.change(usec: 0) }
 
       it "retorna data do parto e nenhum alerta" do
@@ -326,5 +310,13 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         )
       end
     end
+  end
+
+  def expected_next_heat_date
+    last_heat_at.to_date + 21.days
+  end
+
+  def expected_calving_date
+    last_insemination_at.to_date + 285.days
   end
 end
