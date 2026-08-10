@@ -1,29 +1,20 @@
 require "rails_helper"
 
 RSpec.describe Events::Insemination do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
+  let(:tenant) { create(:tenant) }
 
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  let!(:company) { Company.create!(tenant: tenant, name: "Empresa Teste") }
-
-  let!(:local_bull) do
-    tenant.bulls.create!(
-      name: "Touro Local",
-      breed: breed,
-      origin: :local,
-      ear_tag: "001"
+  let(:local_bull) do
+    create(
+      :bull,
+      tenant: tenant
     )
   end
 
-  let!(:company_bull) do
-    tenant.bulls.create!(
-      name: "Touro Empresa",
-      breed: breed,
-      origin: :company,
-      company: company
+  let(:company_bull) do
+    create(
+      :bull,
+      :from_company,
+      tenant: tenant
     )
   end
 
@@ -31,16 +22,12 @@ RSpec.describe Events::Insemination do
   let(:occurred_at) { Time.current.change(usec: 0) }
 
   let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "young",
-      reproductive_status: "in_heat",
-      last_heat_at: last_heat_at,
-      active: true
+    create(
+      :cow,
+      :young,
+      :in_heat,
+      tenant: tenant,
+      last_heat_at: last_heat_at
     )
   end
 
@@ -61,8 +48,11 @@ RSpec.describe Events::Insemination do
       expect(event.event_type).to eq("insemination")
       expect(event.data["method"]).to eq("artificial_insemination")
       expect(event.data["bull_id"]).to eq(company_bull.id)
-      expect(cow.reload.reproductive_status).to eq("inseminated")
-      expect(cow.reload.last_insemination_at).to be_within(1.second).of(occurred_at)
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("inseminated")
+      expect(cow.last_insemination_at).to be_within(1.second).of(occurred_at)
     end
 
     it "cria evento de monta natural e atualiza status da matriz" do
@@ -81,8 +71,11 @@ RSpec.describe Events::Insemination do
       expect(event.event_type).to eq("insemination")
       expect(event.data["method"]).to eq("natural_mating")
       expect(event.data["bull_id"]).to eq(local_bull.id)
-      expect(cow.reload.reproductive_status).to eq("inseminated")
-      expect(cow.reload.last_insemination_at).to be_within(1.second).of(occurred_at)
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("inseminated")
+      expect(cow.last_insemination_at).to be_within(1.second).of(occurred_at)
     end
 
     it "é inválido quando a matriz não está em cio" do
@@ -105,8 +98,11 @@ RSpec.describe Events::Insemination do
       )
 
       expect(Event.count).to eq(0)
-      expect(cow.reload.reproductive_status).to eq("open")
-      expect(cow.reload.last_insemination_at).to be_nil
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("open")
+      expect(cow.last_insemination_at).to be_nil
     end
 
 
@@ -130,8 +126,11 @@ RSpec.describe Events::Insemination do
       )
 
       expect(Event.count).to eq(0)
-      expect(cow.reload.reproductive_status).to eq("in_heat")
-      expect(cow.reload.last_insemination_at).to be_nil
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("in_heat")
+      expect(cow.last_insemination_at).to be_nil
     end
 
     it "é inválido quando o método é inválido" do
@@ -152,8 +151,11 @@ RSpec.describe Events::Insemination do
       )
 
       expect(Event.count).to eq(0)
-      expect(cow.reload.reproductive_status).to eq("in_heat")
-      expect(cow.reload.last_insemination_at).to be_nil
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("in_heat")
+      expect(cow.last_insemination_at).to be_nil
     end
 
     it "é inválido sem touro" do
@@ -174,8 +176,11 @@ RSpec.describe Events::Insemination do
       )
 
       expect(Event.count).to eq(0)
-      expect(cow.reload.reproductive_status).to eq("in_heat")
-      expect(cow.reload.last_insemination_at).to be_nil
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("in_heat")
+      expect(cow.last_insemination_at).to be_nil
     end
 
     it "é inválido quando touro não existe" do
@@ -196,8 +201,11 @@ RSpec.describe Events::Insemination do
       )
 
       expect(Event.count).to eq(0)
-      expect(cow.reload.reproductive_status).to eq("in_heat")
-      expect(cow.reload.last_insemination_at).to be_nil
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("in_heat")
+      expect(cow.last_insemination_at).to be_nil
     end
 
     it "é inválido quando inseminação artificial usa touro local" do
@@ -218,8 +226,11 @@ RSpec.describe Events::Insemination do
       )
 
       expect(Event.count).to eq(0)
-      expect(cow.reload.reproductive_status).to eq("in_heat")
-      expect(cow.reload.last_insemination_at).to be_nil
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("in_heat")
+      expect(cow.last_insemination_at).to be_nil
     end
 
     it "é inválido quando monta natural usa touro de empresa" do
@@ -240,8 +251,11 @@ RSpec.describe Events::Insemination do
       )
 
       expect(Event.count).to eq(0)
-      expect(cow.reload.reproductive_status).to eq("in_heat")
-      expect(cow.reload.last_insemination_at).to be_nil
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("in_heat")
+      expect(cow.last_insemination_at).to be_nil
     end
   end
 end

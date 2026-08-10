@@ -1,38 +1,26 @@
 require "rails_helper"
 
 RSpec.describe Events::HeatDetectionWithInsemination do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
+  let(:tenant) { create(:tenant) }
 
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  let!(:bull) do
-    tenant.bulls.create!(
-      name: "Touro Local",
-      breed: breed,
-      origin: :local,
-      ear_tag: "001"
+  let(:cow) do
+    create(
+      :cow,
+      tenant: tenant,
     )
   end
 
-  let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "calf",
-      reproductive_status: "open",
-      active: true
+  let(:bull) do
+    create(
+      :bull,
+      tenant: tenant
     )
   end
 
   describe "#call" do
     it "cria detecção de cio e inseminação juntos" do
-      heat_occurred_at = Time.zone.parse("2026-05-13 08:00:00")
-      insemination_occurred_at = Time.zone.parse("2026-05-13 14:00:00")
+      heat_occurred_at = 6.hours.ago.change(usec: 0)
+      insemination_occurred_at = 1.hour.ago.change(usec: 0)
 
       params = {
         heat_occurred_at: heat_occurred_at,
@@ -67,8 +55,8 @@ RSpec.describe Events::HeatDetectionWithInsemination do
     end
 
     it "não cria nenhum evento quando cobertura está fora da janela do cio" do
-      heat_occurred_at = Time.zone.parse("2026-05-12 08:00:00")
-      insemination_occurred_at = Time.zone.parse("2026-05-13 14:00:00")
+      heat_occurred_at = 30.hours.ago.change(usec: 0)
+      insemination_occurred_at = 1.hour.ago.change(usec: 0)
 
       params = {
         heat_occurred_at: heat_occurred_at,
