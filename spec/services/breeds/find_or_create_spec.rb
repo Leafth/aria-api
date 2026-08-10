@@ -1,16 +1,12 @@
 require "rails_helper"
 
 RSpec.describe Breeds::FindOrCreate do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
+  let(:tenant) { create(:tenant) }
 
   describe "#call" do
     context "quando breed_id é informado" do
       it "retorna a raça existente" do
-        breed = tenant.breeds.create!(
-          name: "Nelore"
-        )
+        breed = create(:breed, tenant: tenant, name: "Nelore")
 
         result = described_class.new(
           tenant: tenant,
@@ -33,7 +29,9 @@ RSpec.describe Breeds::FindOrCreate do
       end
 
       it "reaproveita uma raça existente com mesmo nome normalizado" do
-        existing_breed = tenant.breeds.create!(
+        existing_breed = create(
+          :breed,
+          tenant: tenant,
           name: "Nelore"
         )
 

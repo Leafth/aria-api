@@ -1,21 +1,14 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::Events", type: :request do
-  let!(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active) }
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  let(:headers) { { "X-Tenant-Slug" => tenant.slug } }
+  let(:tenant) { create(:tenant) }
+  let(:headers) do { "X-Tenant-Slug" => tenant.slug } end
+  let(:current_user) do build(:user, tenant: tenant) end
 
   let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "calf",
-      active: true
+    create(
+      :cow,
+      tenant: tenant,
     )
   end
 
@@ -26,7 +19,7 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:current_user)
-      .and_return(User.new(tenant: tenant))
+      .and_return(current_user)
   end
 
   it "cria evento e permite mudar de calf para heifer" do

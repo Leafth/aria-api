@@ -1,23 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Events::PhaseChange do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "calf",
-      active: true
-    )
-  end
+  let(:cow) { create(:cow) }
 
   describe "#call" do
     it "cria evento e permite mudar de calf para heifer" do
@@ -51,7 +35,7 @@ RSpec.describe Events::PhaseChange do
     end
 
     it "cria evento e permite mudar de heifer para young" do
-      cow.update!(phase: "heifer")
+      cow.update!(phase: :heifer)
 
       params = {
         event_type: "phase_change",
@@ -105,7 +89,7 @@ RSpec.describe Events::PhaseChange do
     end
 
     it "é inválido se tentar voltar de heifer para calf" do
-      cow.update!(phase: "heifer")
+      cow.update!(phase: :heifer)
 
       params = {
         event_type: "phase_change",
@@ -120,7 +104,7 @@ RSpec.describe Events::PhaseChange do
     end
 
     it "é inválido se tentar voltar de young para heifer" do
-      cow.update!(phase: "young")
+      cow.update!(phase: :young)
 
       params = {
         event_type: "phase_change",
@@ -135,7 +119,7 @@ RSpec.describe Events::PhaseChange do
     end
 
     it "é inválido se tentar voltar de young para calf" do
-      cow.update!(phase: "young")
+      cow.update!(phase: :young)
 
       params = {
         event_type: "phase_change",
@@ -163,7 +147,7 @@ RSpec.describe Events::PhaseChange do
     end
 
     it "é inválido se tentar mudar fase de uma matriz primiparous" do
-      cow.update!(phase: "primiparous")
+      cow.update!(phase: :primiparous)
 
       params = {
         event_type: "phase_change",
@@ -191,7 +175,7 @@ RSpec.describe Events::PhaseChange do
     end
 
     it "é inválido se tentar mudar fase de uma matriz multiparous" do
-      cow.update!(phase: "multiparous")
+      cow.update!(phase: :multiparous)
 
       params = {
         event_type: "phase_change",

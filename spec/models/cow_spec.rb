@@ -1,110 +1,90 @@
 require 'rails_helper'
 
 RSpec.describe Cow, type: :model do
-  let(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste") }
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  def build_cow(attrs = {})
-    Cow.new({
-      tenant: tenant,
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: Date.new(2023, 1, 1),
-      breed: breed,
-      weight: 180,
-      phase: "calf",
-      active: true
-    }.merge(attrs))
-  end
-
   it "é válida com dados válidos" do
-    cow = build_cow
+    cow = build(:cow)
 
     expect(cow).to be_valid
   end
 
   it "inválida sem tenant" do
-    cow = build_cow(tenant: nil)
+    cow = build(:cow, tenant: nil)
 
     expect(cow).not_to be_valid
     expect(cow.errors[:tenant]).to be_present
   end
 
   it "inválida sem nome" do
-    cow = build_cow(name: nil)
+    cow = build(:cow, name: nil)
 
     expect(cow).not_to be_valid
     expect(cow.errors[:name]).to be_present
   end
 
   it "inválida sem ear_tag" do
-    cow = build_cow(ear_tag: nil)
+    cow = build(:cow, ear_tag: nil)
 
     expect(cow).not_to be_valid
     expect(cow.errors[:ear_tag]).to be_present
   end
 
   it "inválida com ear_tag duplicado" do
-    Cow.create!(
-      tenant: tenant,
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: Date.new(2023, 1, 1),
-      breed: breed,
-      weight: 180,
-      phase: "calf",
-      active: true
+    existing_cow = create(:cow, ear_tag: "001")
+
+    duplicate_cow = build(
+      :cow,
+      tenant: existing_cow.tenant,
+      ear_tag: existing_cow.ear_tag
     )
 
-    bull = build_cow(ear_tag: "001")
-
-    expect(bull).not_to be_valid
-    expect(bull.errors[:ear_tag]).to be_present
+    expect(duplicate_cow).not_to be_valid
+    expect(duplicate_cow.errors[:ear_tag]).to be_present
   end
 
   it "inválida sem data de nascimento" do
-    cow = build_cow(birth_date: nil)
+    cow = build(:cow, birth_date: nil)
 
     expect(cow).not_to be_valid
     expect(cow.errors[:birth_date]).to be_present
   end
 
   it "inválida com data de nascimento futura" do
-    cow = build_cow(birth_date: 1.day.from_now)
+    cow = build(:cow, birth_date: 1.day.from_now)
+
     expect(cow).not_to be_valid
     expect(cow.errors[:birth_date]).to be_present
   end
 
   it "inválida sem raça" do
-    cow = build_cow(breed: nil)
+    cow = build(:cow, breed: nil)
 
     expect(cow).not_to be_valid
     expect(cow.errors[:breed]).to be_present
   end
 
   it "inválida sem peso" do
-    cow = build_cow(weight: nil)
+    cow = build(:cow, weight: nil)
 
     expect(cow).not_to be_valid
     expect(cow.errors[:weight]).to be_present
   end
 
   it "inválida com peso menor ou igual a 0" do
-    cow = build_cow(weight: 0)
+    cow = build(:cow, weight: 0)
 
     expect(cow).not_to be_valid
     expect(cow.errors[:weight]).to be_present
   end
 
   it "inválida com fase inválida" do
-    cow = build_cow(phase: "inválida")
+    cow = build(:cow, phase: nil)
 
     expect(cow).not_to be_valid
     expect(cow.errors[:phase]).to be_present
   end
 
   it "é válida com active como false" do
-    cow = build_cow(active: false)
+    cow = build(:cow, :inactive)
 
     expect(cow).to be_valid
   end

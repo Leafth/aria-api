@@ -1,27 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Auth::AccessToken do
-  let(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste") }
-
-  let(:user) do
-    User.create!(
-      tenant: tenant,
-      name: "User 1",
-      email: "user@email.com",
-      password: "@Senha123",
-      password_confirmation: "@Senha123",
-      status: :active
-    )
-  end
-
-  let(:session) do
-    AuthSession.create!(
-      tenant: tenant,
-      user: user,
-      refresh_token_digest: "token-digest",
-      expires_at: 1.day.from_now
-    )
-  end
+  let(:user) { create(:user) }
+  let(:tenant) { user.tenant }
+  let(:session) { create(:auth_session, user: user, tenant: tenant) }
 
   describe ".encode" do
     it "gera um token JWT válido com payload esperado" do

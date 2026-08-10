@@ -1,28 +1,20 @@
 require "rails_helper"
 
 RSpec.describe Events::PregnancyCheck do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
+  let(:occurred_at) { Time.current.change(usec: 0) }
 
   let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "young",
-      reproductive_status: "inseminated",
-      last_heat_at: 25.hours.ago,
-      last_insemination_at: 24.hours.ago,
-      active: true
+    create(
+      :cow,
+      :young,
+      :inseminated,
+      last_heat_at: last_heat_at,
+      last_insemination_at: last_insemination_at
     )
   end
 
-  let(:occurred_at) { Time.current.change(usec: 0) }
+  let(:last_heat_at) { 25.hours.ago.change(usec: 0) }
+  let(:last_insemination_at) { 24.hours.ago.change(usec: 0) }
 
   describe "#call" do
     it "cria evento de verificação de gravidez com resultado positivo e atualiza status da matriz" do
@@ -38,8 +30,11 @@ RSpec.describe Events::PregnancyCheck do
       expect(event).to be_persisted
       expect(event.event_type).to eq("pregnancy_check")
       expect(event.data["result"]).to eq("positive")
-      expect(cow.reload.reproductive_status).to eq("pregnant")
-      expect(cow.reload.pregnancy_confirmed_at).to be_within(1.second).of(occurred_at)
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("pregnant")
+      expect(cow.pregnancy_confirmed_at).to be_within(1.second).of(occurred_at)
     end
 
     it "cria evento de verificação de gravidez com resultado negativo e atualiza status da matriz" do
@@ -55,8 +50,11 @@ RSpec.describe Events::PregnancyCheck do
       expect(event).to be_persisted
       expect(event.event_type).to eq("pregnancy_check")
       expect(event.data["result"]).to eq("negative")
-      expect(cow.reload.reproductive_status).to eq("open")
-      expect(cow.reload.pregnancy_confirmed_at).to be_nil
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("open")
+      expect(cow.pregnancy_confirmed_at).to be_nil
     end
 
     it "é inválido quando a matriz não está inseminada" do
@@ -78,8 +76,11 @@ RSpec.describe Events::PregnancyCheck do
       )
 
       expect(Event.count).to eq(0)
-      expect(cow.reload.reproductive_status).to eq("in_heat")
-      expect(cow.reload.pregnancy_confirmed_at).to be_nil
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("in_heat")
+      expect(cow.pregnancy_confirmed_at).to be_nil
     end
 
     it "é inválido quando resultado é inválido" do
@@ -99,8 +100,11 @@ RSpec.describe Events::PregnancyCheck do
       )
 
       expect(Event.count).to eq(0)
-      expect(cow.reload.reproductive_status).to eq("inseminated")
-      expect(cow.reload.pregnancy_confirmed_at).to be_nil
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("inseminated")
+      expect(cow.pregnancy_confirmed_at).to be_nil
     end
 
     it "é inválido sem resultado" do
@@ -120,8 +124,11 @@ RSpec.describe Events::PregnancyCheck do
       )
 
       expect(Event.count).to eq(0)
-      expect(cow.reload.reproductive_status).to eq("inseminated")
-      expect(cow.reload.pregnancy_confirmed_at).to be_nil
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("inseminated")
+      expect(cow.pregnancy_confirmed_at).to be_nil
     end
   end
 end

@@ -1,24 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Cows::Insights::InactiveStatus do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "young",
-      reproductive_status: "open",
-      active: true
-    )
-  end
+  let(:cow) { create(:cow, :young, reproductive_status: :open) }
 
   describe "#call" do
     it "retorna a data e o motivo da inativação" do

@@ -1,26 +1,16 @@
 require "rails_helper"
 
 RSpec.describe Auth::Refresh do
-  let(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste") }
   let(:refresh_token) { Auth::RefreshToken.generate_token }
-
-  let(:user) do
-    User.create!(
-      tenant: tenant,
-      name: "User 1",
-      email: "user@email.com",
-      password: "@Senha123",
-      password_confirmation: "@Senha123",
-      status: :active
-    )
-  end
+  let(:user) { create(:user) }
+  let(:tenant) { user.tenant }
 
   let!(:session) do
-    AuthSession.create!(
-      tenant: tenant,
+    create(
+      :auth_session,
       user: user,
-      refresh_token_digest: Auth::RefreshToken.digest(refresh_token),
-      expires_at: 1.day.from_now
+      tenant: tenant,
+      refresh_token_digest: Auth::RefreshToken.digest(refresh_token)
     )
   end
 

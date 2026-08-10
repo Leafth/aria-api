@@ -1,29 +1,20 @@
 require "rails_helper"
 
 RSpec.describe Events::PregnancyInterruption do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
+  let(:occurred_at) { Time.current.change(usec: 0) }
 
   let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "young",
-      reproductive_status: "pregnant",
-      last_heat_at: 286.days.ago,
-      last_insemination_at: 285.days.ago,
-      pregnancy_confirmed_at: 280.days.ago,
-      active: true
+    create(
+      :cow,
+      :young,
+      :pregnant,
+      last_heat_at: 286.days.ago.change(usec: 0),
+      last_insemination_at: 285.days.ago.change(usec: 0),
+      pregnancy_confirmed_at: pregnancy_confirmed_at
     )
   end
 
-  let(:occurred_at) { Time.current.change(usec: 0) }
+  let(:pregnancy_confirmed_at) { 280.days.ago.change(usec: 0) }
 
   describe "#call" do
     it "cria evento para interrupção de prenhez e atualiza status da matriz" do
@@ -39,8 +30,11 @@ RSpec.describe Events::PregnancyInterruption do
       expect(event).to be_persisted
       expect(event.event_type).to eq("pregnancy_interruption")
       expect(event.occurred_at).to be_within(1.second).of(occurred_at)
-      expect(cow.reload.reproductive_status).to eq("open")
-      expect(cow.reload.last_pregnancy_interruption_at).to be_within(1.second).of(occurred_at)
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("open")
+      expect(cow.last_pregnancy_interruption_at).to be_within(1.second).of(occurred_at)
     end
 
     it "é inválido quando a matriz não está prenha" do
@@ -61,6 +55,9 @@ RSpec.describe Events::PregnancyInterruption do
       )
 
       expect(Event.count).to eq(0)
+
+      cow.reload
+
       expect(cow.reload.reproductive_status).to eq("inseminated")
       expect(cow.reload.last_pregnancy_interruption_at).to be_nil
     end

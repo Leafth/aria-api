@@ -1,31 +1,14 @@
 require "rails_helper"
 
 RSpec.describe Events::Weighing do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "calf",
-      active: true
-    )
-  end
+  let(:cow) { create(:cow, weight: 180) }
+  let(:occurred_at) { 1.day.ago.change(usec: 0) }
 
   describe "#call" do
     it "cria evento de pesagem" do
-      occurred_at = Time.zone.parse("2026-05-05")
-
       params = {
         event_type: "weighing",
-        occurred_at: "2026-05-05",
+        occurred_at: occurred_at,
         data: { weight: 200 }
       }
 
@@ -34,14 +17,17 @@ RSpec.describe Events::Weighing do
       expect(event).to be_persisted
       expect(event.event_type).to eq("weighing")
       expect(event.data["weight"]).to eq(200)
-      expect(cow.reload.weight).to eq(200)
-      expect(cow.reload.last_weighing_at).to eq(occurred_at)
+
+      cow.reload
+
+      expect(cow.weight).to eq(200)
+      expect(cow.last_weighing_at).to eq(occurred_at)
     end
 
     it "é inválido sem peso" do
       params = {
         event_type: "weighing",
-        occurred_at: "2026-05-05",
+        occurred_at: occurred_at,
         data: {}
       }
 
@@ -53,7 +39,7 @@ RSpec.describe Events::Weighing do
     it "é inválido com peso negativo" do
       params = {
         event_type: "weighing",
-        occurred_at: "2026-05-05",
+        occurred_at: occurred_at,
         data: { weight: -200 }
       }
 
@@ -63,8 +49,8 @@ RSpec.describe Events::Weighing do
     end
 
     it "mantém o peso da pesagem mais recente" do
-      recent_occurred_at = Time.zone.parse("2026-05-05")
-      old_occurred_at = Time.zone.parse("2026-01-01")
+      recent_occurred_at = 1.day.ago.change(usec: 0)
+      old_occurred_at = 2.days.ago.change(usec: 0)
 
       params_one = {
         event_type: "weighing",
@@ -81,7 +67,9 @@ RSpec.describe Events::Weighing do
       described_class.new(cow: cow, params: params_one).call
       described_class.new(cow: cow, params: params_two).call
 
-      expect(cow.reload.weight).to eq(200)
+      cow.reload
+
+      expect(cow.weight).to eq(200)
       expect(cow.last_weighing_at).to eq(recent_occurred_at)
     end
 
@@ -90,7 +78,7 @@ RSpec.describe Events::Weighing do
 
       params = {
         event_type: "weighing",
-        occurred_at: "2026-05-05",
+        occurred_at: occurred_at,
         data: { weight: 200 }
       }
 

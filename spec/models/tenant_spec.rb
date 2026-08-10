@@ -1,47 +1,35 @@
 require 'rails_helper'
 
 RSpec.describe Tenant, type: :model do
-  def build_tenant(attrs = {})
-    Tenant.new({
-      name: "Fazenda Feliz",
-      slug: "fazenda-feliz",
-      status: :active
-    }.merge(attrs))
-  end
-
   it "é válido com dados válidos" do
-    expect(build_tenant).to be_valid
+    expect(build(:tenant)).to be_valid
   end
 
   it "inválido sem nome" do
-    tenant = build_tenant(name: nil)
+    tenant = build(:tenant, name: nil)
 
     expect(tenant).not_to be_valid
     expect(tenant.errors[:name]).to be_present
   end
 
   it "inválido sem slug" do
-    tenant = build_tenant(slug: nil)
+    tenant = build(:tenant, slug: nil)
 
     expect(tenant).not_to be_valid
     expect(tenant.errors[:slug]).to be_present
   end
 
   it "inválido com slug já existente" do
-    Tenant.create!(
-      name: "Fazenda Feliz Demais",
-      slug: "fazenda-feliz",
-      status: :active
-    )
+    existing_tenant = create(:tenant)
 
-    tenant = build_tenant()
+    duplicate_tenant = build(:tenant, slug: existing_tenant.slug)
 
-    expect(tenant).not_to be_valid
-    expect(tenant.errors[:slug]).to be_present
+    expect(duplicate_tenant).not_to be_valid
+    expect(duplicate_tenant.errors[:slug]).to be_present
   end
 
   it "normaliza slug antes da validação" do
-    tenant = build_tenant(slug: " Fazenda São João ")
+    tenant = build(:tenant, slug: " Fazenda São João ")
 
     tenant.valid?
 

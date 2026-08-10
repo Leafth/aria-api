@@ -1,40 +1,32 @@
 require "rails_helper"
 
 RSpec.describe Cows::Insights::ForIndex do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
   let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "young",
+    create(
+      :cow,
+      :young,
       reproductive_status: reproductive_status,
       last_heat_at: last_heat_at,
       last_insemination_at: last_insemination_at,
       pregnancy_confirmed_at: pregnancy_confirmed_at,
       last_calving_at: last_calving_at,
-      last_weighing_at: last_weighing_at,
-      active: true
+      last_weighing_at: last_weighing_at
     )
   end
 
-  let(:reproductive_status) { "open" }
-  let(:last_heat_at) { Time.zone.parse("2026-05-18 10:00:00") }
+  let(:reproductive_status) { :open }
+
+  let(:occurred_at) { 1.day.ago.change(usec: 0) }
+
+  let(:last_weighing_at) { occurred_at }
+  let(:last_heat_at) { occurred_at }
   let(:last_insemination_at) { nil }
   let(:pregnancy_confirmed_at) { nil }
   let(:last_calving_at) { nil }
-  let(:last_weighing_at) { Time.zone.parse("2026-05-18 10:00:00") }
 
   let(:reproductive_status_insight) do
     {
-      status: reproductive_status,
+      status: reproductive_status.to_s,
       message: "Mensagem do status",
       observation: observation,
       alerts: reproductive_alerts
@@ -73,7 +65,6 @@ RSpec.describe Cows::Insights::ForIndex do
 
     context "quando o status é open" do
       context "e a matriz não tem cio cadastrado" do
-        let(:reproductive_status) { "open" }
         let(:last_heat_at) { nil }
 
         it "retorna observações de pesagem" do
@@ -88,8 +79,6 @@ RSpec.describe Cows::Insights::ForIndex do
       end
 
       context "e a matriz tem cio cadastrado" do
-        let(:reproductive_status) { "open" }
-
         it "usa a data do último cio como occurred_at" do
           result = described_class.new(cow: cow).call
 
@@ -103,7 +92,7 @@ RSpec.describe Cows::Insights::ForIndex do
     end
 
     context "quando o status é in_heat" do
-      let(:reproductive_status) { "in_heat" }
+      let(:reproductive_status) { :in_heat }
 
       it "usa a data do último cio como occurred_at" do
         result = described_class.new(cow: cow).call
@@ -117,8 +106,8 @@ RSpec.describe Cows::Insights::ForIndex do
     end
 
     context "quando o status é inseminated" do
-      let(:reproductive_status) { "inseminated" }
-      let(:last_insemination_at) { Time.zone.parse("2026-05-18 10:00:00") }
+      let(:reproductive_status) { :inseminated }
+      let(:last_insemination_at) { occurred_at }
 
       it "usa a data da última inseminação como occurred_at" do
         result = described_class.new(cow: cow).call
@@ -132,8 +121,8 @@ RSpec.describe Cows::Insights::ForIndex do
     end
 
     context "quando o status é pregnant" do
-      let(:reproductive_status) { "pregnant" }
-      let(:pregnancy_confirmed_at) { Time.zone.parse("2026-05-18 10:00:00") }
+      let(:reproductive_status) { :pregnant }
+      let(:pregnancy_confirmed_at) { occurred_at }
 
       it "usa a data da confirmação de prenhez como occurred_at" do
         result = described_class.new(cow: cow).call
@@ -147,8 +136,8 @@ RSpec.describe Cows::Insights::ForIndex do
     end
 
     context "quando o status é postpartum" do
-      let(:reproductive_status) { "postpartum" }
-      let(:last_calving_at) { Time.zone.parse("2026-05-18 10:00:00") }
+      let(:reproductive_status) { :postpartum }
+      let(:last_calving_at) { occurred_at }
 
       it "usa a data do último parto como occurred_at" do
         result = described_class.new(cow: cow).call

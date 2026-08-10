@@ -1,31 +1,23 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::Events", type: :request do
-  let!(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active) }
+  let(:tenant) { create(:tenant) }
+  let(:headers) do { "X-Tenant-Slug" => tenant.slug } end
+  let(:current_user) do build(:user, tenant: tenant) end
 
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  let(:headers) { { "X-Tenant-Slug" => tenant.slug } }
-
-  let!(:bull) do
-    tenant.bulls.create!(
-      name: "Touro Local",
-      breed: breed,
-      origin: :local,
-      ear_tag: "001"
+  let(:bull) do
+    create(
+      :bull,
+      tenant: tenant
     )
   end
 
   let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "002",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "young",
-      reproductive_status: "open",
-      active: true
+    create(
+      :cow,
+      :young,
+      :open,
+      tenant: tenant,
     )
   end
 
@@ -36,13 +28,13 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:current_user)
-      .and_return(User.new(tenant: tenant))
+      .and_return(current_user)
   end
 
   describe "POST /api/v1/cows/:cow_id/events" do
     it "cria detecção de cio e inseminação juntos" do
-      heat_occurred_at = Time.zone.parse("2026-05-13 08:00:00")
-      insemination_occurred_at = Time.zone.parse("2026-05-13 14:00:00")
+      heat_occurred_at = 6.hours.ago.change(usec: 0)
+      insemination_occurred_at = 1.hour.ago.change(usec: 0)
 
       post "/api/v1/cows/#{cow.id}/events",
         params: {
@@ -71,8 +63,8 @@ RSpec.describe "Api::V1::Events", type: :request do
     end
 
     it "retorna 422 quando cobertura está fora da janela do cio" do
-      heat_occurred_at = Time.zone.parse("2026-05-12 08:00:00")
-      insemination_occurred_at = Time.zone.parse("2026-05-13 14:00:00")
+      heat_occurred_at = 30.hours.ago.change(usec: 0)
+      insemination_occurred_at = 1.hour.ago.change(usec: 0)
 
       post "/api/v1/cows/#{cow.id}/events",
         params: {

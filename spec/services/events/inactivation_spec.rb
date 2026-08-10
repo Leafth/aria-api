@@ -2,23 +2,7 @@
 require "rails_helper"
 
 RSpec.describe Events::Inactivation do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "calf",
-      active: true
-    )
-  end
+  let(:cow) { create(:cow) }
 
   describe "#call" do
     it "cria evento com reason e inativa cow" do

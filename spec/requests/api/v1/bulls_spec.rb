@@ -1,11 +1,10 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::Bulls", type: :request do
-  let!(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active) }
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  let(:headers) { { "X-Tenant-Slug" => tenant.slug } }
+  let(:tenant) { create(:tenant) }
+  let(:breed) { create(:breed, tenant: tenant, name: "Nelore") }
+  let(:headers) do { "X-Tenant-Slug" => tenant.slug } end
+  let(:current_user) do build(:user, tenant: tenant) end
 
   before do
     allow_any_instance_of(AuthenticateRequest)
@@ -14,7 +13,7 @@ RSpec.describe "Api::V1::Bulls", type: :request do
 
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:current_user)
-      .and_return(User.new(tenant: tenant))
+      .and_return(current_user)
   end
 
   describe "POST /api/v1/bulls" do
@@ -44,11 +43,10 @@ RSpec.describe "Api::V1::Bulls", type: :request do
 
   describe "GET /api/v1/bulls" do
     it "lista touros com paginação" do
-      tenant.bulls.create!(
-        name: "Touro 1",
-        breed: breed,
-        origin: "local",
-        ear_tag: "001"
+      create(
+        :bull,
+        tenant: tenant,
+        breed: breed
       )
 
       get "/api/v1/bulls", headers: headers
@@ -64,11 +62,11 @@ RSpec.describe "Api::V1::Bulls", type: :request do
 
   describe "GET /api/v1/bulls/:id" do
     it "exibe um touro" do
-      bull = tenant.bulls.create!(
-        name: "Touro 1",
+      bull = create(
+        :bull,
+        tenant: tenant,
         breed: breed,
-        origin: "local",
-        ear_tag: "001"
+        name: "Touro 1"
       )
 
       get "/api/v1/bulls/#{bull.id}", headers: headers
@@ -84,11 +82,10 @@ RSpec.describe "Api::V1::Bulls", type: :request do
 
   describe "PATCH /api/v1/bulls/:id" do
     it "atualiza um touro" do
-      bull = tenant.bulls.create!(
-        name: "Touro 1",
+      bull = create(
+        :bull,
+        tenant: tenant,
         breed: breed,
-        origin: "local",
-        ear_tag: "001"
       )
 
       patch "/api/v1/bulls/#{bull.id}",
@@ -110,11 +107,10 @@ RSpec.describe "Api::V1::Bulls", type: :request do
 
   describe "DELETE /api/v1/bulls/:id" do
     it "remove um touro" do
-      bull = tenant.bulls.create!(
-        name: "Touro 1",
-        breed: breed,
-        origin: "local",
-        ear_tag: "001"
+      bull = create(
+        :bull,
+        tenant: tenant,
+        breed: breed
       )
 
       expect {

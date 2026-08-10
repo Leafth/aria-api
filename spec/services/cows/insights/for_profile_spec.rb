@@ -1,32 +1,22 @@
 require "rails_helper"
 
 RSpec.describe Cows::Insights::ForProfile do
-  let!(:tenant) do
-    Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active)
-  end
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
   let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
+    create(
+      :cow,
       weight: weight,
       phase: phase,
-      reproductive_status: reproductive_status,
-      active: true
+      reproductive_status: reproductive_status
     )
   end
 
   let(:weight) { 90 }
-  let(:phase) { "calf" }
-  let(:reproductive_status) { "open" }
+  let(:phase) { :calf }
+  let(:reproductive_status) { :open }
 
   let(:reproductive_status_insight) do
     {
-      status: reproductive_status,
+      status: reproductive_status.to_s,
       message: "Aguardando cio",
       observation: "Sem cio anterior",
       alerts: []
@@ -87,7 +77,7 @@ RSpec.describe Cows::Insights::ForProfile do
     end
 
     context "quando a fase é bezerra" do
-      let(:phase) { "calf" }
+      let(:phase) { :calf }
 
       context "e o peso é menor que 100kg" do
         let(:weight) { 99 }
@@ -136,7 +126,7 @@ RSpec.describe Cows::Insights::ForProfile do
     end
 
     context "quando a fase é garrota" do
-      let(:phase) { "heifer" }
+      let(:phase) { :heifer }
 
       context "e o peso é menor que 100kg" do
         let(:weight) { 99 }
@@ -171,7 +161,7 @@ RSpec.describe Cows::Insights::ForProfile do
     context "quando a fase exige no mínimo 180kg" do
       let(:weight) { 179 }
 
-      %w[young primiparous multiparous].each do |current_phase|
+      %i[young primiparous multiparous].each do |current_phase|
         context "e a fase é #{current_phase}" do
           let(:phase) { current_phase }
 
@@ -179,7 +169,7 @@ RSpec.describe Cows::Insights::ForProfile do
             result = described_class.new(cow: cow).call
 
             expect(result[:phase_insight]).to eq(
-              current_phase: current_phase,
+              current_phase: current_phase.to_s,
               message: I18n.t!("cows.insights.profile.phase.below_weight")
             )
           end
@@ -189,11 +179,11 @@ RSpec.describe Cows::Insights::ForProfile do
 
     context "quando define a próxima ação recomendada" do
       {
-        "open" => "heat_detection",
-        "in_heat" => "insemination",
-        "inseminated" => "pregnancy_check",
-        "pregnant" => "calving",
-        "postpartum" => "heat_detection"
+        open: "heat_detection",
+        in_heat: "insemination",
+        inseminated: "pregnancy_check",
+        pregnant: "calving",
+        postpartum: "heat_detection"
       }.each do |status, action|
         context "quando o status reprodutivo é #{status}" do
           let(:reproductive_status) { status }
@@ -208,8 +198,8 @@ RSpec.describe Cows::Insights::ForProfile do
     end
 
     context "quando calcula os dias desde o último parto" do
-      let(:phase) { "primiparous" }
-      let(:reproductive_status) { "open" }
+      let(:phase) { :primiparous }
+      let(:reproductive_status) { :open }
       let(:last_calving_at) { 10.days.ago.change(usec: 0) }
 
       before do
@@ -223,7 +213,7 @@ RSpec.describe Cows::Insights::ForProfile do
       end
 
       context "quando matriz está prenha" do
-        let(:reproductive_status) { "pregnant" }
+        let(:reproductive_status) { :pregnant }
 
         it "não retorna os dias desde o último parto" do
           result = described_class.new(cow: cow).call
