@@ -1,23 +1,11 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::Events", type: :request do
-  let!(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active) }
+  let(:tenant) { create(:tenant) }
+  let(:headers) do { "X-Tenant-Slug" => tenant.slug } end
+  let(:current_user) do build(:user, tenant: tenant) end
 
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  let(:headers) { { "X-Tenant-Slug" => tenant.slug } }
-
-  let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "calf",
-      active: true
-    )
-  end
+  let(:cow) do create(:cow, tenant: tenant, weight: 180) end
 
   before do
     allow_any_instance_of(AuthenticateRequest)
@@ -26,11 +14,11 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:current_user)
-      .and_return(User.new(tenant: tenant))
+      .and_return(current_user)
   end
 
   it "cria evento de pesagem" do
-    occurred_at = Time.zone.parse("2026-05-05")
+    occurred_at = 1.day.ago.change(usec: 0)
 
     post "/api/v1/cows/#{cow.id}/events",
       params: {
@@ -43,7 +31,7 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     expect(response).to have_http_status(:created)
     expect(cow.reload.weight).to eq(200)
-    expect(cow.reload.last_weighing_at).to eq(occurred_at)
+    expect(cow.last_weighing_at).to eq(occurred_at)
     expect(Event.last.event_type).to eq("weighing")
   end
 

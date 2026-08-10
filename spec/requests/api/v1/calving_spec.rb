@@ -1,29 +1,24 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::Events", type: :request do
-  let!(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active) }
-
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
-
-  let(:headers) { { "X-Tenant-Slug" => tenant.slug } }
+  let(:tenant) { create(:tenant) }
+  let(:headers) do { "X-Tenant-Slug" => tenant.slug } end
+  let(:current_user) do build(:user, tenant: tenant) end
+  let(:occurred_at) { Time.current.change(usec: 0) }
 
   let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "001",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "young",
-      reproductive_status: "pregnant",
-      last_heat_at: 286.days.ago,
-      last_insemination_at: 285.days.ago,
-      pregnancy_confirmed_at: 280.days.ago,
-      active: true
+    create(
+      :cow,
+      :young,
+      :pregnant,
+      tenant: tenant,
+      last_heat_at: 286.days.ago.change(usec: 0),
+      last_insemination_at: 285.days.ago.change(usec: 0),
+      pregnancy_confirmed_at: pregnancy_confirmed_at
     )
   end
 
-  let(:occurred_at) { Time.current.change(usec: 0) }
+  let(:pregnancy_confirmed_at) { 280.days.ago.change(usec: 0) }
 
   before do
     allow_any_instance_of(AuthenticateRequest)
@@ -32,7 +27,7 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:current_user)
-      .and_return(User.new(tenant: tenant))
+      .and_return(current_user)
   end
 
   describe "POST /api/v1/cows/:cow_id/events" do
@@ -49,9 +44,12 @@ RSpec.describe "Api::V1::Events", type: :request do
         }, headers: headers
 
       expect(response).to have_http_status(:created)
-      expect(cow.reload.reproductive_status).to eq("postpartum")
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("postpartum")
       expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
-      expect(cow.reload.phase).to eq("primiparous")
+      expect(cow.phase).to eq("primiparous")
       expect(Event.last.event_type).to eq("calving")
     end
 
@@ -70,9 +68,12 @@ RSpec.describe "Api::V1::Events", type: :request do
         }, headers: headers
 
       expect(response).to have_http_status(:created)
-      expect(cow.reload.reproductive_status).to eq("postpartum")
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("postpartum")
       expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
-      expect(cow.reload.phase).to eq("multiparous")
+      expect(cow.phase).to eq("multiparous")
       expect(Event.last.event_type).to eq("calving")
     end
 
@@ -91,9 +92,12 @@ RSpec.describe "Api::V1::Events", type: :request do
         }, headers: headers
 
       expect(response).to have_http_status(:created)
-      expect(cow.reload.reproductive_status).to eq("postpartum")
+
+      cow.reload
+
+      expect(cow.reproductive_status).to eq("postpartum")
       expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
-      expect(cow.reload.phase).to eq("multiparous")
+      expect(cow.phase).to eq("multiparous")
       expect(Event.last.event_type).to eq("calving")
     end
 

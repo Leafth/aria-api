@@ -1,45 +1,26 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::Events", type: :request do
-  let!(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active) }
+  let(:tenant) { create(:tenant) }
+  let(:headers) do { "X-Tenant-Slug" => tenant.slug } end
+  let(:current_user) do build(:user, tenant: tenant) end
 
-  let(:breed) { Breed.create!(tenant: tenant, name: "Nelore") }
+  let(:local_bull) do create(:bull, tenant: tenant) end
+  let(:company_bull) do create(:bull, :from_company, tenant: tenant) end
 
-  let(:headers) { { "X-Tenant-Slug" => tenant.slug } }
-
-  let!(:company) { Company.create!(tenant: tenant, name: "Empresa Teste") }
-
-  let!(:local_bull) do
-    tenant.bulls.create!(
-      name: "Touro Local",
-      breed: breed,
-      origin: :local,
-      ear_tag: "001"
-    )
-  end
-
-  let!(:company_bull) do
-    tenant.bulls.create!(
-      name: "Touro Empresa",
-      breed: breed,
-      origin: :company,
-      company: company
-    )
-  end
+  let(:occurred_at) { Time.current.change(usec: 0) }
 
   let(:cow) do
-    tenant.cows.create!(
-      name: "Mimosa",
-      ear_tag: "002",
-      birth_date: "2023-01-01",
-      breed: breed,
-      weight: 180,
-      phase: "young",
-      reproductive_status: "in_heat",
-      last_heat_at: 2.hours.ago,
-      active: true
+    create(
+      :cow,
+      :young,
+      :in_heat,
+      tenant: tenant,
+      last_heat_at: last_heat_at
     )
   end
+
+  let(:last_heat_at) { 2.hours.ago.change(usec: 0) }
 
   before do
     allow_any_instance_of(AuthenticateRequest)
@@ -48,7 +29,7 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:current_user)
-      .and_return(User.new(tenant: tenant))
+      .and_return(current_user)
   end
 
   describe "POST /api/v1/cows/:cow_id/events" do

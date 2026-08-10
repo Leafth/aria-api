@@ -1,9 +1,9 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::Companies", type: :request do
-  let!(:tenant) { Tenant.create!(name: "Fazenda", slug: "fazenda-teste", status: :active) }
-
-  let(:headers) { { "X-Tenant-Slug" => tenant.slug } }
+  let(:tenant) { create(:tenant) }
+  let(:headers) do { "X-Tenant-Slug" => tenant.slug } end
+  let(:current_user) do build(:user, tenant: tenant) end
 
   before do
     allow_any_instance_of(AuthenticateRequest)
@@ -12,7 +12,7 @@ RSpec.describe "Api::V1::Companies", type: :request do
 
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:current_user)
-      .and_return(User.new(tenant: tenant))
+      .and_return(current_user)
   end
 
   describe "POST /api/v1/companies" do
@@ -36,8 +36,9 @@ RSpec.describe "Api::V1::Companies", type: :request do
 
   describe "GET /api/v1/companies" do
     it "lista empresas com paginação" do
-      tenant.companies.create!(
-        name: "Empresa 1",
+      create(
+        :company,
+        tenant: tenant,
       )
 
       get "/api/v1/companies", headers: headers
@@ -53,8 +54,10 @@ RSpec.describe "Api::V1::Companies", type: :request do
 
   describe "GET /api/v1/companies/:id" do
     it "exibe uma empresa" do
-      company = tenant.companies.create!(
-        name: "Empresa 1",
+      company = create(
+        :company,
+        tenant: tenant,
+        name: "Empresa 1"
       )
 
       get "/api/v1/companies/#{company.id}", headers: headers
@@ -70,8 +73,9 @@ RSpec.describe "Api::V1::Companies", type: :request do
 
   describe "PATCH /api/v1/companies/:id" do
     it "atualiza uma empresa" do
-      company = tenant.companies.create!(
-        name: "Empresa 1",
+      company = create(
+        :company,
+        tenant: tenant,
         description: "Descrição antiga"
       )
 
@@ -97,8 +101,9 @@ RSpec.describe "Api::V1::Companies", type: :request do
 
   describe "DELETE /api/v1/companies/:id" do
     it "remove uma empresa" do
-      company = tenant.companies.create!(
-        name: "Empresa 1",
+      company = create(
+        :company,
+        tenant: tenant,
       )
 
       expect {
