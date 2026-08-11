@@ -64,19 +64,19 @@ RSpec.describe "Api::V1::Events", type: :request do
   it "retorna 422 se fase vier vazia" do
     post_phase_change(phase: nil)
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "retorna 422 se fase for inválida" do
     post_phase_change(phase: "outro")
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "retorna 422 se tentar mudar para a mesma fase" do
     post_phase_change(phase: "calf")
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "retorna 422 se tentar voltar de heifer para calf" do
@@ -84,7 +84,7 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     post_phase_change(phase: "calf")
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(cow.reload.phase).to eq("heifer")
   end
 
@@ -93,7 +93,7 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     post_phase_change(phase: "heifer")
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(cow.reload.phase).to eq("young")
   end
 
@@ -102,14 +102,14 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     post_phase_change(phase: "calf")
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(cow.reload.phase).to eq("young")
   end
 
   it "retorna 422 se tentar mudar manualmente para primiparous" do
     post_phase_change(phase: "primiparous")
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "retorna 422 se tentar mudar fase de uma matriz primiparous" do
@@ -117,7 +117,7 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     post_phase_change(phase: "young")
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "retorna 422 se tentar mudar fase de uma matriz multiparous" do
@@ -125,12 +125,12 @@ RSpec.describe "Api::V1::Events", type: :request do
 
     post_phase_change(phase: "young")
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "retorna 422 se tentar mudar manualmente para multiparous" do
     post_phase_change(phase: "multiparous")
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 end

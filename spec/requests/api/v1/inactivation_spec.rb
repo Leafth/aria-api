@@ -52,14 +52,14 @@ RSpec.describe "Api::V1::Events", type: :request do
   it "retorna 422 se reason vazia" do
     post_inactivation(reason: nil)
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(cow.reload.active).to eq(true)
   end
 
   it "retorna 422 se reason inválida" do
     post_inactivation(reason: "outro")
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(cow.reload.active).to eq(true)
   end
 end

@@ -75,7 +75,7 @@ RSpec.describe "Api::V1::Events", type: :request do
         observation: "Nova tentativa de cio"
       )
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "não cria evento quando a matriz não está em estado permitido para cio" do
@@ -85,7 +85,7 @@ RSpec.describe "Api::V1::Events", type: :request do
         observation: "Animal apresentou sinais de cio"
       )
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 end

@@ -88,7 +88,7 @@ RSpec.describe "Api::V1::Events", type: :request do
         bull_id: company_bull.id
       )
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "retorna 422 quando o cio passou de 24 horas" do
@@ -101,7 +101,7 @@ RSpec.describe "Api::V1::Events", type: :request do
         bull_id: company_bull.id
       )
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "retorna 422 quando o método é inválido" do
@@ -110,7 +110,7 @@ RSpec.describe "Api::V1::Events", type: :request do
         bull_id: company_bull.id
       )
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "retorna 422 quando o touro não existe" do
@@ -119,7 +119,7 @@ RSpec.describe "Api::V1::Events", type: :request do
         bull_id: SecureRandom.uuid
       )
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "retorna 422 quando inseminação artificial usa touro local" do
@@ -128,7 +128,7 @@ RSpec.describe "Api::V1::Events", type: :request do
         bull_id: local_bull.id
       )
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "retorna 422 quando monta natural usa touro de empresa" do
@@ -137,7 +137,7 @@ RSpec.describe "Api::V1::Events", type: :request do
         bull_id: company_bull.id
       )
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 end

@@ -17,7 +17,7 @@ module Api
         if user.errors.empty?
           render json: { message: I18n.t("devise.passwords.updated_not_active") }, status: :ok
         else
-          render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: user.errors.full_messages }, status: :unprocessable_content
         end
       end
 

@@ -80,7 +80,7 @@ RSpec.describe "Api::V1::Events", type: :request do
         insemination_occurred_at: insemination_occurred_at
       )
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 end

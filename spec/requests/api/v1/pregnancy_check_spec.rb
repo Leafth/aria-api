@@ -71,19 +71,19 @@ RSpec.describe "Api::V1::Events", type: :request do
 
       post_pregnancy_check(result: "positive")
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "retorna 422 quando o resultado é inválido" do
       post_pregnancy_check(result: "outro")
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "retorna 422 sem resultado" do
       post_pregnancy_check(result: nil)
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 end

@@ -60,7 +60,7 @@ RSpec.describe "Api::V1::Events", type: :request do
 
       post_pregnancy_interruption
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(cow.reload.reproductive_status).to eq("inseminated")
       expect(cow.last_pregnancy_interruption_at).to be_nil
       expect(Event.count).to eq(0)

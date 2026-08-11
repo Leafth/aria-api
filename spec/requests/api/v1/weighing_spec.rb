@@ -46,12 +46,12 @@ RSpec.describe "Api::V1::Events", type: :request do
   it "retorna 422 se weight vazio" do
     post_weighing(weight: nil)
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "retorna 422 se weight negativo" do
     post_weighing(weight: -200)
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 end
