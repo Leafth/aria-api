@@ -21,6 +21,25 @@ RSpec.describe "Api::V1::Events", type: :request do
     )
   end
 
+  def post_heat_detection_with_insemination(
+    heat_occurred_at:,
+    insemination_occurred_at:
+  )
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "heat_detection_with_insemination",
+          heat_occurred_at: heat_occurred_at,
+          insemination_occurred_at: insemination_occurred_at,
+          data: {
+            method: "natural_mating",
+            bull_id: bull.id
+          }
+        }
+      },
+      headers: headers
+  end
+
   before do
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:authenticate_request!)
@@ -36,50 +55,32 @@ RSpec.describe "Api::V1::Events", type: :request do
       heat_occurred_at = 6.hours.ago.change(usec: 0)
       insemination_occurred_at = 1.hour.ago.change(usec: 0)
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "heat_detection_with_insemination",
-            heat_occurred_at: heat_occurred_at,
-            insemination_occurred_at: insemination_occurred_at,
-            data: {
-              method: "natural_mating",
-              bull_id: bull.id
-            }
-          }
-        }, headers: headers
+      post_heat_detection_with_insemination(
+        heat_occurred_at: heat_occurred_at,
+        insemination_occurred_at: insemination_occurred_at
+      )
 
-        expect(response).to have_http_status(:created)
-        events = cow.events.order(:occurred_at)
+      expect(response).to have_http_status(:created)
+      events = cow.events.order(:occurred_at)
 
-        expect(events.second_to_last.event_type).to eq("heat_detection")
-        expect(events.last.event_type).to eq("insemination")
+      expect(events.second_to_last.event_type).to eq("heat_detection")
+      expect(events.last.event_type).to eq("insemination")
 
-        cow.reload
-
-        expect(cow.reproductive_status).to eq("inseminated")
-        expect(cow.last_heat_at).to eq(heat_occurred_at)
-        expect(cow.last_insemination_at).to eq(insemination_occurred_at)
+      expect(cow.reload.reproductive_status).to eq("inseminated")
+      expect(cow.last_heat_at).to eq(heat_occurred_at)
+      expect(cow.last_insemination_at).to eq(insemination_occurred_at)
     end
 
     it "retorna 422 quando cobertura está fora da janela do cio" do
       heat_occurred_at = 30.hours.ago.change(usec: 0)
       insemination_occurred_at = 1.hour.ago.change(usec: 0)
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "heat_detection_with_insemination",
-            heat_occurred_at: heat_occurred_at,
-            insemination_occurred_at: insemination_occurred_at,
-            data: {
-              method: "natural_mating",
-              bull_id: bull.id
-            }
-          }
-        }, headers: headers
+      post_heat_detection_with_insemination(
+        heat_occurred_at: heat_occurred_at,
+        insemination_occurred_at: insemination_occurred_at
+      )
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 end

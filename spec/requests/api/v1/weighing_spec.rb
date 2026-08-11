@@ -7,6 +7,21 @@ RSpec.describe "Api::V1::Events", type: :request do
 
   let(:cow) do create(:cow, tenant: tenant, weight: 180) end
 
+  def post_weighing(weight:, occurred_at: nil)
+    data = weight.nil? ? {} : { weight: weight }
+
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "weighing",
+          occurred_at: occurred_at,
+          data: data
+        }
+      },
+      headers: headers,
+      as: :json
+  end
+
   before do
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:authenticate_request!)
@@ -20,14 +35,7 @@ RSpec.describe "Api::V1::Events", type: :request do
   it "cria evento de pesagem" do
     occurred_at = 1.day.ago.change(usec: 0)
 
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        "event": {
-          event_type: "weighing",
-          occurred_at: occurred_at,
-          data: { weight: 200 }
-        }
-      }, headers: headers, as: :json
+    post_weighing(weight: 200, occurred_at: occurred_at)
 
     expect(response).to have_http_status(:created)
     expect(cow.reload.weight).to eq(200)
@@ -36,27 +44,14 @@ RSpec.describe "Api::V1::Events", type: :request do
   end
 
   it "retorna 422 se weight vazio" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        "event": {
-          event_type: "weighing",
-          data: {}
-        }
-      }, headers: headers, as: :json
+    post_weighing(weight: nil)
 
-
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "retorna 422 se weight negativo" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        "event": {
-          event_type: "weighing",
-          data: { weight: -200 }
-        }
-      }, headers: headers, as: :json
+    post_weighing(weight: -200)
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 end

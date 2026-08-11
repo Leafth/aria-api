@@ -3,14 +3,19 @@ require "rails_helper"
 RSpec.describe Events::PhaseChange do
   let(:cow) { create(:cow) }
 
+  def call_service(phase:)
+    described_class.new(
+      cow: cow,
+      params: {
+        event_type: "phase_change",
+        data: phase.nil? ? {} : { phase: phase }
+      }
+    ).call
+  end
+
   describe "#call" do
     it "cria evento e permite mudar de calf para heifer" do
-      params = {
-        event_type: "phase_change",
-        data: { phase: "heifer" }
-      }
-
-      event = described_class.new(cow: cow, params: params).call
+      event = call_service(phase: "heifer")
 
       expect(event).to be_persisted
       expect(event.event_type).to eq("phase_change")
@@ -20,12 +25,7 @@ RSpec.describe Events::PhaseChange do
     end
 
     it "cria evento e permite mudar de calf para young" do
-      params = {
-        event_type: "phase_change",
-        data: { phase: "young" }
-      }
-
-      event = described_class.new(cow: cow, params: params).call
+      event = call_service(phase: "young")
 
       expect(event).to be_persisted
       expect(event.event_type).to eq("phase_change")
@@ -37,12 +37,7 @@ RSpec.describe Events::PhaseChange do
     it "cria evento e permite mudar de heifer para young" do
       cow.update!(phase: :heifer)
 
-      params = {
-        event_type: "phase_change",
-        data: { phase: "young" }
-      }
-
-      event = described_class.new(cow: cow, params: params).call
+      event = call_service(phase: "young")
 
       expect(event).to be_persisted
       expect(event.event_type).to eq("phase_change")
@@ -52,52 +47,32 @@ RSpec.describe Events::PhaseChange do
     end
 
     it "é inválido sem fase" do
-      params = {
-        event_type: "phase_change",
-        data: {}
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(phase: nil)
       }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("calf")
     end
 
     it "é inválido com fase inválida" do
-      params = {
-        event_type: "phase_change",
-        data: { phase: "outro" }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(phase: "outro")
       }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("calf")
     end
 
     it "é inválido se tentar mudar para a mesma fase" do
-      params = {
-        event_type: "phase_change",
-        data: { phase: "calf" }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(phase: "calf")
       }.to raise_error(Events::Error)
     end
 
     it "é inválido se tentar voltar de heifer para calf" do
       cow.update!(phase: :heifer)
 
-      params = {
-        event_type: "phase_change",
-        data: { phase: "calf" }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(phase: "calf")
       }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("heifer")
@@ -106,13 +81,8 @@ RSpec.describe Events::PhaseChange do
     it "é inválido se tentar voltar de young para heifer" do
       cow.update!(phase: :young)
 
-      params = {
-        event_type: "phase_change",
-        data: { phase: "heifer" }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(phase: "heifer")
       }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("young")
@@ -121,26 +91,16 @@ RSpec.describe Events::PhaseChange do
     it "é inválido se tentar voltar de young para calf" do
       cow.update!(phase: :young)
 
-      params = {
-        event_type: "phase_change",
-        data: { phase: "calf" }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(phase: "calf")
       }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("young")
     end
 
     it "é inválido se tentar mudar manualmente para primiparous" do
-      params = {
-        event_type: "phase_change",
-        data: { phase: "primiparous" }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(phase: "primiparous")
       }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("calf")
@@ -149,26 +109,16 @@ RSpec.describe Events::PhaseChange do
     it "é inválido se tentar mudar fase de uma matriz primiparous" do
       cow.update!(phase: :primiparous)
 
-      params = {
-        event_type: "phase_change",
-        data: { phase: "young" }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(phase: "young")
       }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("primiparous")
     end
 
     it "é inválido se tentar mudar manualmente para multiparous" do
-      params = {
-        event_type: "phase_change",
-        data: { phase: "multiparous" }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(phase: "multiparous")
       }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("calf")
@@ -177,13 +127,8 @@ RSpec.describe Events::PhaseChange do
     it "é inválido se tentar mudar fase de uma matriz multiparous" do
       cow.update!(phase: :multiparous)
 
-      params = {
-        event_type: "phase_change",
-        data: { phase: "young" }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(phase: "young")
       }.to raise_error(Events::Error)
 
       expect(cow.reload.phase).to eq("multiparous")

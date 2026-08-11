@@ -20,6 +20,20 @@ RSpec.describe "Api::V1::Events", type: :request do
 
   let(:pregnancy_confirmed_at) { 280.days.ago.change(usec: 0) }
 
+  def post_calving
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "calving",
+          occurred_at: occurred_at,
+          data: {
+            observation: "Parto sem complicações"
+          }
+        }
+      },
+      headers: headers
+  end
+
   before do
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:authenticate_request!)
@@ -32,22 +46,11 @@ RSpec.describe "Api::V1::Events", type: :request do
 
   describe "POST /api/v1/cows/:cow_id/events" do
     it "cria evento de parto, atualiza status da matriz e muda fase para primípara" do
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "calving",
-            occurred_at: occurred_at,
-            data: {
-              observation: "Parto sem complicações"
-            }
-          }
-        }, headers: headers
+      post_calving
 
       expect(response).to have_http_status(:created)
 
-      cow.reload
-
-      expect(cow.reproductive_status).to eq("postpartum")
+      expect(cow.reload.reproductive_status).to eq("postpartum")
       expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
       expect(cow.phase).to eq("primiparous")
       expect(Event.last.event_type).to eq("calving")
@@ -56,22 +59,11 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "cria evento de parto, atualiza status da matriz, e muda fase de primípara para multípara" do
       cow.update!(phase: "primiparous")
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "calving",
-            occurred_at: occurred_at,
-            data: {
-              observation: "Parto sem complicações"
-            }
-          }
-        }, headers: headers
+      post_calving
 
       expect(response).to have_http_status(:created)
 
-      cow.reload
-
-      expect(cow.reproductive_status).to eq("postpartum")
+      expect(cow.reload.reproductive_status).to eq("postpartum")
       expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
       expect(cow.phase).to eq("multiparous")
       expect(Event.last.event_type).to eq("calving")
@@ -80,22 +72,11 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "cria evento de parto, atualiza status da matriz, e mantém fase quando multípara" do
       cow.update!(phase: "multiparous")
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "calving",
-            occurred_at: occurred_at,
-            data: {
-              observation: "Parto sem complicações"
-            }
-          }
-        }, headers: headers
+      post_calving
 
       expect(response).to have_http_status(:created)
 
-      cow.reload
-
-      expect(cow.reproductive_status).to eq("postpartum")
+      expect(cow.reload.reproductive_status).to eq("postpartum")
       expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
       expect(cow.phase).to eq("multiparous")
       expect(Event.last.event_type).to eq("calving")
@@ -104,18 +85,9 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "retorna 422 quando a matriz não está prenha" do
       cow.update!(reproductive_status: "inseminated", pregnancy_confirmed_at: nil)
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "calving",
-            occurred_at: occurred_at,
-            data: {
-              observation: "Parto sem complicações"
-            }
-          }
-        }, headers: headers
+      post_calving
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 end

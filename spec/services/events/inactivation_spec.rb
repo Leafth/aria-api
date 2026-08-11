@@ -4,14 +4,19 @@ require "rails_helper"
 RSpec.describe Events::Inactivation do
   let(:cow) { create(:cow) }
 
+  def call_service(reason:)
+    described_class.new(
+      cow: cow,
+      params: {
+        event_type: "inactivation",
+        data: reason.nil? ? {} : { reason: reason }
+      }
+    ).call
+  end
+
   describe "#call" do
     it "cria evento com reason e inativa cow" do
-      params = {
-        event_type: "inactivation",
-        data: { reason: "sale" }
-      }
-
-      event = described_class.new(cow: cow, params: params).call
+      event = call_service(reason: "sale")
 
       expect(event).to be_persisted
       expect(event.event_type).to eq("inactivation")
@@ -20,24 +25,14 @@ RSpec.describe Events::Inactivation do
     end
 
     it "é inválido sem reason" do
-      params = {
-        event_type: "inactivation",
-        data: {}
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(reason: nil)
       }.to raise_error(Events::Error)
     end
 
     it "é inválido com reason inválido" do
-      params = {
-        event_type: "inactivation",
-        data: { reason: "outro" }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service(reason: "outro")
       }.to raise_error(Events::Error)
     end
   end

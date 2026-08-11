@@ -21,13 +21,18 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
   let(:last_calving_at) { nil }
   let(:last_pregnancy_interruption_at) { nil }
 
+
+  def call_service
+    described_class.new(cow: cow).call
+  end
+
   describe "#call" do
     context "quando a matriz está aguardando cio" do
       let(:reproductive_status) { :open }
 
       context "sem data de cio anterior" do
         it "retorna mensagem e nenhum alerta" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "open",
@@ -43,7 +48,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_pregnancy_interruption_at) { 3.days.ago.change(usec: 0) }
 
         it "retorna mensagem e nenhum alerta" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "open",
@@ -58,7 +63,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_heat_at) { 10.days.ago.change(usec: 0) }
 
         it "retorna a data estimada do próximo cio e nenhum alerta" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "open",
@@ -76,7 +81,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_heat_at) { 22.days.ago.change(usec: 0) }
 
         it "retorna alerta de cio atrasado" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "open",
@@ -104,7 +109,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_heat_at) { 10.hours.ago.change(usec: 0) }
 
         it "retorna observação e nenhum alerta" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "in_heat",
@@ -119,7 +124,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_heat_at) { 20.hours.ago.change(usec: 0) }
 
         it "retorna alerta de cio próximo do fim" do
-          result = described_class.new(cow: cow).call
+          result = call_service
           remaining_hours = ((last_heat_at + 24.hours - Time.current) / 1.hour).ceil
 
           expect(result).to eq(
@@ -147,7 +152,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_heat_at) { 25.hours.ago.change(usec: 0) }
 
         it "retorna observação de cio expirado e nenhum alerta" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "in_heat",
@@ -166,7 +171,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_insemination_at) { 10.days.ago.change(usec: 0) }
 
         it "retorna observação de aguardando diagnóstico e nenhum alerta" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "inseminated",
@@ -181,7 +186,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_insemination_at) { 20.days.ago.change(usec: 0) }
 
         it "retorna alerta de diagnóstico indicado" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "inseminated",
@@ -202,7 +207,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_insemination_at) { 31.days.ago.change(usec: 0) }
 
         it "retorna alerta de diagnóstico atrasado" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "inseminated",
@@ -228,7 +233,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_insemination_at) { 100.days.ago.change(usec: 0) }
 
         it "retorna data prevista do parto e nenhum alerta" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "pregnant",
@@ -246,7 +251,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_insemination_at) { 270.days.ago.change(usec: 0) }
 
         it "retorna alerta de parto próximo" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "pregnant",
@@ -270,7 +275,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
         let(:last_insemination_at) { 286.days.ago.change(usec: 0) }
 
         it "retorna alerta de parto atrasado" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).to eq(
             status: "pregnant",
@@ -296,7 +301,7 @@ RSpec.describe Cows::Insights::ReproductiveStatus do
       let(:last_calving_at) { 3.days.ago.change(usec: 0) }
 
       it "retorna data do parto e nenhum alerta" do
-        result = described_class.new(cow: cow).call
+        result = call_service
         days_since_calving = (Time.zone.today - cow.last_calving_at.to_date).to_i
 
         expect(result).to eq(

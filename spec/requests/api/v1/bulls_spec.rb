@@ -6,6 +6,10 @@ RSpec.describe "Api::V1::Bulls", type: :request do
   let(:headers) do { "X-Tenant-Slug" => tenant.slug } end
   let(:current_user) do build(:user, tenant: tenant) end
 
+  def response_body
+    JSON.parse(response.body)
+  end
+
   before do
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:authenticate_request!)
@@ -32,7 +36,7 @@ RSpec.describe "Api::V1::Bulls", type: :request do
 
       expect(response).to have_http_status(:created)
 
-      body = JSON.parse(response.body)
+      body = response_body
 
       expect(body["name"]).to eq("Touro 1")
       expect(body["breed"]).to eq("Nelore")
@@ -53,7 +57,7 @@ RSpec.describe "Api::V1::Bulls", type: :request do
 
       expect(response).to have_http_status(:ok)
 
-      body = JSON.parse(response.body)
+      body = response_body
 
       expect(body["data"].size).to eq(1)
       expect(body["meta"]).to be_present
@@ -73,7 +77,7 @@ RSpec.describe "Api::V1::Bulls", type: :request do
 
       expect(response).to have_http_status(:ok)
 
-      body = JSON.parse(response.body)
+      body = response_body
 
       expect(body["id"]).to eq(bull.id)
       expect(body["name"]).to eq("Touro 1")
@@ -98,7 +102,7 @@ RSpec.describe "Api::V1::Bulls", type: :request do
       expect(response).to have_http_status(:ok)
       expect(bull.reload.name).to eq("Touro Atualizado")
 
-      body = JSON.parse(response.body)
+      body = response_body
 
       expect(body["id"]).to eq(bull.id)
       expect(body["name"]).to eq("Touro Atualizado")

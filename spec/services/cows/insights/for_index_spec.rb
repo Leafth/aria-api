@@ -15,7 +15,6 @@ RSpec.describe Cows::Insights::ForIndex do
   end
 
   let(:reproductive_status) { :open }
-
   let(:occurred_at) { 1.day.ago.change(usec: 0) }
 
   let(:last_weighing_at) { occurred_at }
@@ -36,6 +35,18 @@ RSpec.describe Cows::Insights::ForIndex do
   let(:observation) { "Observação do status" }
   let(:reproductive_alerts) { [] }
 
+  def call_service
+    described_class.new(cow: cow).call
+  end
+
+  def expected_status(code:, occurred_at:)
+    {
+      code: code,
+      message: I18n.t!("cows.insights.index.status.#{code}"),
+      occurred_at: I18n.l(occurred_at.to_date)
+    }
+  end
+
   before do
     allow(Cows::Insights::ReproductiveStatus)
       .to receive(:new)
@@ -45,14 +56,13 @@ RSpec.describe Cows::Insights::ForIndex do
 
   describe "#call" do
     it "retorna status e alerts para o index" do
-      result = described_class.new(cow: cow).call
+      result = call_service
 
       expect(result).to eq(
-        status: {
+        status: expected_status(
           code: "open",
-          message: I18n.t!("cows.insights.index.status.open"),
-          occurred_at: I18n.l(last_heat_at.to_date)
-        },
+          occurred_at: last_heat_at
+        ),
         alerts: [
           {
             level: "info",
@@ -68,24 +78,26 @@ RSpec.describe Cows::Insights::ForIndex do
         let(:last_heat_at) { nil }
 
         it "retorna observações de pesagem" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result[:status]).to eq(
-            code: "weighing",
-            message: I18n.t!("cows.insights.index.status.weighing"),
-            occurred_at: I18n.l(last_weighing_at.to_date)
+            expected_status(
+              code: "weighing",
+              occurred_at: last_weighing_at
+            )
           )
         end
       end
 
       context "e a matriz tem cio cadastrado" do
         it "usa a data do último cio como occurred_at" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result[:status]).to eq(
-            code: "open",
-            message: I18n.t!("cows.insights.index.status.open"),
-            occurred_at: I18n.l(last_heat_at.to_date)
+            expected_status(
+              code: "open",
+              occurred_at: last_heat_at
+            )
           )
         end
       end
@@ -95,12 +107,13 @@ RSpec.describe Cows::Insights::ForIndex do
       let(:reproductive_status) { :in_heat }
 
       it "usa a data do último cio como occurred_at" do
-        result = described_class.new(cow: cow).call
+        result = call_service
 
         expect(result[:status]).to eq(
-          code: "in_heat",
-          message: I18n.t!("cows.insights.index.status.in_heat"),
-          occurred_at: I18n.l(last_heat_at.to_date)
+          expected_status(
+            code: "in_heat",
+            occurred_at: last_heat_at
+          )
         )
       end
     end
@@ -110,12 +123,13 @@ RSpec.describe Cows::Insights::ForIndex do
       let(:last_insemination_at) { occurred_at }
 
       it "usa a data da última inseminação como occurred_at" do
-        result = described_class.new(cow: cow).call
+        result = call_service
 
         expect(result[:status]).to eq(
-          code: "inseminated",
-          message: I18n.t!("cows.insights.index.status.inseminated"),
-          occurred_at: I18n.l(last_insemination_at.to_date)
+          expected_status(
+            code: "inseminated",
+            occurred_at: last_insemination_at
+          )
         )
       end
     end
@@ -125,12 +139,13 @@ RSpec.describe Cows::Insights::ForIndex do
       let(:pregnancy_confirmed_at) { occurred_at }
 
       it "usa a data da confirmação de prenhez como occurred_at" do
-        result = described_class.new(cow: cow).call
+        result = call_service
 
         expect(result[:status]).to eq(
-          code: "pregnant",
-          message: I18n.t!("cows.insights.index.status.pregnant"),
-          occurred_at: I18n.l(pregnancy_confirmed_at.to_date)
+          expected_status(
+            code: "pregnant",
+            occurred_at: pregnancy_confirmed_at
+          )
         )
       end
     end
@@ -140,12 +155,13 @@ RSpec.describe Cows::Insights::ForIndex do
       let(:last_calving_at) { occurred_at }
 
       it "usa a data do último parto como occurred_at" do
-        result = described_class.new(cow: cow).call
+        result = call_service
 
         expect(result[:status]).to eq(
-          code: "postpartum",
-          message: I18n.t!("cows.insights.index.status.postpartum"),
-          occurred_at: I18n.l(last_calving_at.to_date)
+          expected_status(
+            code: "postpartum",
+            occurred_at: last_calving_at
+          )
         )
       end
     end

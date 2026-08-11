@@ -34,7 +34,7 @@ module Api
         if forbidden_params_present?
           return render json: {
             errors: { forbidden_fields: [ I18n.t!("cows.errors.forbidden_fields") ] }
-          }, status: :unprocessable_entity
+          }, status: :unprocessable_content
         end
 
         cow = Cows::Update.new(

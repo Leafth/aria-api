@@ -16,39 +16,35 @@ RSpec.describe Events::PregnancyInterruption do
 
   let(:pregnancy_confirmed_at) { 280.days.ago.change(usec: 0) }
 
-  describe "#call" do
-    it "cria evento para interrupção de prenhez e atualiza status da matriz" do
-      params = {
+  def call_service
+    described_class.new(
+      cow: cow,
+      params: {
         occurred_at: occurred_at,
         data: {
           observation: "Gestação interrompida"
         }
       }
+    ).call
+  end
 
-      event = described_class.new(cow: cow, params: params).call
+  describe "#call" do
+    it "cria evento para interrupção de prenhez e atualiza status da matriz" do
+      event = call_service
 
       expect(event).to be_persisted
       expect(event.event_type).to eq("pregnancy_interruption")
       expect(event.occurred_at).to be_within(1.second).of(occurred_at)
 
-      cow.reload
-
-      expect(cow.reproductive_status).to eq("open")
+      expect(cow.reload.reproductive_status).to eq("open")
       expect(cow.last_pregnancy_interruption_at).to be_within(1.second).of(occurred_at)
     end
 
     it "é inválido quando a matriz não está prenha" do
       cow.update!(reproductive_status: "inseminated", pregnancy_confirmed_at: nil)
 
-      params = {
-        occurred_at: occurred_at,
-        data: {
-          observation: "Gestação interrompida"
-        }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service
       }.to raise_error(
         Events::Error,
         I18n.t!("events.errors.invalid_pregnancy_interruption_transition")
@@ -56,10 +52,8 @@ RSpec.describe Events::PregnancyInterruption do
 
       expect(Event.count).to eq(0)
 
-      cow.reload
-
       expect(cow.reload.reproductive_status).to eq("inseminated")
-      expect(cow.reload.last_pregnancy_interruption_at).to be_nil
+      expect(cow.last_pregnancy_interruption_at).to be_nil
     end
   end
 end

@@ -12,6 +12,19 @@ RSpec.describe "Api::V1::Events", type: :request do
     )
   end
 
+  def post_inactivation(reason:)
+    data = reason.nil? ? {} : { reason: reason }
+
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "inactivation",
+          data: data
+        }
+      },
+      headers: headers
+  end
+
   before do
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:authenticate_request!)
@@ -23,54 +36,30 @@ RSpec.describe "Api::V1::Events", type: :request do
   end
 
   it "cria evento que realiza inativação de cow com reason sale" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        "event": {
-          event_type: "inactivation",
-          data: { reason: "sale" }
-        }
-      }, headers: headers
+    post_inactivation(reason: "sale")
 
     expect(response).to have_http_status(:created)
     expect(cow.reload.active).to eq(false)
   end
 
   it "cria evento que realiza inativação de cow com reason death" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        "event": {
-          event_type: "inactivation",
-          data: { reason: "death" }
-        }
-      }, headers: headers
+    post_inactivation(reason: "death")
 
     expect(response).to have_http_status(:created)
     expect(cow.reload.active).to eq(false)
   end
 
   it "retorna 422 se reason vazia" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        "event": {
-          event_type: "inactivation",
-          data: {}
-        }
-      }, headers: headers
+    post_inactivation(reason: nil)
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(cow.reload.active).to eq(true)
   end
 
   it "retorna 422 se reason inválida" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        "event": {
-          event_type: "inactivation",
-          data: { reason: "outro" }
-        }
-      }, headers: headers
+    post_inactivation(reason: "outro")
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(cow.reload.active).to eq(true)
   end
 end

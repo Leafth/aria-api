@@ -16,24 +16,27 @@ RSpec.describe Events::Calving do
 
   let(:pregnancy_confirmed_at) { 280.days.ago.change(usec: 0) }
 
-  describe "#call" do
-    it "cria evento para parto, atualiza status da matriz, e muda fase para primípara" do
-      params = {
+  def call_service
+    described_class.new(
+      cow: cow,
+      params: {
         event_type: "calving",
         occurred_at: occurred_at,
         data: {
           observation: "Parto sem complicações"
         }
       }
+    ).call
+  end
 
-      event = described_class.new(cow: cow, params: params).call
+  describe "#call" do
+    it "cria evento para parto, atualiza status da matriz, e muda fase para primípara" do
+      event = call_service
 
       expect(event).to be_persisted
       expect(event.event_type).to eq("calving")
 
-      cow.reload
-
-      expect(cow.reproductive_status).to eq("postpartum")
+      expect(cow.reload.reproductive_status).to eq("postpartum")
       expect(cow.phase).to eq("primiparous")
       expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
     end
@@ -41,22 +44,12 @@ RSpec.describe Events::Calving do
     it "cria evento para parto, atualiza status da matriz, e muda fase de primípara para multípara" do
       cow.update!(phase: "primiparous")
 
-      params = {
-        event_type: "calving",
-        occurred_at: occurred_at,
-        data: {
-          observation: "Parto sem complicações"
-        }
-      }
-
-      event = described_class.new(cow: cow, params: params).call
+      event = call_service
 
       expect(event).to be_persisted
       expect(event.event_type).to eq("calving")
 
-      cow.reload
-
-      expect(cow.reproductive_status).to eq("postpartum")
+      expect(cow.reload.reproductive_status).to eq("postpartum")
       expect(cow.phase).to eq("multiparous")
       expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
     end
@@ -64,22 +57,12 @@ RSpec.describe Events::Calving do
     it "cria evento para parto, atualiza status da matriz, e mantém fase quando multípara" do
       cow.update!(phase: "multiparous")
 
-      params = {
-        event_type: "calving",
-        occurred_at: occurred_at,
-        data: {
-          observation: "Parto sem complicações"
-        }
-      }
-
-      event = described_class.new(cow: cow, params: params).call
+      event = call_service
 
       expect(event).to be_persisted
       expect(event.event_type).to eq("calving")
 
-      cow.reload
-
-      expect(cow.reproductive_status).to eq("postpartum")
+      expect(cow.reload.reproductive_status).to eq("postpartum")
       expect(cow.phase).to eq("multiparous")
       expect(cow.last_calving_at).to be_within(1.second).of(occurred_at)
     end
@@ -87,15 +70,8 @@ RSpec.describe Events::Calving do
     it "é inválido quando a matriz não está prenha" do
       cow.update!(reproductive_status: "inseminated", pregnancy_confirmed_at: nil)
 
-      params = {
-        occurred_at: occurred_at,
-        data: {
-          observation: "Parto sem complicações"
-        }
-      }
-
       expect {
-        described_class.new(cow: cow, params: params).call
+        call_service
       }.to raise_error(
         Events::Error,
         I18n.t!("events.errors.invalid_calving_transition")
@@ -103,9 +79,7 @@ RSpec.describe Events::Calving do
 
       expect(Event.count).to eq(0)
 
-      cow.reload
-
-      expect(cow.reproductive_status).to eq("inseminated")
+      expect(cow.reload.reproductive_status).to eq("inseminated")
       expect(cow.last_calving_at).to be_nil
     end
   end
