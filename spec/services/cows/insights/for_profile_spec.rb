@@ -23,6 +23,20 @@ RSpec.describe Cows::Insights::ForProfile do
     }
   end
 
+  def call_service(current_cow = cow)
+    described_class.new(cow: current_cow).call
+  end
+
+  def create_weighing(occurred_at:, weight:)
+    Events::Weighing.new(
+      cow: cow,
+      params: {
+        occurred_at: occurred_at,
+        data: { weight: weight }
+      }
+    ).call
+  end
+
   before do
     allow(Cows::Insights::ReproductiveStatus)
       .to receive(:new)
@@ -32,7 +46,7 @@ RSpec.describe Cows::Insights::ForProfile do
 
   describe "#call" do
     it "retorna os insights da ficha da matriz" do
-      result = described_class.new(cow: cow).call
+      result = call_service
 
       expect(result).to eq(
         reproductive_status: reproductive_status_insight,
@@ -52,23 +66,17 @@ RSpec.describe Cows::Insights::ForProfile do
       older_weighing_at = 2.days.ago.change(usec: 0)
       latest_weighing_at = 1.day.ago.change(usec: 0)
 
-      Events::Weighing.new(
-        cow: cow,
-        params: {
-          occurred_at: older_weighing_at,
-          data: { weight: 95 }
-        }
-      ).call
+      create_weighing(
+        occurred_at: older_weighing_at,
+        weight: 95
+      )
 
-      Events::Weighing.new(
-        cow: cow,
-        params: {
-          occurred_at: latest_weighing_at,
-          data: { weight: 100 }
-        }
-      ).call
+      create_weighing(
+        occurred_at: latest_weighing_at,
+        weight: 100
+      )
 
-      result = described_class.new(cow: cow.reload).call
+      result = call_service(cow.reload)
 
       expect(result[:weight_insight]).to eq(
         current_weight: 100,
@@ -83,7 +91,7 @@ RSpec.describe Cows::Insights::ForProfile do
         let(:weight) { 99 }
 
         it "retorna fase adequada" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result[:phase_insight]).to eq(
             current_phase: "calf",
@@ -96,7 +104,7 @@ RSpec.describe Cows::Insights::ForProfile do
         let(:weight) { 100 }
 
         it "sugere mudar para garrota" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result[:phase_insight]).to eq(
             current_phase: "calf",
@@ -112,7 +120,7 @@ RSpec.describe Cows::Insights::ForProfile do
         let(:weight) { 180 }
 
         it "sugere mudar para novilha" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result[:phase_insight]).to eq(
             current_phase: "calf",
@@ -132,7 +140,7 @@ RSpec.describe Cows::Insights::ForProfile do
         let(:weight) { 99 }
 
         it "retorna abaixo do peso esperado" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result[:phase_insight]).to eq(
             current_phase: "heifer",
@@ -145,7 +153,7 @@ RSpec.describe Cows::Insights::ForProfile do
         let(:weight) { 180 }
 
         it "sugere mudar para novilha" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result[:phase_insight]).to eq(
             current_phase: "heifer",
@@ -166,7 +174,7 @@ RSpec.describe Cows::Insights::ForProfile do
           let(:phase) { current_phase }
 
           it "retorna abaixo do peso esperado" do
-            result = described_class.new(cow: cow).call
+            result = call_service
 
             expect(result[:phase_insight]).to eq(
               current_phase: current_phase.to_s,
@@ -189,7 +197,7 @@ RSpec.describe Cows::Insights::ForProfile do
           let(:reproductive_status) { status }
 
           it "retorna #{action}" do
-            result = described_class.new(cow: cow).call
+            result = call_service
 
             expect(result[:recommended_next_action]).to eq(action)
           end
@@ -207,7 +215,7 @@ RSpec.describe Cows::Insights::ForProfile do
       end
 
       it "retorna os dias desde o último parto quando o parto existe" do
-        result = described_class.new(cow: cow).call
+        result = call_service
 
         expect(result[:days_since_last_calving]).to eq(10)
       end
@@ -216,7 +224,7 @@ RSpec.describe Cows::Insights::ForProfile do
         let(:reproductive_status) { :pregnant }
 
         it "não retorna os dias desde o último parto" do
-          result = described_class.new(cow: cow).call
+          result = call_service
 
           expect(result).not_to have_key(:days_since_last_calving)
         end
@@ -226,7 +234,7 @@ RSpec.describe Cows::Insights::ForProfile do
         let(:last_calving_at) { nil }
 
         it "não retorna os dias desde o último parto" do
-          result = described_class.new(cow: cow.reload).call
+          result = call_service(cow.reload)
 
           expect(result).not_to have_key(:days_since_last_calving)
         end
