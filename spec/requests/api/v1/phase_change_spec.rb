@@ -12,6 +12,19 @@ RSpec.describe "Api::V1::Events", type: :request do
     )
   end
 
+  def post_phase_change(phase:)
+    data = phase.nil? ? {} : { phase: phase }
+
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "phase_change",
+          data: data
+        }
+      },
+      headers: headers
+  end
+
   before do
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:authenticate_request!)
@@ -23,13 +36,7 @@ RSpec.describe "Api::V1::Events", type: :request do
   end
 
   it "cria evento e permite mudar de calf para heifer" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "heifer" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "heifer")
 
     expect(response).to have_http_status(:created)
     expect(cow.reload.phase).to eq("heifer")
@@ -37,13 +44,7 @@ RSpec.describe "Api::V1::Events", type: :request do
   end
 
   it "cria evento e permite mudar de calf para young" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "young" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "young")
 
     expect(response).to have_http_status(:created)
     expect(cow.reload.phase).to eq("young")
@@ -53,13 +54,7 @@ RSpec.describe "Api::V1::Events", type: :request do
   it "cria evento e permite mudar de heifer para young" do
     cow.update!(phase: "heifer")
 
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "young" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "young")
 
     expect(response).to have_http_status(:created)
     expect(cow.reload.phase).to eq("young")
@@ -67,37 +62,19 @@ RSpec.describe "Api::V1::Events", type: :request do
   end
 
   it "retorna 422 se fase vier vazia" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: {}
-        }
-      }, headers: headers
+    post_phase_change(phase: nil)
 
     expect(response).to have_http_status(:unprocessable_entity)
   end
 
   it "retorna 422 se fase for inválida" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "outro" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "outro")
 
     expect(response).to have_http_status(:unprocessable_entity)
   end
 
   it "retorna 422 se tentar mudar para a mesma fase" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "calf" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "calf")
 
     expect(response).to have_http_status(:unprocessable_entity)
   end
@@ -105,13 +82,7 @@ RSpec.describe "Api::V1::Events", type: :request do
   it "retorna 422 se tentar voltar de heifer para calf" do
     cow.update!(phase: "heifer")
 
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "calf" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "calf")
 
     expect(response).to have_http_status(:unprocessable_entity)
     expect(cow.reload.phase).to eq("heifer")
@@ -120,13 +91,7 @@ RSpec.describe "Api::V1::Events", type: :request do
   it "retorna 422 se tentar voltar de young para heifer" do
     cow.update!(phase: "young")
 
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "heifer" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "heifer")
 
     expect(response).to have_http_status(:unprocessable_entity)
     expect(cow.reload.phase).to eq("young")
@@ -135,26 +100,14 @@ RSpec.describe "Api::V1::Events", type: :request do
   it "retorna 422 se tentar voltar de young para calf" do
     cow.update!(phase: "young")
 
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "calf" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "calf")
 
     expect(response).to have_http_status(:unprocessable_entity)
     expect(cow.reload.phase).to eq("young")
   end
 
   it "retorna 422 se tentar mudar manualmente para primiparous" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "primiparous" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "primiparous")
 
     expect(response).to have_http_status(:unprocessable_entity)
   end
@@ -162,13 +115,7 @@ RSpec.describe "Api::V1::Events", type: :request do
   it "retorna 422 se tentar mudar fase de uma matriz primiparous" do
     cow.update!(phase: "primiparous")
 
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "young" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "young")
 
     expect(response).to have_http_status(:unprocessable_entity)
   end
@@ -176,25 +123,13 @@ RSpec.describe "Api::V1::Events", type: :request do
   it "retorna 422 se tentar mudar fase de uma matriz multiparous" do
     cow.update!(phase: "multiparous")
 
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "young" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "young")
 
     expect(response).to have_http_status(:unprocessable_entity)
   end
 
   it "retorna 422 se tentar mudar manualmente para multiparous" do
-    post "/api/v1/cows/#{cow.id}/events",
-      params: {
-        event: {
-          event_type: "phase_change",
-          data: { phase: "multiparous" }
-        }
-      }, headers: headers
+    post_phase_change(phase: "multiparous")
 
     expect(response).to have_http_status(:unprocessable_entity)
   end

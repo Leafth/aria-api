@@ -22,6 +22,25 @@ RSpec.describe "Api::V1::Events", type: :request do
 
   let(:last_heat_at) { 2.hours.ago.change(usec: 0) }
 
+  def post_insemination(
+    method:,
+    bull_id:,
+    occurred_at: self.occurred_at
+  )
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "insemination",
+          occurred_at: occurred_at,
+          data: {
+            method: method,
+            bull_id: bull_id
+          }
+        }
+      },
+      headers: headers
+  end
+
   before do
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:authenticate_request!)
@@ -36,17 +55,10 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "cria evento de inseminação artificial e atualiza status da matriz" do
       occurred_at = Time.current
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "insemination",
-            occurred_at: occurred_at,
-            data: {
-              method: "artificial_insemination",
-              bull_id: company_bull.id
-            }
-          }
-        }, headers: headers
+      post_insemination(
+        method: "artificial_insemination",
+        bull_id: company_bull.id
+      )
 
       expect(response).to have_http_status(:created)
       expect(cow.reload.reproductive_status).to eq("inseminated")
@@ -57,17 +69,10 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "cria evento de monta natural e atualiza status da matriz" do
       occurred_at = Time.current
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "insemination",
-            occurred_at: occurred_at,
-            data: {
-              method: "natural_mating",
-              bull_id: local_bull.id
-            }
-          }
-        }, headers: headers
+      post_insemination(
+        method: "natural_mating",
+        bull_id: local_bull.id
+      )
 
       expect(response).to have_http_status(:created)
       expect(cow.reload.reproductive_status).to eq("inseminated")
@@ -78,17 +83,10 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "retorna 422 quando a matriz não está em cio" do
       cow.update!(reproductive_status: "open", last_heat_at: nil)
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "insemination",
-            occurred_at: Time.current,
-            data: {
-              method: "artificial_insemination",
-              bull_id: company_bull.id
-            }
-          }
-        }, headers: headers
+      post_insemination(
+        method: "artificial_insemination",
+        bull_id: company_bull.id
+      )
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
@@ -98,81 +96,46 @@ RSpec.describe "Api::V1::Events", type: :request do
 
       cow.update!(last_heat_at: occurred_at - 25.hours)
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "insemination",
-            occurred_at: occurred_at,
-            data: {
-              method: "artificial_insemination",
-              bull_id: company_bull.id
-            }
-          }
-        }, headers: headers
+      post_insemination(
+        method: "artificial_insemination",
+        bull_id: company_bull.id
+      )
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
     it "retorna 422 quando o método é inválido" do
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "insemination",
-            occurred_at: Time.current,
-            data: {
-              method: "outro",
-              bull_id: company_bull.id
-            }
-          }
-        }, headers: headers
+      post_insemination(
+        method: "outro",
+        bull_id: company_bull.id
+      )
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
     it "retorna 422 quando o touro não existe" do
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "insemination",
-            occurred_at: Time.current,
-            data: {
-              method: "artificial_insemination",
-              bull_id: SecureRandom.uuid
-            }
-          }
-        }, headers: headers
+      post_insemination(
+        method: "artificial_insemination",
+        bull_id: SecureRandom.uuid
+      )
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
     it "retorna 422 quando inseminação artificial usa touro local" do
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "insemination",
-            occurred_at: Time.current,
-            data: {
-              method: "artificial_insemination",
-              bull_id: local_bull.id
-            }
-          }
-        }, headers: headers
+      post_insemination(
+        method: "artificial_insemination",
+        bull_id: local_bull.id
+      )
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
     it "retorna 422 quando monta natural usa touro de empresa" do
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "insemination",
-            occurred_at: Time.current,
-            data: {
-              method: "natural_mating",
-              bull_id: company_bull.id
-            }
-          }
-        }, headers: headers
+      post_insemination(
+        method: "natural_mating",
+        bull_id: company_bull.id
+      )
 
       expect(response).to have_http_status(:unprocessable_entity)
     end

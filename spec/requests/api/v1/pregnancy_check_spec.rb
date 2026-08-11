@@ -21,6 +21,20 @@ RSpec.describe "Api::V1::Events", type: :request do
   let(:last_heat_at) { 25.hours.ago.change(usec: 0) }
   let(:last_insemination_at) { 24.hours.ago.change(usec: 0) }
 
+  def post_pregnancy_check(result:)
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "pregnancy_check",
+          occurred_at: occurred_at,
+          data: {
+            result: result
+          }
+        }
+      },
+      headers: headers
+  end
+
   before do
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:authenticate_request!)
@@ -31,19 +45,9 @@ RSpec.describe "Api::V1::Events", type: :request do
       .and_return(current_user)
   end
 
-
   describe "POST /api/v1/cows/:cow_id/events" do
     it "cria evento de verificação de gravidez com resultado positivo e atualiza status da matriz" do
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "pregnancy_check",
-            occurred_at: occurred_at,
-            data: {
-              result: "positive"
-            }
-          }
-        }, headers: headers
+      post_pregnancy_check(result: "positive")
 
       expect(response).to have_http_status(:created)
       expect(cow.reload.reproductive_status).to eq("pregnant")
@@ -53,16 +57,7 @@ RSpec.describe "Api::V1::Events", type: :request do
     end
 
     it "cria evento de verificação de gravidez com resultado negativo e atualiza status da matriz" do
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "pregnancy_check",
-            occurred_at: occurred_at,
-            data: {
-              result: "negative"
-            }
-          }
-        }, headers: headers
+      post_pregnancy_check(result: "negative")
 
       expect(response).to have_http_status(:created)
       expect(cow.reload.reproductive_status).to eq("open")
@@ -74,46 +69,19 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "retorna 422 quando a matriz não está inseminada" do
       cow.update!(reproductive_status: "in_heat", last_heat_at: nil, last_insemination_at: nil)
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "pregnancy_check",
-            occurred_at: occurred_at,
-            data: {
-              result: "positive"
-            }
-          }
-        }, headers: headers
+      post_pregnancy_check(result: "positive")
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
     it "retorna 422 quando o resultado é inválido" do
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "pregnancy_check",
-            occurred_at: occurred_at,
-            data: {
-              result: "outro"
-            }
-          }
-        }, headers: headers
+      post_pregnancy_check(result: "outro")
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
     it "retorna 422 sem resultado" do
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "pregnancy_check",
-            occurred_at: Time.current.change(usec: 0),
-            data: {
-              result: nil
-            }
-          }
-        }, headers: headers
+      post_pregnancy_check(result: nil)
 
       expect(response).to have_http_status(:unprocessable_entity)
     end

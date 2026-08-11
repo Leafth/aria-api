@@ -13,6 +13,23 @@ RSpec.describe "Api::V1::Events", type: :request do
     )
   end
 
+  def post_heat_detection(
+    occurred_at: Time.current,
+    observation: "Cio observado visualmente"
+  )
+    post "/api/v1/cows/#{cow.id}/events",
+      params: {
+        event: {
+          event_type: "heat_detection",
+          occurred_at: occurred_at,
+          data: {
+            observation: observation
+          }
+        }
+      },
+      headers: headers
+  end
+
   before do
     allow_any_instance_of(AuthenticateRequest)
       .to receive(:authenticate_request!)
@@ -27,16 +44,7 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "cria evento de detecção do cio atual e atualiza status da matriz" do
       occurred_at = 1.hour.ago
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "heat_detection",
-            occurred_at: occurred_at,
-            data: {
-              observation: "Cio observado visualmente"
-            }
-          }
-        }, headers: headers
+      post_heat_detection(occurred_at: occurred_at)
 
       expect(response).to have_http_status(:created)
       expect(cow.reload.reproductive_status).to eq("in_heat")
@@ -47,16 +55,10 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "cria evento de detecção de cio passado e mantém status da matriz como open" do
       occurred_at = 25.hours.ago
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "heat_detection",
-            occurred_at: occurred_at,
-            data: {
-              observation: "Cio antigo registrado"
-            }
-          }
-        }, headers: headers
+      post_heat_detection(
+        occurred_at: occurred_at,
+        observation: "Cio antigo registrado"
+      )
 
       expect(response).to have_http_status(:created)
       expect(cow.reload.reproductive_status).to eq("open")
@@ -69,16 +71,9 @@ RSpec.describe "Api::V1::Events", type: :request do
 
       cow.update!(reproductive_status: "in_heat", last_heat_at: last_heat_at)
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "heat_detection",
-            occurred_at: Time.current,
-            data: {
-              observation: "Nova tentativa de cio"
-            }
-          }
-        }, headers: headers
+      post_heat_detection(
+        observation: "Nova tentativa de cio"
+      )
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
@@ -86,16 +81,9 @@ RSpec.describe "Api::V1::Events", type: :request do
     it "não cria evento quando a matriz não está em estado permitido para cio" do
       cow.update!(reproductive_status: "inseminated")
 
-      post "/api/v1/cows/#{cow.id}/events",
-        params: {
-          event: {
-            event_type: "heat_detection",
-            occurred_at: Time.current,
-            data: {
-              observation: "Animal apresentou sinais de cio"
-            }
-          }
-        }, headers: headers
+      post_heat_detection(
+        observation: "Animal apresentou sinais de cio"
+      )
 
       expect(response).to have_http_status(:unprocessable_entity)
     end

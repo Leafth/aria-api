@@ -5,19 +5,51 @@ RSpec.describe "Api::V1::Auth", type: :request do
   let(:headers) { { "X-Tenant-Slug" => tenant.slug } }
   let(:user) do create(:user, tenant: tenant) end
 
+  def post_login(email:, password:)
+    post "/api/v1/auth/login",
+      params: {
+        auth: {
+          email: email,
+          password: password
+        }
+      },
+      headers: headers
+  end
+
+  def post_refresh(refresh_token:)
+    post "/api/v1/auth/refresh",
+      params: {
+        auth: {
+          refresh_token: refresh_token
+        }
+      },
+      headers: headers
+  end
+
+  def delete_logout(refresh_token:)
+    delete "/api/v1/auth/logout",
+      params: {
+        auth: {
+          refresh_token: refresh_token
+        }
+      },
+      headers: headers
+  end
+
+  def response_body
+    JSON.parse(response.body)
+  end
+
   describe "POST /api/v1/auth/login" do
     it "autentica usuário com credenciais válidas" do
-      post "/api/v1/auth/login",
-        params: {
-          auth: {
-            email: user.email,
-            password: "@Senha123"
-          }
-        }, headers: headers
+      post_login(
+        email: user.email,
+        password: "@Senha123"
+      )
 
       expect(response).to have_http_status(:ok)
 
-      body = JSON.parse(response.body)
+      body = response_body
 
       expect(body["access_token"]).to be_present
       expect(body["refresh_token"]).to be_present
@@ -35,13 +67,10 @@ RSpec.describe "Api::V1::Auth", type: :request do
     end
 
     it "retorna 401 com senha inválida" do
-      post "/api/v1/auth/login",
-        params: {
-          auth: {
-            email: user.email,
-            password: "senha-errada"
-          }
-        }, headers: headers
+      post_login(
+        email: user.email,
+        password: "senha-errada"
+      )
 
       expect(response).to have_http_status(:unauthorized)
     end
@@ -61,16 +90,11 @@ RSpec.describe "Api::V1::Auth", type: :request do
     end
 
     it "renova autenticação com refresh token válido via params" do
-      post "/api/v1/auth/refresh",
-        params: {
-          auth: {
-            refresh_token: refresh_token
-          }
-        }, headers: headers
+      post_refresh(refresh_token: refresh_token)
 
       expect(response).to have_http_status(:ok)
 
-      body = JSON.parse(response.body)
+      body = response_body
 
       expect(body["access_token"]).to be_present
       expect(body["refresh_token"]).to be_present
@@ -91,33 +115,20 @@ RSpec.describe "Api::V1::Auth", type: :request do
     it "rotaciona o refresh token da sessão" do
       old_digest = session.refresh_token_digest
 
-      post "/api/v1/auth/refresh",
-        params: {
-          auth: {
-            refresh_token: refresh_token
-          }
-        }, headers: headers
+      post_refresh(refresh_token: refresh_token)
 
       expect(response).to have_http_status(:ok)
       expect(session.reload.refresh_token_digest).not_to eq(old_digest)
     end
 
     it "retorna 401 com refresh token inválido" do
-      post "/api/v1/auth/refresh",
-        params: {
-          auth: {
-            refresh_token: "token-invalido"
-          }
-        }, headers: headers
+      post_refresh(refresh_token: "token-invalido")
 
       expect(response).to have_http_status(:unauthorized)
     end
 
     it "retorna 401 quando refresh token não é enviado" do
-      post "/api/v1/auth/refresh",
-        params: {
-          auth: {}
-        }, headers: headers
+      post_refresh(refresh_token: nil)
 
       expect(response).to have_http_status(:unauthorized)
     end
@@ -137,37 +148,22 @@ RSpec.describe "Api::V1::Auth", type: :request do
     end
 
     it "realiza logout com refresh token válido" do
-      delete "/api/v1/auth/logout",
-        params: {
-          auth: {
-            refresh_token: refresh_token
-          }
-        }, headers: headers
+      delete_logout(refresh_token: refresh_token)
 
       expect(response).to have_http_status(:ok)
 
-      body = JSON.parse(response.body)
-
-      expect(body).to eq({})
+      expect(response_body).to eq({})
       expect(session.reload.revoked?).to eq(true)
     end
 
     it "retorna 401 com refresh token inválido" do
-      delete "/api/v1/auth/logout",
-        params: {
-          auth: {
-            refresh_token: "token-invalido"
-          }
-        }, headers: headers
+      delete_logout(refresh_token: "token-invalido")
 
       expect(response).to have_http_status(:unauthorized)
     end
 
     it "retorna 401 quando refresh token não é enviado" do
-      delete "/api/v1/auth/logout",
-        params: {
-          auth: {}
-        }, headers: headers
+      delete_logout(refresh_token: nil)
 
       expect(response).to have_http_status(:unauthorized)
     end
