@@ -58,7 +58,7 @@ end
 
 gem "devise", "~> 5.0"
 
-gem "jwt", "~> 3.2"
+gem "jwt", "~> 3.3"
 
 gem "mcp", ">= 0.9.2"
 
