@@ -69,4 +69,4 @@ gem "active_model_serializers", "~> 0.10.16"
 gem "sidekiq", "~> 8.1"
 gem "sidekiq-cron", "~> 2.4"
 
-gem "grover", "~> 1.2"
+gem "grover", "~> 2.0"
